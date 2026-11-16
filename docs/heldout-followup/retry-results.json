@@ -1,0 +1,243 @@
+{
+  "dataset": {
+    "ids": [
+      "ekrombouts/fruta_records"
+    ],
+    "revisions": [
+      "579141e3431c18a932fa3a0870e9f1c131f10367"
+    ],
+    "sha256": "05a7c80ba50a849ee1ca8e3127503c74f3a237880ba5eb878207b29bb419d11c",
+    "splits": {
+      "held_out": 6
+    },
+    "translation_ids": [
+      "caresignal-agent-en-reviewed-v1"
+    ]
+  },
+  "examples": [
+    {
+      "annotation_id": "caresignal-two-agent-adjudicated-v1",
+      "dataset_id": "ekrombouts/fruta_records",
+      "dataset_revision": "579141e3431c18a932fa3a0870e9f1c131f10367",
+      "error_category": null,
+      "evidence_correct": true,
+      "example_id": "nb_1319",
+      "gold_evidence": [
+        {
+          "end": 97,
+          "quote": "During a short walk with the walking stick, the resident said that she felt a little more stable.",
+          "start": 0
+        }
+      ],
+      "gold_label": "UNCLEAR",
+      "joint_correct": true,
+      "label_correct": true,
+      "note": "During a short walk with the walking stick, the resident said that she felt a little more stable. She did tire quickly.",
+      "original_note": "Tijdens een korte wandeling met de wandelstok gaf mw. aan dat ze zich wat stabieler voelde. Ze was wel snel moe.",
+      "predicted_evidence": [
+        {
+          "end": 97,
+          "quote": "During a short walk with the walking stick, the resident said that she felt a little more stable.",
+          "start": 0
+        }
+      ],
+      "predicted_label": "UNCLEAR",
+      "reason_code": "INSUFFICIENT_EVIDENCE",
+      "source_note_id": "nb_1319",
+      "source_url": "https://huggingface.co/datasets/ekrombouts/fruta_records/blob/579141e3431c18a932fa3a0870e9f1c131f10367/data/train-00000-of-00001.parquet",
+      "split": "held_out",
+      "status": "COMPLETE",
+      "target": {
+        "context_key": "other_walk",
+        "observed_on": "2024-04-04",
+        "resident_id": "fruta-cb_07",
+        "resident_name": "Fruta synthetic resident cb_07",
+        "target_cue": "short walk with the walking stick"
+      },
+      "translation_id": "caresignal-agent-en-reviewed-v1"
+    },
+    {
+      "annotation_id": "caresignal-two-agent-adjudicated-v1",
+      "dataset_id": "ekrombouts/fruta_records",
+      "dataset_revision": "579141e3431c18a932fa3a0870e9f1c131f10367",
+      "error_category": null,
+      "evidence_correct": false,
+      "example_id": "nn_2108",
+      "gold_evidence": [
+        {
+          "end": 48,
+          "quote": "The afternoon ends with a quiet walk in the sun.",
+          "start": 0
+        }
+      ],
+      "gold_label": "UNCLEAR",
+      "joint_correct": false,
+      "label_correct": false,
+      "note": "The afternoon ends with a quiet walk in the sun. The client is quiet and follows well, which helps to end his day positively.",
+      "original_note": "De middag eindigt met een rustige wandeling in de zon. De client is stil en volgt goed, wat helpt om zijn dag positief af te sluiten.",
+      "predicted_evidence": [
+        {
+          "end": 48,
+          "quote": "The afternoon ends with a quiet walk in the sun.",
+          "start": 0
+        },
+        {
+          "end": 125,
+          "quote": "The client is quiet and follows well, which helps to end his day positively.",
+          "start": 49
+        }
+      ],
+      "predicted_label": "HELP_UNSPECIFIED",
+      "reason_code": "GUIDANCE_ONLY",
+      "source_note_id": "nn_2108",
+      "source_url": "https://huggingface.co/datasets/ekrombouts/fruta_records/blob/579141e3431c18a932fa3a0870e9f1c131f10367/data/train-00000-of-00001.parquet",
+      "split": "held_out",
+      "status": "COMPLETE",
+      "target": {
+        "context_key": "other_walk",
+        "observed_on": "2024-09-25",
+        "resident_id": "fruta-cn_07",
+        "resident_name": "Fruta synthetic resident cn_07",
+        "target_cue": "quiet walk in the sun at the end of the afternoon"
+      },
+      "translation_id": "caresignal-agent-en-reviewed-v1"
+    },
+    {
+      "annotation_id": "caresignal-two-agent-adjudicated-v1",
+      "dataset_id": "ekrombouts/fruta_records",
+      "dataset_revision": "579141e3431c18a932fa3a0870e9f1c131f10367",
+      "error_category": null,
+      "evidence_correct": true,
+      "example_id": "nm_0865",
+      "gold_evidence": [],
+      "gold_label": "UNCLEAR",
+      "joint_correct": true,
+      "label_correct": true,
+      "note": "Morning care. The resident was already awake and in a good mood. Cooperated well with washing and dressing. Had difficulty with the buttons on his shirt and was frustrated when it did not work. Reassured and helped. COPD symptoms seem less today. Uses the walker without protest.",
+      "original_note": "Ochtendzorg. Dhr. was al wakker en in goede bui. Hielp goed mee met wassen en aankleden. Wel moeite met knopen van overhemd, gefrustreerd toen het niet lukte. Gerustgesteld en geholpen. COPD-klachten lijken vandaag minder. Gebruikt rollator zonder protest.",
+      "predicted_evidence": [],
+      "predicted_label": "UNCLEAR",
+      "reason_code": "NO_WALKING_EVENT",
+      "source_note_id": "nm_0865",
+      "source_url": "https://huggingface.co/datasets/ekrombouts/fruta_records/blob/579141e3431c18a932fa3a0870e9f1c131f10367/data/train-00000-of-00001.parquet",
+      "split": "held_out",
+      "status": "COMPLETE",
+      "target": {
+        "context_key": "other_walk",
+        "observed_on": "2025-03-04",
+        "resident_id": "fruta-cm_04",
+        "resident_name": "Fruta synthetic resident cm_04",
+        "target_cue": "any walking described during morning care"
+      },
+      "translation_id": "caresignal-agent-en-reviewed-v1"
+    },
+    {
+      "annotation_id": "caresignal-two-agent-adjudicated-v1",
+      "dataset_id": "ekrombouts/fruta_records",
+      "dataset_revision": "579141e3431c18a932fa3a0870e9f1c131f10367",
+      "error_category": null,
+      "evidence_correct": true,
+      "example_id": "nc_1659",
+      "gold_evidence": [],
+      "gold_label": "UNCLEAR",
+      "joint_correct": true,
+      "label_correct": true,
+      "note": "The resident took part in a memory game in the activity room. Noticeable difficulty concentrating, but participated enthusiastically. Very tired afterwards; helped with the transfer to bed for a rest.",
+      "original_note": "Mw. deelgenomen aan geheugenspel in de activiteitenruimte. Merkbaar moeite met concentratie, maar deed enthousiast mee. Na afloop erg moe, geholpen met transfer naar bed voor rustmoment.",
+      "predicted_evidence": [],
+      "predicted_label": "UNCLEAR",
+      "reason_code": "NO_WALKING_EVENT",
+      "source_note_id": "nc_1659",
+      "source_url": "https://huggingface.co/datasets/ekrombouts/fruta_records/blob/579141e3431c18a932fa3a0870e9f1c131f10367/data/train-00000-of-00001.parquet",
+      "split": "held_out",
+      "status": "COMPLETE",
+      "target": {
+        "context_key": "other_walk",
+        "observed_on": "2024-05-14",
+        "resident_id": "fruta-cc_07",
+        "resident_name": "Fruta synthetic resident cc_07",
+        "target_cue": "any walking described after the memory game; exclude the transfer to bed"
+      },
+      "translation_id": "caresignal-agent-en-reviewed-v1"
+    },
+    {
+      "annotation_id": "caresignal-two-agent-adjudicated-v1",
+      "dataset_id": "ekrombouts/fruta_records",
+      "dataset_revision": "579141e3431c18a932fa3a0870e9f1c131f10367",
+      "error_category": null,
+      "evidence_correct": true,
+      "example_id": "nn_1576",
+      "gold_evidence": [],
+      "gold_label": "UNCLEAR",
+      "joint_correct": true,
+      "label_correct": true,
+      "note": "The resident needed help with the morning routine again, especially with bathing because of lower back pain. Forgot the walker, but no fall occurred.",
+      "original_note": "Mw. moest weer hulp hebben bij de ochtendroutine, vooral bij haar baden vanwege lage rugpijn. Rollator vergeten maar geen val gebeurd.",
+      "predicted_evidence": [],
+      "predicted_label": "UNCLEAR",
+      "reason_code": "NO_COMPLETED_WALK_EVENT",
+      "source_note_id": "nn_1576",
+      "source_url": "https://huggingface.co/datasets/ekrombouts/fruta_records/blob/579141e3431c18a932fa3a0870e9f1c131f10367/data/train-00000-of-00001.parquet",
+      "split": "held_out",
+      "status": "COMPLETE",
+      "target": {
+        "context_key": "other_walk",
+        "observed_on": "2024-06-28",
+        "resident_id": "fruta-cn_06",
+        "resident_name": "Fruta synthetic resident cn_06",
+        "target_cue": "any walking described during the morning routine"
+      },
+      "translation_id": "caresignal-agent-en-reviewed-v1"
+    },
+    {
+      "annotation_id": "caresignal-two-agent-adjudicated-v1",
+      "dataset_id": "ekrombouts/fruta_records",
+      "dataset_revision": "579141e3431c18a932fa3a0870e9f1c131f10367",
+      "error_category": null,
+      "evidence_correct": true,
+      "example_id": "nc_0922",
+      "gold_evidence": [],
+      "gold_label": "UNCLEAR",
+      "joint_correct": true,
+      "label_correct": true,
+      "note": "Sunday breakfast: the resident enjoyed fresh croissants. Asked whether she could come along to the church service in the building. Wheelchair put ready.",
+      "original_note": "Zondagontbijt: mw. genoot van verse croissantjes. Vroeg of ze mee kon naar kerkdienst in huis. Rolstoel klaargezet.",
+      "predicted_evidence": [],
+      "predicted_label": "UNCLEAR",
+      "reason_code": "NO_WALKING_EVENT",
+      "source_note_id": "nc_0922",
+      "source_url": "https://huggingface.co/datasets/ekrombouts/fruta_records/blob/579141e3431c18a932fa3a0870e9f1c131f10367/data/train-00000-of-00001.parquet",
+      "split": "held_out",
+      "status": "COMPLETE",
+      "target": {
+        "context_key": "other_walk",
+        "observed_on": "2024-02-18",
+        "resident_id": "fruta-cc_05",
+        "resident_name": "Fruta synthetic resident cc_05",
+        "target_cue": "any walking described before the proposed church service"
+      },
+      "translation_id": "caresignal-agent-en-reviewed-v1"
+    }
+  ],
+  "extractor": {
+    "mode": "gemini",
+    "model_id": "gemini-3.1-flash-lite",
+    "prompt_version": "walking-assistance-v2",
+    "version": "gemini-structured-v2"
+  },
+  "metrics_policy": "Exact span-set match; all examples including errors remain in denominator.",
+  "schema_version": "1.0",
+  "scope": "post_hoc_replay",
+  "scope_note": "Post-hoc replay on previously evaluated frozen examples. These descriptive results are not a new held-out performance estimate.",
+  "summary": {
+    "completed": 6,
+    "errors": 0,
+    "evidence_accuracy": 0.8333333333333334,
+    "evidence_correct": 5,
+    "joint_accuracy": 0.8333333333333334,
+    "joint_correct": 5,
+    "label_accuracy": 0.8333333333333334,
+    "label_correct": 5,
+    "total": 6
+  }
+}

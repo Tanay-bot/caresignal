@@ -10,8 +10,10 @@ import argparse
 import csv
 import hashlib
 import json
+import math
+import time
 from pathlib import Path
-from typing import Any, Literal, Protocol, Sequence
+from typing import Any, Callable, Literal, Protocol, Sequence
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
@@ -36,6 +38,72 @@ class EvaluatedExtractor(Protocol):
     prompt_version: str
 
     def extract(self, note_body: str, target: Target, revision_id: str) -> ExtractionResult: ...
+
+
+def _validated_request_interval(value: float) -> float:
+    interval = float(value)
+    if not math.isfinite(interval) or not 0 <= interval <= 60:
+        raise ValueError("Request interval must be a finite number from 0 to 60 seconds.")
+    return interval
+
+
+def _parse_request_interval(value: str) -> float:
+    try:
+        return _validated_request_interval(float(value))
+    except ValueError as exc:
+        raise argparse.ArgumentTypeError(str(exc)) from exc
+
+
+class PacedExtractor:
+    """Space serial live request starts while preserving the provider contract.
+
+    Offline modes and an interval of zero never read the clock or sleep.
+    Provider exceptions propagate unchanged, and failed attempts still establish
+    the next request's earliest start time. This wrapper adds no retries.
+    """
+
+    def __init__(
+        self,
+        extractor: EvaluatedExtractor,
+        min_request_interval: float = 0,
+        *,
+        clock: Callable[[], float] | None = None,
+        sleep: Callable[[float], None] | None = None,
+    ) -> None:
+        self.min_request_interval = _validated_request_interval(min_request_interval)
+        self._extractor = extractor
+        self._extract_method = extractor.extract
+        self._clock = clock if clock is not None else time.monotonic
+        self._sleep = sleep if sleep is not None else time.sleep
+        self._last_started_at: float | None = None
+        self._live = extractor.mode in {"live", "gemini"}
+
+    @property
+    def mode(self) -> str:
+        return self._extractor.mode
+
+    @property
+    def version(self) -> str:
+        return self._extractor.version
+
+    @property
+    def model_id(self) -> str | None:
+        return self._extractor.model_id
+
+    @property
+    def prompt_version(self) -> str:
+        return self._extractor.prompt_version
+
+    def extract(self, note_body: str, target: Target, revision_id: str) -> ExtractionResult:
+        if self._live and self.min_request_interval > 0:
+            started_at = self._clock()
+            if self._last_started_at is not None:
+                remaining = self._last_started_at + self.min_request_interval - started_at
+                if remaining > 0:
+                    self._sleep(remaining)
+                    started_at = self._clock()
+            self._last_started_at = started_at
+        return self._extract_method(note_body, target, revision_id)
 
 
 class GoldEvidence(BaseModel):
@@ -152,7 +220,7 @@ def dataset_hash(examples: Sequence[FrozenExample]) -> str:
 
 
 def evaluate_examples(
-    examples: Sequence[FrozenExample], extractor: EvaluatedExtractor
+    examples: Sequence[FrozenExample], extractor: EvaluatedExtractor, *, post_hoc: bool = False
 ) -> dict[str, Any]:
     """Score label, exact evidence, and their intersection on identical inputs.
 
@@ -247,7 +315,7 @@ def evaluate_examples(
             "joint_accuracy": summary["joint_correct"] / count,
         }
     )
-    return {
+    report = {
         "schema_version": "1.0",
         "scope": "held_out_public"
         if all(e.split == "held_out" for e in examples)
@@ -279,6 +347,13 @@ def evaluate_examples(
         "summary": summary,
         "examples": rows,
     }
+    if post_hoc:
+        report["scope"] = "post_hoc_replay"
+        report["scope_note"] = (
+            "Post-hoc replay on previously evaluated frozen examples. "
+            "These descriptive results are not a new held-out performance estimate."
+        )
+    return report
 
 
 def _method_reports(report: dict[str, Any]) -> list[dict[str, Any]]:
@@ -300,7 +375,12 @@ def summary_markdown(report: dict[str, Any]) -> str:
             f"| {summary['joint_correct']}/{summary['total']} ({summary['joint_accuracy']:.1%}) "
             f"| {summary['errors']} |"
         )
-    if any(method["scope"] != "held_out_public" for method in reports):
+    if any(method["scope"] == "post_hoc_replay" for method in reports):
+        output += [
+            "",
+            "Post-hoc replay on previously evaluated examples. These results are not a new held-out performance estimate.",
+        ]
+    elif any(method["scope"] != "held_out_public" for method in reports):
         output += [
             "",
             "Development results verify these examples only. They do not estimate held-out Fruta performance.",
@@ -358,6 +438,17 @@ def main(argv: Sequence[str] | None = None) -> int:
         default="openai",
         help="Live adapter for --mode live/compare; offline modes do not call a provider.",
     )
+    parser.add_argument(
+        "--post-hoc",
+        action="store_true",
+        help="Mark a replay after prior result inspection; never a new held-out estimate.",
+    )
+    parser.add_argument(
+        "--min-request-interval",
+        type=_parse_request_interval,
+        default=0.0,
+        help="Minimum seconds between serial live request starts (0 to 60; default 0).",
+    )
     parser.add_argument("--output-dir", type=Path, default=Path("artifacts/evaluation"))
     args = parser.parse_args(argv)
     try:
@@ -373,8 +464,12 @@ def main(argv: Sequence[str] | None = None) -> int:
         if args.provider == "gemini":
             from .extractors import GeminiExtractor
 
-            return GeminiExtractor()
-        return OpenAIExtractor()
+            extractor = GeminiExtractor()
+        else:
+            extractor = OpenAIExtractor()
+        if args.min_request_interval > 0:
+            return PacedExtractor(extractor, args.min_request_interval)
+        return extractor
 
     extractors = {
         "phrase": lambda: [PhraseMatcher()],
@@ -382,7 +477,9 @@ def main(argv: Sequence[str] | None = None) -> int:
         "live": lambda: [make_live_extractor()],
         "compare": lambda: [PhraseMatcher(), make_live_extractor()],
     }[args.mode]()
-    reports = [evaluate_examples(examples, extractor) for extractor in extractors]
+    reports = [
+        evaluate_examples(examples, extractor, post_hoc=args.post_hoc) for extractor in extractors
+    ]
     report = reports[0] if len(reports) == 1 else {"schema_version": "1.0", "methods": reports}
     write_results(report, args.output_dir)
     print(summary_markdown(report))

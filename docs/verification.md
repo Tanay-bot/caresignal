@@ -34,6 +34,20 @@ Added native Google Gen AI SDK support with a Live AI provider selector and eval
 - Exact JSON/CSV and a generated summary are in [gemini-development-results](gemini-development-results/). No additional live request was used to generate the documentation.
 - Credentials are read from the process environment. A local `.env` is excluded from Git and can be loaded explicitly with `uv run --env-file .env ...`.
 
-The Google SDK is locked to version 3.3.0 in `uv.lock`. `GEMINI_MODEL` changes the requested model. OpenAI inference and all held-out results remain pending.
+The Google SDK is locked to version 3.3.0 in `uv.lock`. `GEMINI_MODEL` changes the requested model. At this stage, OpenAI inference and held-out results were pending; the subsequent completed experiment is recorded below.
+
+## Completed prototype and experiment
+
+- **231 local tests passed**, including 11 Streamlit flow tests, 38 saved-report integrity tests, 44 evaluation/pacing tests, frozen-data checks and full per-example retry provenance checks.
+- Ruff lint and formatting checks passed. Source distribution and wheel builds passed.
+- The complete notebook executed successfully: **9 code cells**, no live requests by default. It replays resident comparisons/corrections and reads the actual first-pass and follow-up artifacts.
+- Chromium verified Elena/Ruth comparison switching and desktop/mobile layout. At 390px, content has no horizontal overflow. Source-note and baseline Markdown/HTML syntax remain literal in an independent browser check.
+- The 24-note source sample and two-agent annotation review were committed before predictions in `b28451c`. Gold source/target/translation hashes remain unchanged.
+- First complete comparison, prompt v1: phrase **14/24 labels, 8/24 joint**; Gemini Flash Lite **11/24 labels, 7/24 joint**. Each completed all 24 cases without API errors. All exact outcomes, confusion counts and real failures are preserved in [heldout-results](heldout-results/).
+- The initial `gemini-3.8-flash` attempt returned 14 provider failures and was stopped with a 15th request in flight. It is recorded separately and is not presented as a completed 24-note accuracy result. `gemini-3.1-flash-lite` was selected on development-example availability before successful held-out predictions.
+- Prompt v2 adds general fictional examples to address attribution errors. Its **post-hoc replay** of the same 24 notes ends at **21/24 labels, 16/24 joint**. Six initial rate limits were retried once, paced five seconds apart; original attempts and actual retry rows remain in [heldout-followup](heldout-followup/). This is not a new held-out estimate.
+- The default provider model is now `gemini-3.1-flash-lite`, native extractor `gemini-structured-v2`, shared prompt `walking-assistance-v2`. Request pacing is configurable for batch evaluation; provider failures remain separate from completed Unclear predictions.
+
+The reference labels were reviewed by coding agents, not human or clinical experts. Results describe a small, deliberately stratified synthetic sample. New uninspected data and human review are required for stronger revised-prompt generalization claims; that is a validation limitation, rather than an unfinished core app feature. OpenAI live account availability remains optional and unverified.
 
 This project is a prototype and is not medical advice.

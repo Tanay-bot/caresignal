@@ -73,6 +73,10 @@ def _analyze(service: CareSignalService, case_id: str, mode: str) -> None:
     service.analyze_active_revision(case_id, _extractor(mode))
 
 
+def _selected_method(mode: str) -> str:
+    return f"Live AI · {st.session_state.live_provider}" if mode == "Live AI" else mode
+
+
 def _result(view, mode: str) -> bool:
     """Render only data belonging to the selected active source."""
     run = view.run
@@ -92,10 +96,12 @@ def _result(view, mode: str) -> bool:
         else:
             st.subheader("Analysis unavailable" if run else "Ready to analyze")
         if result:
-            st.markdown(f"**Documented help:** {LABELS[result.label]}")
+            fields = f"**Documented help:** {LABELS[result.label]}"
             if view.baseline:
-                st.markdown(f"**Usual help:** {LABELS[view.baseline.level]}")
-            st.write(comparison.reason)
+                fields += f"  \n**Usual help:** {LABELS[view.baseline.level]}"
+            st.markdown(fields)
+            if comparison.status not in headlines:
+                st.write(comparison.reason)
             if result.reason and result.reason != comparison.reason:
                 st.caption(result.reason)
             if result.device:
@@ -109,16 +115,29 @@ def _result(view, mode: str) -> bool:
             if run and run.error_category:
                 st.caption(f"Error category: {run.error_category}")
         if run:
+            result_method = {
+                "fixture": "Fixture demo",
+                "phrase": "Phrase matcher",
+                "live": "Live AI · OpenAI",
+                "gemini": "Live AI · Gemini",
+            }.get(run.extractor_mode, run.extractor_mode)
             st.caption(
-                f"Analysis mode: {run.extractor_mode} · source version {view.revision.version}"
+                f"Analysis mode: {run.extractor_mode} ({result_method}) · "
+                f"source version {view.revision.version}"
                 + (f" · model {run.model_id}" if run.model_id else "")
             )
+            selected = _extractor(mode)
+            if (run.extractor_mode, run.model_id) != (selected.mode, selected.model_id):
+                st.info(
+                    f"This result used {result_method}. Analyze the active note to use "
+                    f"{_selected_method(mode)} with the current settings."
+                )
         retry = st.button(
             "Retry active note"
             if run and run.status != RunStatus.COMPLETE
             else "Analyze active note",
             key=f"retry_{view.case.id}_{view.revision.id}",
-            help=f"Analyze source version {view.revision.version} using {mode}.",
+            help=f"Analyze source version {view.revision.version} using {_selected_method(mode)}.",
         )
 
     with st.expander("View evidence", expanded=True):
@@ -130,10 +149,7 @@ def _result(view, mode: str) -> bool:
         if view.revision.source_note_id:
             st.caption(f"Source note ID: {view.revision.source_note_id}")
         spans = result.evidence if result else []
-        st.markdown(
-            f'<div class="source-note">{highlight_evidence(view.revision.body, spans)}</div>',
-            unsafe_allow_html=True,
-        )
+        st.html(f'<div class="source-note">{highlight_evidence(view.revision.body, spans)}</div>')
         if view.revision.source_kind == "fruta" and view.revision.source_note_id == "nn_1093":
             source = _fruta_example()
             if view.revision.body == source["note"]:
@@ -151,7 +167,7 @@ def _result(view, mode: str) -> bool:
         st.markdown("**Staff-confirmed usual assistance**")
         if view.baseline:
             st.write(LABELS[view.baseline.level])
-            st.write(view.baseline.source_description)
+            st.text(view.baseline.source_description)
             st.caption(
                 f"Confirmed {view.baseline.confirmed_on.isoformat()} · "
                 f"{CONTEXTS[view.baseline.context_key]}"
@@ -163,7 +179,10 @@ def _result(view, mode: str) -> bool:
 
 def _new_note(service: CareSignalService, resident, view, mode: str) -> None:
     with st.expander("Analyze a new note", expanded=True):
-        st.caption("Create a separate observation for one selected walk. Use fictional notes only.")
+        st.caption(
+            "Create a separate observation for one selected walk. "
+            "To correct the selected observation, use Attach replacement. Use fictional notes only."
+        )
         with st.form(f"new_note_{resident.id}"):
             context = st.selectbox(
                 "Target walk",
@@ -230,10 +249,11 @@ def _baseline(service: CareSignalService, view) -> None:
                 "Confirmation date", value=case.observed_on, key=f"baseline_date_{case.id}"
             )
             if st.form_submit_button("Review usual assistance"):
+                st.session_state[f"baseline_agrees_{case.id}"] = False
+                st.session_state.pop(draft_key, None)
                 if not description.strip():
                     st.error("Add a source description before confirming usual assistance.")
                 else:
-                    st.session_state[f"baseline_agrees_{case.id}"] = False
                     st.session_state[draft_key] = {
                         "level": level,
                         "description": description,
@@ -243,7 +263,7 @@ def _baseline(service: CareSignalService, view) -> None:
         if draft:
             st.markdown("**Check both values before confirming**")
             st.write(f"Usual help: {LABELS[draft['level']]}")
-            st.write(f"Source description: {draft['description']}")
+            st.text(f"Source description: {draft['description']}")
             st.caption(f"Confirmation date: {draft['confirmed_on'].isoformat()}")
             agrees = st.checkbox(
                 "I confirm this level and description agree.",
@@ -274,8 +294,13 @@ def _replacement(service: CareSignalService, view, mode: str, result_area) -> No
             "This replacement becomes the source for the current card. "
             "The previous note stays in history."
         )
-        if st.button("Use demo replacement", key=f"use_replacement_{revision.id}"):
-            st.session_state[key] = DEMO_REPLACEMENT
+        if (
+            view.case.context_key == "to_breakfast"
+            and view.case.observed_on == DEMO_DATE
+            and revision.body in (DEMO_NOTE, DEMO_REPLACEMENT)
+        ):
+            if st.button("Use demo replacement", key=f"use_replacement_{revision.id}"):
+                st.session_state[key] = DEMO_REPLACEMENT
         with st.form(f"replacement_{revision.id}"):
             body = st.text_area("Full replacement note", height=130, key=key)
             if st.form_submit_button("Attach replacement", type="primary"):
@@ -323,12 +348,16 @@ def main() -> None:
                 "A conservative phrase baseline. Ambiguous event attribution produces Unclear."
             )
         else:
+            default_provider = st.session_state.get("live_provider_preference") or (
+                "Gemini" if os.environ.get("GEMINI_API_KEY") else "OpenAI"
+            )
             provider = st.selectbox(
                 "AI provider",
                 ["Gemini", "OpenAI"],
-                index=0 if os.environ.get("GEMINI_API_KEY") else 1,
+                index=0 if default_provider == "Gemini" else 1,
                 key="live_provider",
             )
+            st.session_state.live_provider_preference = provider
             st.caption(f"Structured extraction using {provider}.")
             st.caption(f"Configured model: {_extractor(mode).model_id}")
             key_name = "GEMINI_API_KEY" if provider == "Gemini" else "OPENAI_API_KEY"
@@ -369,6 +398,21 @@ def main() -> None:
         st.caption(
             "nn_1093 · Dutch original and frozen English translation. Uses the selected extractor."
         )
+        with st.expander("Demo walkthrough"):
+            st.markdown(
+                "1. Choose **Fixture demo** and **Load demo**. Open Elena’s evidence "
+                "to compare the note with her confirmed routine.\n"
+                "2. Switch to **Ruth**. The note stays the same; the comparison changes "
+                "because her usual help differs.\n"
+                "3. Return to **Elena**. Under **Attach replacement**, choose "
+                "**Use demo replacement**, then submit. Review the cleared flag and "
+                "both entries in **Note history**."
+            )
+            st.caption(
+                "To test a model, choose Live AI and your provider, then Load Fruta example. "
+                "Fixture demo uses fixed example results and needs no API key. "
+                "The result always identifies the method and model actually used."
+            )
         st.divider()
         st.caption(
             "Fictional residents only. Each browser session has an isolated demo workspace in a local SQLite database. A new session starts a fresh workspace."
@@ -377,8 +421,9 @@ def main() -> None:
     title, controls = st.columns([4, 1])
     with title:
         st.title("CareSignal")
-        mode_label = f"{mode} · {st.session_state.live_provider}" if mode == "Live AI" else mode
-        st.caption(f"Walking assistance, grounded in the note · {mode_label}")
+        st.caption(
+            f"Walking assistance, grounded in the note · Selected method: {_selected_method(mode)}"
+        )
     with controls:
         st.write("")
         if st.button("Load demo", use_container_width=True):

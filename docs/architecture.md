@@ -12,15 +12,17 @@ The app reviews documentation about one selected walk. It does not derive a clin
 - `repository.py` uses parameterized SQLite queries, foreign keys on every connection and workspace-scoped access. Composite foreign keys bind active and superseded revisions to the same case. Revisions, baseline confirmations and extraction runs are immutable snapshots.
 - `service.py` owns analysis, usual-assistance confirmation, replacements and the current handoff view. The app and notebook use these operations.
 - `extractors.py` provides fixture, phrase and native structured Gemini/OpenAI implementations behind the same full-note/target interface.
-- `evaluation.py` reads frozen examples and writes source-traceable per-example and summary artifacts.
+- `evaluation.py` reads frozen examples and writes source-traceable per-example and summary artifacts. `reporting.py` validates stored result counts and renders readable reports without inference.
 
-## Live providers
+## Live providers and version history
 
-`GeminiExtractor` uses the Google Gen AI Python SDK and `GEMINI_API_KEY`; its requested model defaults to `gemini-3.8-flash` and can be changed with `GEMINI_MODEL`. `OpenAIExtractor` keeps the OpenAI SDK path with `OPENAI_API_KEY` and optional `OPENAI_MODEL` (default `gpt-4.1-mini`). Both use the shared full-note/target prompt and validate exact quotes with the same local evidence functions. Provider selection does not change baseline comparison or revision rules.
+`GeminiExtractor` uses the Google Gen AI Python SDK and `GEMINI_API_KEY`. Its requested model defaults to `gemini-3.1-flash-lite`, configurable with `GEMINI_MODEL`. `OpenAIExtractor` keeps the OpenAI SDK path with `OPENAI_API_KEY` and optional `OPENAI_MODEL` (default `gpt-4.1-mini`). Both use the shared full-note/target prompt and local exact-evidence functions. Provider selection does not change comparison or revision rules.
 
-Runs distinguish Gemini's `gemini` mode / `gemini-structured-v1` version from OpenAI's existing `live` mode / `openai-structured-v1` version, and retain the requested model, shared prompt version and input hash. API keys stay in the process environment and are not stored in the evidence history. The app does not load `.env` automatically. The evaluation CLI uses `--provider gemini|openai` for live/compare runs and defaults to OpenAI for backward compatibility; offline modes do not construct live adapters. Provider errors stay separate from completed predictions.
+Current runs identify Gemini as mode `gemini`, extractor `gemini-structured-v2`, and OpenAI as mode `live`, extractor `openai-structured-v1`. Both currently use prompt `walking-assistance-v2`. Runs retain the requested model, prompt version, input hash and source revision. API keys stay in the process environment and are not stored in the evidence history. The app does not load `.env` automatically. The evaluation CLI uses `--provider gemini|openai` for live/compare runs and defaults to OpenAI; offline modes do not construct live adapters. Provider errors remain separate from completed predictions.
 
-Gemini `gemini-3.8-flash` completed one recorded live development check on disclosed public synthetic note `nn_1093`, returning Hands-on help with exact evidence; see [the result](gemini-development-results/results.json). OpenAI live availability and all held-out performance remain pending. SDK mocks verify transport and validation behavior, while that single development result does not estimate general extraction quality.
+The historical `gemini-3.8-flash` / `gemini-structured-v1` / `walking-assistance-v1` adapter completed one [recorded live development check](gemini-development-results/results.json) on `nn_1093`. A subsequent 24-note attempt using that model stopped after 14 provider failures; the [failed attempts](heldout-results/initial-provider-failures.json) remain archived. Availability checks on the disclosed development input identified `gemini-3.1-flash-lite` before any successful held-out prediction, and the runtime amendment changed the model/adapter without changing the frozen dataset or v1 prompt.
+
+The [first completed paired comparison](heldout-results/results.json) used `gemini-3.1-flash-lite`, `gemini-structured-v2`, and prompt `walking-assistance-v1`. Both methods completed all 24 examples. Gemini matched 11/24 reference labels and 7/24 exact label-plus-evidence pairs; phrase rules matched 14/24 and 8/24. These measurements remain intact. The current v2 prompt adds fictional counterexamples after review of that result; a replay of the same sample is [post-hoc follow-up](heldout-followup/), not a new independent held-out experiment. OpenAI live availability remains unverified.
 
 ## Corrections and concurrency
 
@@ -34,12 +36,12 @@ Baseline confirmations preserve history. Selection uses the latest confirmation 
 
 Each browser session receives a random workspace ID. It shares a local SQLite file with other sessions, while repository operations enforce workspace ownership. A browser session does not restore a prior session’s workspace. `Load demo` resets only the current workspace.
 
-The default data directory is the operating system’s temporary directory under `caresignal/`. Set `CARESIGNAL_DATA_DIR` for a chosen local directory. The database, secrets and generated artifacts are excluded from Git.
+The default data directory is the operating system’s temporary directory under `caresignal/`. Set `CARESIGNAL_DATA_DIR` for a chosen local directory. The database, secrets and generated runtime artifacts are excluded from Git. Selected evaluation artifacts are intentionally recorded under `docs/` for review.
 
 ## Provenance and limits
 
-Fixture results are predetermined walkthrough results and are visibly identified as fixtures. The phrase matcher is a conservative baseline. Structured model output must pass the same exact-evidence validation as the other methods. Provider failures, refusal and invalid citations are unavailable/invalid runs, separate from a completed `UNCLEAR` prediction.
+Fixture outputs are predetermined walkthrough results and are visibly identified as fixtures. The phrase matcher is a small transparent baseline. Structured output must pass exact-evidence validation, but a valid quotation does not prove that the model selected the right event or label. Provider failures and invalid citations are unavailable/invalid runs, distinct from completed `UNCLEAR` predictions.
 
-The included public Fruta note is a development example with a pinned source revision and a coding-agent translation. It is not a held-out experiment. The recorded Gemini development check is one successful path, using a coding-agent translation that has not been independently reviewed. Held-out performance must be measured before claiming general extraction quality.
+Fruta `nn_1093` is a disclosed development example with a pinned source and coding-agent translation. The separate 24-note sample was frozen at commit `b28451c45fe6a4814855a816f50e310b269f4b8e` before its first successful predictions. Its translations and reference labels were reviewed by two assistant contexts, not human annotators. The small lexical challenge sample is not prevalence-weighted and does not establish general extraction quality or clinical validity. See [heldout-methods.md](heldout-methods.md) for the review, uncertainty ledger and source hashes.
 
 This project is a prototype and is not medical advice.

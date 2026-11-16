@@ -8,6 +8,7 @@ from pydantic import ValidationError
 
 from caresignal.evaluation import (
     FrozenExample,
+    PacedExtractor,
     dataset_hash,
     evaluate_examples,
     load_dataset,
@@ -188,7 +189,8 @@ def test_disclosed_public_development_note_cannot_be_relabelled_held_out():
         FrozenExample.model_validate(row)
 
 
-def test_fixture_answer_lookup_is_rejected_for_held_out_data():
+@pytest.mark.parametrize("post_hoc", [False, True])
+def test_fixture_answer_lookup_is_rejected_for_held_out_data(post_hoc):
     example = FrozenExample.model_validate(
         record(
             split="held_out",
@@ -202,7 +204,7 @@ def test_fixture_answer_lookup_is_rejected_for_held_out_data():
     fixture = CorrectExtractor()
     fixture.mode = "fixture"
     with pytest.raises(ValueError, match="Fixture answer lookups"):
-        evaluate_examples([example], fixture)
+        evaluate_examples([example], fixture, post_hoc=post_hoc)
 
 
 def test_mixed_fictional_and_public_development_never_claims_public_only():
@@ -303,6 +305,282 @@ def test_cli_offline_mode_does_not_construct_a_live_provider(tmp_path, monkeypat
                 "phrase",
                 "--provider",
                 "gemini",
+                "--output-dir",
+                str(tmp_path / "out"),
+            ]
+        )
+        == 0
+    )
+
+
+def test_post_hoc_marks_scope_without_changing_inputs_predictions_or_metrics():
+    example = FrozenExample.model_validate(record())
+    first = evaluate_examples([example], CorrectExtractor())
+    replay = evaluate_examples([example], CorrectExtractor(), post_hoc=True)
+    assert first["scope"] == "fictional_development"
+    assert "scope_note" not in first
+    assert replay["scope"] == "post_hoc_replay"
+    assert "not a new held-out performance estimate" in replay["scope_note"]
+    assert replay["dataset"] == first["dataset"]
+    assert replay["examples"] == first["examples"]
+    assert replay["summary"] == first["summary"]
+    assert replay["extractor"] == first["extractor"]
+
+
+def test_cli_post_hoc_reaches_every_compared_method(tmp_path, monkeypatch):
+    import caresignal.evaluation as evaluation
+    from caresignal import extractors
+
+    original_evaluate = evaluation.evaluate_examples
+    received = []
+
+    def track(examples, extractor, *, post_hoc=False):
+        received.append(post_hoc)
+        return original_evaluate(examples, extractor, post_hoc=post_hoc)
+
+    monkeypatch.setattr(evaluation, "evaluate_examples", track)
+    monkeypatch.setattr(extractors, "PhraseMatcher", CorrectExtractor)
+    monkeypatch.setattr(extractors, "GeminiExtractor", CorrectExtractor)
+    path = tmp_path / "frozen.jsonl"
+    path.write_text(json.dumps(record()) + "\n")
+    output = tmp_path / "replay"
+    assert (
+        main(
+            [
+                "--dataset",
+                str(path),
+                "--mode",
+                "compare",
+                "--provider",
+                "gemini",
+                "--post-hoc",
+                "--output-dir",
+                str(output),
+            ]
+        )
+        == 0
+    )
+    assert received == [True, True]
+    stored = json.loads((output / "results.json").read_text())
+    expected_hash = dataset_hash([FrozenExample.model_validate(record())])
+    assert all(method["scope"] == "post_hoc_replay" for method in stored["methods"])
+    assert all(method["dataset"]["sha256"] == expected_hash for method in stored["methods"])
+    assert "Post-hoc replay" in (output / "summary.md").read_text()
+    assert "not a new held-out performance estimate" in (output / "summary.md").read_text()
+
+
+class FakeRequestClock:
+    def __init__(self):
+        self.now = 0.0
+        self.sleeps = []
+
+    def monotonic(self):
+        return self.now
+
+    def sleep(self, delay):
+        self.sleeps.append(delay)
+        self.now += delay
+
+
+def test_pacing_spaces_request_starts_and_accounts_for_request_duration():
+    clock = FakeRequestClock()
+    starts = []
+    durations = iter([2, 8, 0])
+
+    class Live(CorrectExtractor):
+        mode = "gemini"
+
+        def extract(self, note_body, target, revision_id):
+            starts.append(clock.now)
+            clock.now += next(durations)
+            return super().extract(note_body, target, revision_id)
+
+    paced = PacedExtractor(Live(), 5, clock=clock.monotonic, sleep=clock.sleep)
+    target = FrozenExample.model_validate(record()).target
+    for _ in range(3):
+        paced.extract(NOTE, target, "revision")
+    assert starts == [0, 5, 13]
+    assert clock.sleeps == [3]  # No initial sleep; an eight-second request needs none.
+
+
+def test_pacing_preserves_bound_method_payload_result_metadata_and_provider_failure():
+    from caresignal.extractors import ExtractionUnavailable
+
+    clock = FakeRequestClock()
+    seen = []
+    failure = ExtractionUnavailable("rate_limit")
+    target = FrozenExample.model_validate(record()).target
+    result = CorrectExtractor().extract(NOTE, target, "exact-revision")
+
+    class Live(CorrectExtractor):
+        mode = "live"
+        version = "preserved-adapter-v1"
+        model_id = "preserved-model"
+        prompt_version = "preserved-prompt"
+
+        def extract(self, note_body, supplied_target, revision_id):
+            seen.append((note_body, supplied_target, revision_id, clock.now))
+            if len(seen) == 1:
+                raise failure
+            return result
+
+    original = Live()
+    paced = PacedExtractor(original, 5, clock=clock.monotonic, sleep=clock.sleep)
+    # The wrapper retains the original bound method, including its exceptions.
+    original.extract = lambda *args: pytest.fail("The original bound method was replaced.")
+    with pytest.raises(ExtractionUnavailable) as caught:
+        paced.extract(NOTE, target, "exact-revision")
+    assert caught.value is failure
+    assert clock.sleeps == []
+    assert paced.extract(NOTE, target, "exact-revision") is result
+    assert clock.sleeps == [5]
+    assert seen[0][0] is NOTE and seen[0][1] is target
+    assert seen[0][2] == seen[1][2] == "exact-revision"
+    assert seen[0][3] == 0 and seen[1][3] == 5
+    assert (paced.mode, paced.version, paced.model_id, paced.prompt_version) == (
+        original.mode,
+        original.version,
+        original.model_id,
+        original.prompt_version,
+    )
+
+
+@pytest.mark.parametrize(
+    "mode,interval", [("phrase", 5), ("fixture", 5), ("live", 0), ("gemini", 0)]
+)
+def test_offline_and_zero_interval_wrappers_never_sleep_or_read_clock(mode, interval):
+    def forbidden(*args):
+        raise AssertionError("This mode must not wait or read the pacing clock.")
+
+    original = CorrectExtractor()
+    original.mode = mode
+    paced = PacedExtractor(original, interval, clock=forbidden, sleep=forbidden)
+    target = FrozenExample.model_validate(record()).target
+    assert paced.extract(NOTE, target, "revision").label == AssistanceLevel.INDEPENDENT
+
+
+@pytest.mark.parametrize("interval", [-1, 60.1, float("inf"), float("nan")])
+def test_invalid_pacer_intervals_fail_before_extracting(interval):
+    class Forbidden(CorrectExtractor):
+        def extract(self, *args):
+            pytest.fail("Invalid pacing must fail before an extraction call.")
+
+    with pytest.raises(ValueError, match="finite number from 0 to 60"):
+        PacedExtractor(Forbidden(), interval)
+
+
+def test_pacing_preserves_all_evaluation_fields_with_fake_clock():
+    examples = [FrozenExample.model_validate(record(id=f"fictional-{i}")) for i in range(3)]
+    plain = CorrectExtractor()
+    plain.mode = "gemini"
+    expected = evaluate_examples(examples, plain, post_hoc=True)
+    clock = FakeRequestClock()
+    actual = evaluate_examples(
+        examples,
+        PacedExtractor(plain, 2.5, clock=clock.monotonic, sleep=clock.sleep),
+        post_hoc=True,
+    )
+    assert actual == expected  # Full metadata, dataset hash, payload-derived rows and scores.
+    assert clock.sleeps == [2.5, 2.5]
+
+
+@pytest.mark.parametrize("interval", ["-1", "60.1", "inf", "nan"])
+def test_cli_invalid_pacing_fails_before_provider_construction(tmp_path, monkeypatch, interval):
+    from caresignal import extractors
+
+    def forbidden():
+        pytest.fail("Invalid pacing must be rejected before provider construction.")
+
+    monkeypatch.setattr(extractors, "GeminiExtractor", forbidden)
+    path = tmp_path / "frozen.jsonl"
+    path.write_text(json.dumps(record()) + "\n")
+    with pytest.raises(SystemExit) as caught:
+        main(
+            [
+                "--dataset",
+                str(path),
+                "--mode",
+                "live",
+                "--provider",
+                "gemini",
+                "--min-request-interval",
+                interval,
+                "--output-dir",
+                str(tmp_path / "out"),
+            ]
+        )
+    assert caught.value.code == 2
+    assert not (tmp_path / "out").exists()
+
+
+def test_cli_live_pacing_uses_requested_interval_with_fake_clock(tmp_path, monkeypatch):
+    import caresignal.evaluation as evaluation
+    from caresignal import extractors
+
+    clock = FakeRequestClock()
+    starts = []
+    received_intervals = []
+    original_pacer = PacedExtractor
+
+    class Live(CorrectExtractor):
+        mode = "gemini"
+
+        def extract(self, note_body, target, revision_id):
+            starts.append(clock.now)
+            return super().extract(note_body, target, revision_id)
+
+    def fake_clock_pacer(extractor, interval):
+        received_intervals.append(interval)
+        return original_pacer(extractor, interval, clock=clock.monotonic, sleep=clock.sleep)
+
+    monkeypatch.setattr(extractors, "GeminiExtractor", Live)
+    monkeypatch.setattr(evaluation, "PacedExtractor", fake_clock_pacer)
+    path = tmp_path / "frozen.jsonl"
+    path.write_text("".join(json.dumps(record(id=f"fictional-{i}")) + "\n" for i in range(3)))
+    assert (
+        main(
+            [
+                "--dataset",
+                str(path),
+                "--mode",
+                "live",
+                "--provider",
+                "gemini",
+                "--min-request-interval",
+                "5",
+                "--output-dir",
+                str(tmp_path / "out"),
+            ]
+        )
+        == 0
+    )
+    assert received_intervals == [5.0]
+    assert starts == [0, 5, 10]
+    assert clock.sleeps == [5, 5]
+
+
+@pytest.mark.parametrize("mode", ["phrase", "fixture"])
+def test_cli_offline_modes_never_construct_a_pacer(tmp_path, monkeypatch, mode):
+    import caresignal.evaluation as evaluation
+    from caresignal import extractors
+
+    def forbidden(*args, **kwargs):
+        pytest.fail("Offline modes must not construct a live request pacer.")
+
+    monkeypatch.setattr(evaluation, "PacedExtractor", forbidden)
+    monkeypatch.setattr(extractors, "PhraseMatcher", CorrectExtractor)
+    monkeypatch.setattr(extractors, "FixtureExtractor", CorrectExtractor)
+    path = tmp_path / "frozen.jsonl"
+    path.write_text(json.dumps(record()) + "\n")
+    assert (
+        main(
+            [
+                "--dataset",
+                str(path),
+                "--mode",
+                mode,
+                "--min-request-interval",
+                "5",
                 "--output-dir",
                 str(tmp_path / "out"),
             ]

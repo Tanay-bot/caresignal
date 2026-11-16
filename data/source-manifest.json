@@ -47,11 +47,57 @@
     "openai_live_check_status": "pending"
   },
   "held_out_fruta_evaluation": {
-    "status": "pending_frozen_dataset_gold_and_live_run",
-    "dataset_revision": null,
-    "translation_id": null,
-    "annotation_id": null,
-    "results_path": null,
-    "note": "No held-out public experiment or model performance claim is recorded by this manifest."
+    "status": "complete_agent_reviewed_first_pass",
+    "protocol_id": "caresignal-fruta-24-v1",
+    "dataset_revision": "579141e3431c18a932fa3a0870e9f1c131f10367",
+    "translation_id": "caresignal-agent-en-reviewed-v1",
+    "annotation_id": "caresignal-two-agent-adjudicated-v1",
+    "dataset_path": "data/fruta_held_out.jsonl",
+    "dataset_sha256": "a2d3a2e8dbe1d119c8cb02064963f585849ee2f01d95f2d640c7cbf426b178cf",
+    "selection_manifest": "data/fruta_held_out_manifest.json",
+    "annotation_ledger": "data/annotations/fruta_held_out_v1.json",
+    "freeze_commit": "b28451c45fe6a4814855a816f50e310b269f4b8e",
+    "runtime_commit": "66cc0c569e4c97849c5ee790016636e0367038ce",
+    "results_path": "docs/heldout-results/results.json",
+    "report_path": "docs/heldout-results/report.md",
+    "error_analysis_path": "docs/heldout-results/error-analysis.md",
+    "total": 24,
+    "methods": [
+      {
+        "mode": "phrase",
+        "model_id": null,
+        "prompt_version": "rules-v1",
+        "label_correct": 14,
+        "joint_correct": 8,
+        "errors": 0
+      },
+      {
+        "mode": "gemini",
+        "model_id": "gemini-3.1-flash-lite",
+        "prompt_version": "walking-assistance-v1",
+        "label_correct": 11,
+        "joint_correct": 7,
+        "errors": 0
+      }
+    ],
+    "note": "Small lexical-stratified synthetic sample; translations and reference labels reviewed by coding agents, not human clinical gold. Held out from this app development before first predictions, not asserted unseen in model training. Gemini did not beat the phrase matcher in this first run."
+  },
+  "post_hoc_prompt_v2_replay": {
+    "status": "complete_with_explicit_rate_limit_retries",
+    "scope": "post_hoc_replay_not_new_held_out",
+    "dataset_sha256": "a2d3a2e8dbe1d119c8cb02064963f585849ee2f01d95f2d640c7cbf426b178cf",
+    "results_path": "docs/heldout-followup/results.json",
+    "first_attempt_results_path": "docs/heldout-followup/first-attempt-results.json",
+    "retry_ledger_path": "docs/heldout-followup/retry-ledger.json",
+    "report_path": "docs/heldout-followup/report.md",
+    "model_id": "gemini-3.1-flash-lite",
+    "prompt_version": "walking-assistance-v2",
+    "label_correct": 21,
+    "joint_correct": 16,
+    "total": 24,
+    "initial_api_failures": 6,
+    "retry_attempts": 6,
+    "final_api_failures": 0,
+    "note": "Same frozen examples reused after error-informed fictional prompt examples; requires a new uninspected sample to estimate revised-prompt generalization."
   }
 }
