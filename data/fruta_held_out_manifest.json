@@ -1,0 +1,91 @@
+{
+  "protocol_id": "caresignal-fruta-24-v1",
+  "frozen_at_utc": "2026-11-16T01:01:14.994350+00:00",
+  "freeze_before_prediction": true,
+  "pre_inference_base_commit": "a5c5ca6bc4b60143ca1c43c0fb4f34245a362112",
+  "source": {
+    "dataset_id": "ekrombouts/fruta_records",
+    "revision": "579141e3431c18a932fa3a0870e9f1c131f10367",
+    "source_parquet_sha256": "205ae14313c65f57c03cc15a0fa16ac33aa827c5c242bfbc1215db621aac1c4f",
+    "total_source_rows": 14533
+  },
+  "selection": {
+    "seed": "caresignal-fruta-heldout-v1-20261115",
+    "method": "Assign mutually exclusive Dutch lexical strata in priority order physical, independence, guidance, other walking, non-walking device/transfer controls; sort each by SHA256(seed:note_id) and take fixed counts. Exclude disclosed nn_1093 by ID and original-text fingerprint. No predictions were used for selection.",
+    "pool_sizes": {
+      "physical_cue": 35,
+      "independence_cue": 42,
+      "guidance_cue": 105,
+      "other_walk": 414,
+      "device_transfer_control": 795
+    },
+    "selected_counts": {
+      "physical_cue": 6,
+      "independence_cue": 4,
+      "guidance_cue": 6,
+      "other_walk": 4,
+      "device_transfer_control": 4
+    },
+    "note_ids": [
+      "na_0145",
+      "nd_0902",
+      "nm_1286",
+      "na_0762",
+      "na_0689",
+      "nk_1089",
+      "nl_1309",
+      "nb_0960",
+      "nm_0182",
+      "nb_0890",
+      "nk_0846",
+      "nl_0727",
+      "nn_1577",
+      "nn_2000",
+      "nm_0341",
+      "nk_0797",
+      "nb_1319",
+      "nd_0297",
+      "na_1633",
+      "nn_2108",
+      "nm_0865",
+      "nc_1659",
+      "nn_1576",
+      "nc_0922"
+    ],
+    "source_records_path": "data/fruta_held_out_sources.jsonl",
+    "source_records_sha256": "f47346a5d7e82e7a20313f16c8aadfd409c127d296a4d208903b27739ddbeeae",
+    "target_specifications_path": "data/fruta_held_out_targets.json",
+    "targets_sha256": "43e0ff26a40bd8f50bd2482e6646d3c55af9f3757bc16a10bab4644b3e4bb31d"
+  },
+  "frozen_dataset": {
+    "path": "data/fruta_held_out.jsonl",
+    "rows": 24,
+    "file_sha256": "48bb25f8cf61ca5f352581b2ccefd94c5869385597976e2d29875c0c4e8c9b80",
+    "canonical_sha256": "a2d3a2e8dbe1d119c8cb02064963f585849ee2f01d95f2d640c7cbf426b178cf",
+    "translation_id": "caresignal-agent-en-reviewed-v1",
+    "annotation_id": "caresignal-two-agent-adjudicated-v1",
+    "annotation_ledger_path": "data/annotations/fruta_held_out_v1.json",
+    "annotation_ledger_sha256": "e4b04e3205cd61253ba91fb1cac42f05478291e1b1ba51f934d260688bc34c05",
+    "label_counts": {
+      "UNCLEAR": 14,
+      "HELP_UNSPECIFIED": 6,
+      "HANDS_ON": 2,
+      "INDEPENDENT": 1,
+      "SUPERVISION": 1
+    }
+  },
+  "extractor_source_sha256": "8074fddf308108c868bd93ff616dff5c3762c0bf2270f37a4fcd069e66d0cb60",
+  "planned_comparison": {
+    "baseline_mode": "phrase",
+    "live_mode": "gemini",
+    "model_id": "gemini-3.8-flash",
+    "prompt_version": "walking-assistance-v1"
+  },
+  "limitations": [
+    "Small lexical-stratified challenge sample; not a prevalence-weighted or representative estimate.",
+    "Only held out from this app's development; upstream training split is named train and provider training exposure is unknown.",
+    "References and translations were reviewed by coding agents, not humans or clinical experts.",
+    "Few examples of specific categories; several notes share synthetic residents/scenarios.",
+    "Usual-assistance comparisons are tested with fictional fixtures, not inferred from this public dataset."
+  ]
+}

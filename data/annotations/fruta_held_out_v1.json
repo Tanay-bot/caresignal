@@ -1,0 +1,793 @@
+{
+  "annotation_id": "caresignal-two-agent-adjudicated-v1",
+  "translation_id": "caresignal-agent-en-reviewed-v1",
+  "process": "Two coding agents independently labeled the original Dutch notes for the same fixed targets without extractor predictions. Agent A translated; agent B then reviewed all A translations. Root adjudicated before inference. Agents share the assistant model family; this is not human or clinical expert gold.",
+  "blind_label_agreement": {
+    "agreed": 23,
+    "total": 24,
+    "disagreement_ids": [
+      "nb_0890"
+    ]
+  },
+  "translation_review": {
+    "reviewer": "coding-agent-b",
+    "delivery": "Review findings delivered in agent message and transcribed here by root; the original blind label review is preserved per record.",
+    "required_correction_note_id": "nm_0865",
+    "all_other_translations": "Reviewer B reported source assistance, modality and event scope preserved.",
+    "evidence_policy": "Choose the minimal contiguous full sentence(s) needed for event and assistance attribution. If support is in a later sentence, include intervening text. For unclear assistance on an actual walk, quote the walking/device sentence; when no completed target walk is documented, no evidence is required. Different defensible span sets can fail this strict metric."
+  },
+  "ambiguity_notes": [
+    "nm_1286 and na_0689 use bodily instability/balance plus direct support; both reviewers chose HANDS_ON, without adding contact to the literal translation.",
+    "nn_2000 retains ambiguous guidance and verbal reminders as HELP_UNSPECIFIED.",
+    "nb_0890 is adjudicated UNCLEAR because independence grammatically modifies walker use."
+  ],
+  "reviews": [
+    {
+      "note_id": "na_0145",
+      "selection_stratum": "physical_cue",
+      "annotation_a": {
+        "note_id": "na_0145",
+        "translation": "The resident was helped with getting up and dressing this morning. He had some difficulty walking to the shared room, but with the walker it went reasonably well. The tremors are visible, especially when grasping the handles.",
+        "gold_label": "UNCLEAR",
+        "gold_evidence_quotes": [
+          "He had some difficulty walking to the shared room, but with the walker it went reasonably well."
+        ],
+        "rationale": "Human help is documented for getting up and dressing, not for the selected walk. A walker and tremors do not establish human walking assistance.",
+        "translation_notes": "Literal coding-agent translation; preserves the source modality and event boundaries. Not human-reviewed gold."
+      },
+      "blind_annotation_b": {
+        "note_id": "na_0145",
+        "label": "UNCLEAR",
+        "original_dutch_evidence": [
+          "Hij had wat moeite met lopen naar de gezamenlijke ruimte, maar met de rollator ging het redelijk."
+        ],
+        "rationale": "The selected walk is documented with a device, but the human help describes getting up and dressing. No human help is specified for this walk.",
+        "ambiguity_notes": "Do not attach morning-care help or grasping device handles to walking assistance.",
+        "review_provenance": "Independent coding-agent B review of original Dutch and fixed targets before predictions; not human expert gold."
+      },
+      "final_label": "UNCLEAR",
+      "final_evidence": [
+        {
+          "quote": "He had some difficulty walking to the shared room, but with the walker it went reasonably well.",
+          "start": 67,
+          "end": 162
+        }
+      ],
+      "adjudication": "Both coding-agent reviewers agreed; exact contiguous whole-sentence evidence from translation A retained.",
+      "translation_change": null
+    },
+    {
+      "note_id": "nd_0902",
+      "selection_stratum": "physical_cue",
+      "annotation_a": {
+        "note_id": "nd_0902",
+        "translation": "Provided support during a shorter walk with the walker, during which her balance and awareness improved. The resident said that she felt safe.",
+        "gold_label": "HELP_UNSPECIFIED",
+        "gold_evidence_quotes": [
+          "Provided support during a shorter walk with the walker, during which her balance and awareness improved."
+        ],
+        "rationale": "The note reports support during the selected walk, but does not specify physical contact or a clear supervision subtype.",
+        "translation_notes": "The Dutch opening is a subjectless fragment. Provided support preserves the nursing-note action without specifying physical contact; bewustzijn is translated as awareness."
+      },
+      "blind_annotation_b": {
+        "note_id": "nd_0902",
+        "label": "HELP_UNSPECIFIED",
+        "original_dutch_evidence": [
+          "Ondersteunde tijdens een kortere wandeling met de rollator, waarbij haar balans en bewustzijn werden verbeterd."
+        ],
+        "rationale": "Support during the selected walk is documented, but the elliptical wording does not specify contact versus accompanying/guiding support.",
+        "ambiguity_notes": "Ondersteunde means supported; balance improvement is an outcome rather than an explicit description of bodily contact. Preserve the unspecified subtype.",
+        "review_provenance": "Independent coding-agent B review of original Dutch and fixed targets before predictions; not human expert gold."
+      },
+      "final_label": "HELP_UNSPECIFIED",
+      "final_evidence": [
+        {
+          "quote": "Provided support during a shorter walk with the walker, during which her balance and awareness improved.",
+          "start": 0,
+          "end": 104
+        }
+      ],
+      "adjudication": "Both coding-agent reviewers agreed; exact contiguous whole-sentence evidence from translation A retained.",
+      "translation_change": null
+    },
+    {
+      "note_id": "nm_1286",
+      "selection_stratum": "physical_cue",
+      "annotation_a": {
+        "note_id": "nm_1286",
+        "translation": "The resident was sitting in the living room. Kept asking where her bag was (not brought in on admission). Became restless when we said it was not there. Taken for a short walk in the garden as a distraction. Walked unsteadily; support had to be provided.",
+        "gold_label": "HANDS_ON",
+        "gold_evidence_quotes": [
+          "Taken for a short walk in the garden as a distraction. Walked unsteadily; support had to be provided."
+        ],
+        "rationale": "The garden walk is immediately followed by unsteady walking requiring support. The bodily instability context supports physical support during that event.",
+        "translation_notes": "The source contains fragments and omits the subject of moest ondersteunen. The English preserves that omission. HANDS_ON is a borderline decision based on unsteady walking plus support and needs independent adjudication."
+      },
+      "blind_annotation_b": {
+        "note_id": "nm_1286",
+        "label": "HANDS_ON",
+        "original_dutch_evidence": [
+          "Om af te leiden meegenomen voor korte wandeling in de tuin. Liep onstabiel, moest ondersteunen."
+        ],
+        "rationale": "The actual garden walk is followed immediately by unsteady walking and the need to support her. In this bodily-stability context, ondersteunen denotes physical walking support.",
+        "ambiguity_notes": "Elliptical Dutch care-note grammar leaves the supporter and object unstated. This is a boundary case requiring adjudication: a stricter no-contact-word policy could choose HELP_UNSPECIFIED. Do not invent an arm hold or other precise technique.",
+        "review_provenance": "Independent coding-agent B review of original Dutch and fixed targets before predictions; not human expert gold."
+      },
+      "final_label": "HANDS_ON",
+      "final_evidence": [
+        {
+          "quote": "Taken for a short walk in the garden as a distraction. Walked unsteadily; support had to be provided.",
+          "start": 153,
+          "end": 254
+        }
+      ],
+      "adjudication": "Both coding-agent reviewers agreed; exact contiguous whole-sentence evidence from translation A retained.",
+      "translation_change": null
+    },
+    {
+      "note_id": "na_0762",
+      "selection_stratum": "physical_cue",
+      "annotation_a": {
+        "note_id": "na_0762",
+        "translation": "The resident had difficulty walking with the walker. We provided additional support. She was visibly anxious after last week's fall. After a short walk, she sat on the sofa for a while to recover.",
+        "gold_label": "HELP_UNSPECIFIED",
+        "gold_evidence_quotes": [
+          "The resident had difficulty walking with the walker. We provided additional support."
+        ],
+        "rationale": "Two adjacent sentences bind offered support to walking, but generic additional support does not establish physical contact or supervision subtype.",
+        "translation_notes": "Extra ondersteuning remains additional support; no hands-on detail is added. The previous week's fall is retained as a separate past event."
+      },
+      "blind_annotation_b": {
+        "note_id": "na_0762",
+        "label": "HELP_UNSPECIFIED",
+        "original_dutch_evidence": [
+          "Mw. had moeite met lopen met de rollator. We hebben extra ondersteuning geboden."
+        ],
+        "rationale": "The extra support provided is linked to the selected walking difficulty, but its subtype is not resolved.",
+        "ambiguity_notes": "Extra ondersteuning alone can cover physical support, guidance, or supervision; anxiety and last week's fall do not establish the method used today.",
+        "review_provenance": "Independent coding-agent B review of original Dutch and fixed targets before predictions; not human expert gold."
+      },
+      "final_label": "HELP_UNSPECIFIED",
+      "final_evidence": [
+        {
+          "quote": "The resident had difficulty walking with the walker. We provided additional support.",
+          "start": 0,
+          "end": 84
+        }
+      ],
+      "adjudication": "Both coding-agent reviewers agreed; exact contiguous whole-sentence evidence from translation A retained.",
+      "translation_change": null
+    },
+    {
+      "note_id": "na_0689",
+      "selection_stratum": "physical_cue",
+      "annotation_a": {
+        "note_id": "na_0689",
+        "translation": "At midday, the resident ate well, but she still seemed tired. After lunch, we took a short walk together with the walker. She had difficulty keeping her balance, but with my support it went reasonably well. We took it slowly.",
+        "gold_label": "HANDS_ON",
+        "gold_evidence_quotes": [
+          "After lunch, we took a short walk together with the walker. She had difficulty keeping her balance, but with my support it went reasonably well."
+        ],
+        "rationale": "The selected completed walk and the support needed to keep bodily balance are adjacent. This describes bodily support during the walk rather than mere presence.",
+        "translation_notes": "Mijn ondersteuning is translated literally as my support. HANDS_ON depends on the explicit balance-maintenance context and should be adjudicated independently."
+      },
+      "blind_annotation_b": {
+        "note_id": "na_0689",
+        "label": "HANDS_ON",
+        "original_dutch_evidence": [
+          "Na de lunch hebben we samen een korte wandeling gemaakt met de rollator. Ze had moeite om haar balans te houden, maar met mijn ondersteuning ging het redelijk."
+        ],
+        "rationale": "During the completed post-lunch walk she struggled to keep her balance, and the caregiver's direct support made it manageable. The balance-stabilizing context supports bodily assistance.",
+        "ambiguity_notes": "Boundary case for independent adjudication: physical contact is not named explicitly, although the contrast between losing balance and my support strongly implies stabilizing physical support. Do not translate as holding an arm.",
+        "review_provenance": "Independent coding-agent B review of original Dutch and fixed targets before predictions; not human expert gold."
+      },
+      "final_label": "HANDS_ON",
+      "final_evidence": [
+        {
+          "quote": "After lunch, we took a short walk together with the walker. She had difficulty keeping her balance, but with my support it went reasonably well.",
+          "start": 62,
+          "end": 206
+        }
+      ],
+      "adjudication": "Both coding-agent reviewers agreed; exact contiguous whole-sentence evidence from translation A retained.",
+      "translation_change": null
+    },
+    {
+      "note_id": "nk_1089",
+      "selection_stratum": "physical_cue",
+      "annotation_a": {
+        "note_id": "nk_1089",
+        "translation": "The resident needed some help again during today's toilet visit. He is visibly tired, but can still walk short distances with support. After the toilet visit, we let him rest in his wheelchair for a while.",
+        "gold_label": "UNCLEAR",
+        "gold_evidence_quotes": [],
+        "rationale": "Help with toileting and a statement of general walking ability do not document an actual selected walking event. Wheelchair rest is separate.",
+        "translation_notes": "Literal coding-agent translation; preserves the source modality and event boundaries. Not human-reviewed gold."
+      },
+      "blind_annotation_b": {
+        "note_id": "nk_1089",
+        "label": "UNCLEAR",
+        "original_dutch_evidence": [],
+        "rationale": "The note states a general ability to walk short distances with support, rather than reporting the assistance delivered during a selected walking event. Toilet help and subsequent wheelchair rest do not establish a walk.",
+        "ambiguity_notes": "Kan nog steeds is can still, not did walk. Keep ability distinct from the episode actually documented.",
+        "review_provenance": "Independent coding-agent B review of original Dutch and fixed targets before predictions; not human expert gold."
+      },
+      "final_label": "UNCLEAR",
+      "final_evidence": [],
+      "adjudication": "Both coding-agent reviewers agreed; exact contiguous whole-sentence evidence from translation A retained.",
+      "translation_change": null
+    },
+    {
+      "note_id": "nl_1309",
+      "selection_stratum": "independence_cue",
+      "annotation_a": {
+        "note_id": "nl_1309",
+        "translation": "The resident was independent this morning and walked around calmly. Attention was paid to his fall risk, but there were no incidents.",
+        "gold_label": "INDEPENDENT",
+        "gold_evidence_quotes": [
+          "The resident was independent this morning and walked around calmly."
+        ],
+        "rationale": "Independence and actual walking are linked in the same sentence. The separate general attention to fall risk does not explicitly establish a person supervising the selected walk.",
+        "translation_notes": "Literal coding-agent translation; preserves the source modality and event boundaries. Not human-reviewed gold."
+      },
+      "blind_annotation_b": {
+        "note_id": "nl_1309",
+        "label": "INDEPENDENT",
+        "original_dutch_evidence": [
+          "Dhr. was vanochtend zelfstandig en liep rustig rond."
+        ],
+        "rationale": "Independence is explicitly described in the same completed morning event as walking around. The later general attention to fall risk does not specify staff walking beside or actively supervising that walk.",
+        "ambiguity_notes": "There is room for a supervision reading if general risk attention is overbound to the event. The source does not say close attendance or continual walking supervision.",
+        "review_provenance": "Independent coding-agent B review of original Dutch and fixed targets before predictions; not human expert gold."
+      },
+      "final_label": "INDEPENDENT",
+      "final_evidence": [
+        {
+          "quote": "The resident was independent this morning and walked around calmly.",
+          "start": 0,
+          "end": 67
+        }
+      ],
+      "adjudication": "Both coding-agent reviewers agreed; exact contiguous whole-sentence evidence from translation A retained.",
+      "translation_change": null
+    },
+    {
+      "note_id": "nb_0960",
+      "selection_stratum": "independence_cue",
+      "annotation_a": {
+        "note_id": "nb_0960",
+        "translation": "The resident tried to walk independently to her room with the walker. She forgot how it works and had to be guided.",
+        "gold_label": "HELP_UNSPECIFIED",
+        "gold_evidence_quotes": [
+          "The resident tried to walk independently to her room with the walker. She forgot how it works and had to be guided."
+        ],
+        "rationale": "Independent walking was attempted, then guidance became necessary for that attempt. The guidance subtype is unspecified.",
+        "translation_notes": "Begeleid is translated as guided. Neither hands-on help nor staff safety supervision is invented."
+      },
+      "blind_annotation_b": {
+        "note_id": "nb_0960",
+        "label": "HELP_UNSPECIFIED",
+        "original_dutch_evidence": [
+          "Mw. probeerde zelfstandig naar haar kamer te lopen met de rollator. Ze vergat hoe deze werkt en moest worden begeleid."
+        ],
+        "rationale": "The independent attempt was followed by the need for guidance after forgetting how to use the walker. Guidance during this selected attempt is documented, but its subtype is unknown.",
+        "ambiguity_notes": "Begeleid does not establish contact. The first sentence describes an attempted independent walk, not successful unassisted completion.",
+        "review_provenance": "Independent coding-agent B review of original Dutch and fixed targets before predictions; not human expert gold."
+      },
+      "final_label": "HELP_UNSPECIFIED",
+      "final_evidence": [
+        {
+          "quote": "The resident tried to walk independently to her room with the walker. She forgot how it works and had to be guided.",
+          "start": 0,
+          "end": 115
+        }
+      ],
+      "adjudication": "Both coding-agent reviewers agreed; exact contiguous whole-sentence evidence from translation A retained.",
+      "translation_change": null
+    },
+    {
+      "note_id": "nm_0182",
+      "selection_stratum": "independence_cue",
+      "annotation_a": {
+        "note_id": "nm_0182",
+        "translation": "Lunch: ate independently. Afterwards, a short walk in the garden with a walker. Visibly enjoyed the fresh air. Talked about his former garden; seemed to be a positive memory.",
+        "gold_label": "UNCLEAR",
+        "gold_evidence_quotes": [
+          "Afterwards, a short walk in the garden with a walker."
+        ],
+        "rationale": "The independence refers to eating. The selected garden walk mentions a device but leaves human assistance unspecified.",
+        "translation_notes": "Literal coding-agent translation; preserves the source modality and event boundaries. Not human-reviewed gold."
+      },
+      "blind_annotation_b": {
+        "note_id": "nm_0182",
+        "label": "UNCLEAR",
+        "original_dutch_evidence": [
+          "Daarna korte wandeling in de tuin met rollator."
+        ],
+        "rationale": "The garden walk with a walker has no stated human assistance. Independently describes eating lunch, a different activity.",
+        "ambiguity_notes": "Do not transfer at zelfstandig from eating to the walk.",
+        "review_provenance": "Independent coding-agent B review of original Dutch and fixed targets before predictions; not human expert gold."
+      },
+      "final_label": "UNCLEAR",
+      "final_evidence": [
+        {
+          "quote": "Afterwards, a short walk in the garden with a walker.",
+          "start": 26,
+          "end": 79
+        }
+      ],
+      "adjudication": "Both coding-agent reviewers agreed; exact contiguous whole-sentence evidence from translation A retained.",
+      "translation_change": null
+    },
+    {
+      "note_id": "nb_0890",
+      "selection_stratum": "independence_cue",
+      "annotation_a": {
+        "note_id": "nb_0890",
+        "translation": "During the afternoon walk in the garden, the resident used her walker independently. She walked calmly and said that the pain in her knees was not too bad today.",
+        "gold_label": "INDEPENDENT",
+        "gold_evidence_quotes": [
+          "During the afternoon walk in the garden, the resident used her walker independently."
+        ],
+        "rationale": "Independently using the walker is explicitly situated within the selected completed garden walk; this supports unaided walking with a device.",
+        "translation_notes": "The source precisely says independent walker use during the walk, rather than independently walked. This is a borderline taxonomy distinction requiring independent review; the translation preserves that wording."
+      },
+      "blind_annotation_b": {
+        "note_id": "nb_0890",
+        "label": "UNCLEAR",
+        "original_dutch_evidence": [
+          "Tijdens de middagwandeling in de tuin gebruikte mw. haar rollator zelfstandig."
+        ],
+        "rationale": "The sentence explicitly makes device use independent, while human assistance for the walk is not separately specified. Calm walking does not establish unaided walking.",
+        "ambiguity_notes": "Important boundary case: natural shorthand might imply independent walking, but the strict annotation policy says independent walker handling alone is insufficient. Human review would be useful.",
+        "review_provenance": "Independent coding-agent B review of original Dutch and fixed targets before predictions; not human expert gold."
+      },
+      "final_label": "UNCLEAR",
+      "final_evidence": [
+        {
+          "quote": "During the afternoon walk in the garden, the resident used her walker independently.",
+          "start": 0,
+          "end": 84
+        }
+      ],
+      "adjudication": "UNCLEAR: independently using a walker during a walk does not explicitly establish unaided walking or absence of human help.",
+      "translation_change": null
+    },
+    {
+      "note_id": "nk_0846",
+      "selection_stratum": "guidance_cue",
+      "annotation_a": {
+        "note_id": "nk_0846",
+        "translation": "At the end of the day, the resident was tired. She took a short walk with guidance. It was a quiet day, but she is having some difficulty getting used to the new surroundings.",
+        "gold_label": "HELP_UNSPECIFIED",
+        "gold_evidence_quotes": [
+          "She took a short walk with guidance."
+        ],
+        "rationale": "Guidance is documented during the selected walk, without a resolved physical-support versus supervision subtype.",
+        "translation_notes": "Begeleiding is rendered as guidance to retain its ambiguity; no physical contact or safety purpose is added."
+      },
+      "blind_annotation_b": {
+        "note_id": "nk_0846",
+        "label": "HELP_UNSPECIFIED",
+        "original_dutch_evidence": [
+          "Ze heeft een korte wandeling gemaakt met begeleiding."
+        ],
+        "rationale": "The completed short walk included guidance/accompaniment, but the source does not resolve supervision for safety versus physical support.",
+        "ambiguity_notes": "Preserve the ambiguity of begeleiding instead of adding a contact or safety detail.",
+        "review_provenance": "Independent coding-agent B review of original Dutch and fixed targets before predictions; not human expert gold."
+      },
+      "final_label": "HELP_UNSPECIFIED",
+      "final_evidence": [
+        {
+          "quote": "She took a short walk with guidance.",
+          "start": 47,
+          "end": 83
+        }
+      ],
+      "adjudication": "Both coding-agent reviewers agreed; exact contiguous whole-sentence evidence from translation A retained.",
+      "translation_change": null
+    },
+    {
+      "note_id": "nl_0727",
+      "selection_stratum": "guidance_cue",
+      "annotation_a": {
+        "note_id": "nl_0727",
+        "translation": "The resident was restless during lunch and kept getting up to walk around. He accepted guidance to sit back down.",
+        "gold_label": "UNCLEAR",
+        "gold_evidence_quotes": [
+          "The resident was restless during lunch and kept getting up to walk around."
+        ],
+        "rationale": "The selected walking is described, but the human guidance belongs to sitting back down, which is excluded by the target.",
+        "translation_notes": "Literal coding-agent translation; preserves the source modality and event boundaries. Not human-reviewed gold."
+      },
+      "blind_annotation_b": {
+        "note_id": "nl_0727",
+        "label": "UNCLEAR",
+        "original_dutch_evidence": [
+          "Dhr. was onrustig tijdens de lunch en bleef opstaan om rond te lopen."
+        ],
+        "rationale": "Walking around is described without a stated help level. The accepted guidance is specifically to sit back down, which is excluded by the target.",
+        "ambiguity_notes": "Sitting down is a distinct activity; do not treat its guidance as walking help.",
+        "review_provenance": "Independent coding-agent B review of original Dutch and fixed targets before predictions; not human expert gold."
+      },
+      "final_label": "UNCLEAR",
+      "final_evidence": [
+        {
+          "quote": "The resident was restless during lunch and kept getting up to walk around.",
+          "start": 0,
+          "end": 74
+        }
+      ],
+      "adjudication": "Both coding-agent reviewers agreed; exact contiguous whole-sentence evidence from translation A retained.",
+      "translation_change": null
+    },
+    {
+      "note_id": "nn_1577",
+      "selection_stratum": "guidance_cue",
+      "annotation_a": {
+        "note_id": "nn_1577",
+        "translation": "The afternoon activity was a short walk with the walker, during which we regularly reminded her to use it. She liked the light exercise.",
+        "gold_label": "HELP_UNSPECIFIED",
+        "gold_evidence_quotes": [
+          "The afternoon activity was a short walk with the walker, during which we regularly reminded her to use it."
+        ],
+        "rationale": "Verbal reminders are explicit human help during the walk, but verbal cueing alone is outside the ranked supervision/physical-support categories.",
+        "translation_notes": "Literal coding-agent translation; preserves the source modality and event boundaries. Not human-reviewed gold."
+      },
+      "blind_annotation_b": {
+        "note_id": "nn_1577",
+        "label": "HELP_UNSPECIFIED",
+        "original_dutch_evidence": [
+          "Middagactiviteit was een korte wandeling met de rollator, waarbij we regelmatig herinnerden om deze te gebruiken."
+        ],
+        "rationale": "Staff repeatedly reminded the resident to use the walker during the selected walk. Verbal cueing is human help but is outside the three ranked specific levels.",
+        "ambiguity_notes": "The note does not state physical support or active safety supervision in addition to reminders.",
+        "review_provenance": "Independent coding-agent B review of original Dutch and fixed targets before predictions; not human expert gold."
+      },
+      "final_label": "HELP_UNSPECIFIED",
+      "final_evidence": [
+        {
+          "quote": "The afternoon activity was a short walk with the walker, during which we regularly reminded her to use it.",
+          "start": 0,
+          "end": 106
+        }
+      ],
+      "adjudication": "Both coding-agent reviewers agreed; exact contiguous whole-sentence evidence from translation A retained.",
+      "translation_change": null
+    },
+    {
+      "note_id": "nn_2000",
+      "selection_stratum": "guidance_cue",
+      "annotation_a": {
+        "note_id": "nn_2000",
+        "translation": "The resident was guided for a short walk in the hallway; he was enthusiastic but sometimes had to be reminded about safety.",
+        "gold_label": "HELP_UNSPECIFIED",
+        "gold_evidence_quotes": [
+          "The resident was guided for a short walk in the hallway; he was enthusiastic but sometimes had to be reminded about safety."
+        ],
+        "rationale": "Guidance and safety reminders establish human help on this walk. They do not explicitly establish physical contact or sustained safety supervision beyond verbal cueing.",
+        "translation_notes": "Bijgeleid is an unusual source form; guided retains its ambiguous help subtype. Safety reminders are kept explicit. The label boundary with SUPERVISION merits independent review."
+      },
+      "blind_annotation_b": {
+        "note_id": "nn_2000",
+        "label": "HELP_UNSPECIFIED",
+        "original_dutch_evidence": [
+          "Dhr. werd bijgeleid voor een korte wandeling in de gang; hij was enthousiast maar moest soms worden herinnerd aan veiligheid."
+        ],
+        "rationale": "Guidance and intermittent verbal safety reminders are documented on the hallway walk, with no explicit physical contact or sustained close supervision.",
+        "ambiguity_notes": "Bijgeleid is unusual synthetic wording; translate conservatively as guided/accompanied rather than physically supported. Safety reminders alone are verbal cues.",
+        "review_provenance": "Independent coding-agent B review of original Dutch and fixed targets before predictions; not human expert gold."
+      },
+      "final_label": "HELP_UNSPECIFIED",
+      "final_evidence": [
+        {
+          "quote": "The resident was guided for a short walk in the hallway; he was enthusiastic but sometimes had to be reminded about safety.",
+          "start": 0,
+          "end": 123
+        }
+      ],
+      "adjudication": "Both coding-agent reviewers agreed; exact contiguous whole-sentence evidence from translation A retained.",
+      "translation_change": null
+    },
+    {
+      "note_id": "nm_0341",
+      "selection_stratum": "guidance_cue",
+      "annotation_a": {
+        "note_id": "nm_0341",
+        "translation": "Short walk with a walker in the hallway. The resident was very unsteady on his feet. Had to stop often to rest. Fall risk appears to have increased.",
+        "gold_label": "UNCLEAR",
+        "gold_evidence_quotes": [
+          "Short walk with a walker in the hallway."
+        ],
+        "rationale": "The walk, device, instability and source risk statement do not document a person providing help.",
+        "translation_notes": "Literal coding-agent translation; preserves the source modality and event boundaries. Not human-reviewed gold."
+      },
+      "blind_annotation_b": {
+        "note_id": "nm_0341",
+        "label": "UNCLEAR",
+        "original_dutch_evidence": [
+          "Korte wandeling met rollator in de gang."
+        ],
+        "rationale": "A hallway walk with a walker is documented, but wobbliness, rest stops, and increased fall risk do not state whether or how a person helped.",
+        "ambiguity_notes": "Clinical observations and device use do not supply a human-assistance level.",
+        "review_provenance": "Independent coding-agent B review of original Dutch and fixed targets before predictions; not human expert gold."
+      },
+      "final_label": "UNCLEAR",
+      "final_evidence": [
+        {
+          "quote": "Short walk with a walker in the hallway.",
+          "start": 0,
+          "end": 40
+        }
+      ],
+      "adjudication": "Both coding-agent reviewers agreed; exact contiguous whole-sentence evidence from translation A retained.",
+      "translation_change": null
+    },
+    {
+      "note_id": "nk_0797",
+      "selection_stratum": "guidance_cue",
+      "annotation_a": {
+        "note_id": "nk_0797",
+        "translation": "During the afternoon shift, the resident took a short walk with the walking frame. He was somewhat restless and saw things that were not there. We kept an extra close eye on whether he might fall. After the walk, we helped him with his lunch, which went well. He ate with enjoyment.",
+        "gold_label": "SUPERVISION",
+        "gold_evidence_quotes": [
+          "During the afternoon shift, the resident took a short walk with the walking frame. He was somewhat restless and saw things that were not there. We kept an extra close eye on whether he might fall."
+        ],
+        "rationale": "The walking event is followed by explicit close staff observation for fall prevention, before the note transitions to help with lunch. This is actual safety supervision during the selected walk.",
+        "translation_notes": "In de gaten gehouden is translated as kept an extra close eye. The original conditional whether he might fall is preserved; the app does not derive risk from it."
+      },
+      "blind_annotation_b": {
+        "note_id": "nk_0797",
+        "label": "SUPERVISION",
+        "original_dutch_evidence": [
+          "Tijdens de middagshift heeft dhr. een korte wandeling gemaakt met het looprek.",
+          "We hebben extra goed in de gaten gehouden of hij niet zou vallen."
+        ],
+        "rationale": "The completed afternoon walk is associated with staff watching especially closely to prevent a fall. This is active walking-safety supervision.",
+        "ambiguity_notes": "Use the walking and supervision sentences together. The later lunch assistance is a separate activity and does not contribute.",
+        "review_provenance": "Independent coding-agent B review of original Dutch and fixed targets before predictions; not human expert gold."
+      },
+      "final_label": "SUPERVISION",
+      "final_evidence": [
+        {
+          "quote": "During the afternoon shift, the resident took a short walk with the walking frame. He was somewhat restless and saw things that were not there. We kept an extra close eye on whether he might fall.",
+          "start": 0,
+          "end": 196
+        }
+      ],
+      "adjudication": "Both coding-agent reviewers agreed; exact contiguous whole-sentence evidence from translation A retained.",
+      "translation_change": null
+    },
+    {
+      "note_id": "nb_1319",
+      "selection_stratum": "other_walk",
+      "annotation_a": {
+        "note_id": "nb_1319",
+        "translation": "During a short walk with the walking stick, the resident said that she felt a little more stable. She did tire quickly.",
+        "gold_label": "UNCLEAR",
+        "gold_evidence_quotes": [
+          "During a short walk with the walking stick, the resident said that she felt a little more stable."
+        ],
+        "rationale": "The device and the resident's reported stability do not specify human assistance during this walk.",
+        "translation_notes": "Literal coding-agent translation; preserves the source modality and event boundaries. Not human-reviewed gold."
+      },
+      "blind_annotation_b": {
+        "note_id": "nb_1319",
+        "label": "UNCLEAR",
+        "original_dutch_evidence": [
+          "Tijdens een korte wandeling met de wandelstok gaf mw. aan dat ze zich wat stabieler voelde."
+        ],
+        "rationale": "A walk with a walking stick and a report of greater stability do not specify human assistance.",
+        "ambiguity_notes": "Feeling more stable does not establish either independence or staff support.",
+        "review_provenance": "Independent coding-agent B review of original Dutch and fixed targets before predictions; not human expert gold."
+      },
+      "final_label": "UNCLEAR",
+      "final_evidence": [
+        {
+          "quote": "During a short walk with the walking stick, the resident said that she felt a little more stable.",
+          "start": 0,
+          "end": 97
+        }
+      ],
+      "adjudication": "Both coding-agent reviewers agreed; exact contiguous whole-sentence evidence from translation A retained.",
+      "translation_change": null
+    },
+    {
+      "note_id": "nd_0297",
+      "selection_stratum": "other_walk",
+      "annotation_a": {
+        "note_id": "nd_0297",
+        "translation": "The resident was noticed to have increased wheezing in her chest after a walk; help and comfort were quickly offered.",
+        "gold_label": "UNCLEAR",
+        "gold_evidence_quotes": [
+          "The resident was noticed to have increased wheezing in her chest after a walk; help and comfort were quickly offered."
+        ],
+        "rationale": "The offered help and comfort occur after the selected walk in response to wheezing. The note does not say who helped during the walk.",
+        "translation_notes": "The awkward Dutch chest wording is rendered as increased wheezing in her chest without adding a clinical interpretation or human walking assistance."
+      },
+      "blind_annotation_b": {
+        "note_id": "nd_0297",
+        "label": "UNCLEAR",
+        "original_dutch_evidence": [
+          "Mw. werd opgemerkt met een verhoogde piepende borst na wandeling; hulp en troost werden snel aangeboden."
+        ],
+        "rationale": "The help and comfort were offered after wheezing was observed following the walk. They do not specify assistance during the selected preceding walk.",
+        "ambiguity_notes": "Na wandeling establishes temporal separation; offered post-walk help also does not establish delivered walking support.",
+        "review_provenance": "Independent coding-agent B review of original Dutch and fixed targets before predictions; not human expert gold."
+      },
+      "final_label": "UNCLEAR",
+      "final_evidence": [
+        {
+          "quote": "The resident was noticed to have increased wheezing in her chest after a walk; help and comfort were quickly offered.",
+          "start": 0,
+          "end": 117
+        }
+      ],
+      "adjudication": "Both coding-agent reviewers agreed; exact contiguous whole-sentence evidence from translation A retained.",
+      "translation_change": null
+    },
+    {
+      "note_id": "na_1633",
+      "selection_stratum": "other_walk",
+      "annotation_a": {
+        "note_id": "na_1633",
+        "translation": "The resident had a restless afternoon. He walked around aimlessly and seemed anxious. The carer took him to the garden for some fresh air. This helped him relax a little.",
+        "gold_label": "UNCLEAR",
+        "gold_evidence_quotes": [
+          "He walked around aimlessly and seemed anxious."
+        ],
+        "rationale": "The target is the aimless walking before the later garden visit. No human walking assistance is documented for that earlier event.",
+        "translation_notes": "Literal coding-agent translation; preserves the source modality and event boundaries. Not human-reviewed gold."
+      },
+      "blind_annotation_b": {
+        "note_id": "na_1633",
+        "label": "UNCLEAR",
+        "original_dutch_evidence": [
+          "Hij liep rond zonder doel en leek angstig."
+        ],
+        "rationale": "The target is the aimless walk before the garden visit. Its human-assistance level is not documented.",
+        "ambiguity_notes": "The caregiver taking him to the garden is a later event and cannot label the earlier aimless walking.",
+        "review_provenance": "Independent coding-agent B review of original Dutch and fixed targets before predictions; not human expert gold."
+      },
+      "final_label": "UNCLEAR",
+      "final_evidence": [
+        {
+          "quote": "He walked around aimlessly and seemed anxious.",
+          "start": 39,
+          "end": 85
+        }
+      ],
+      "adjudication": "Both coding-agent reviewers agreed; exact contiguous whole-sentence evidence from translation A retained.",
+      "translation_change": null
+    },
+    {
+      "note_id": "nn_2108",
+      "selection_stratum": "other_walk",
+      "annotation_a": {
+        "note_id": "nn_2108",
+        "translation": "The afternoon ends with a quiet walk in the sun. The client is quiet and follows well, which helps to end his day positively.",
+        "gold_label": "UNCLEAR",
+        "gold_evidence_quotes": [
+          "The afternoon ends with a quiet walk in the sun."
+        ],
+        "rationale": "The walk is documented, but follows well does not explicitly say that a person provided walking support or supervision.",
+        "translation_notes": "Volgt goed is kept as follows well, preserving its vague attribution instead of inventing staff accompaniment."
+      },
+      "blind_annotation_b": {
+        "note_id": "nn_2108",
+        "label": "UNCLEAR",
+        "original_dutch_evidence": [
+          "De middag eindigt met een rustige wandeling in de zon. De client is stil en volgt goed, wat helpt om zijn dag positief af te sluiten."
+        ],
+        "rationale": "The quiet walk is documented, but follows well does not establish the type or purpose of human walking help.",
+        "ambiguity_notes": "Following might imply a person or instructions, but the wording is too ambiguous to classify specific assistance or confirmed human help.",
+        "review_provenance": "Independent coding-agent B review of original Dutch and fixed targets before predictions; not human expert gold."
+      },
+      "final_label": "UNCLEAR",
+      "final_evidence": [
+        {
+          "quote": "The afternoon ends with a quiet walk in the sun.",
+          "start": 0,
+          "end": 48
+        }
+      ],
+      "adjudication": "Both coding-agent reviewers agreed; exact contiguous whole-sentence evidence from translation A retained.",
+      "translation_change": null
+    },
+    {
+      "note_id": "nm_0865",
+      "selection_stratum": "device_transfer_control",
+      "annotation_a": {
+        "note_id": "nm_0865",
+        "translation": "Morning care. The resident was already awake and in a good mood. Helped well with washing and dressing. Had difficulty with the buttons on his shirt and was frustrated when it did not work. Reassured and helped. COPD symptoms seem less today. Uses the walker without protest.",
+        "gold_label": "UNCLEAR",
+        "gold_evidence_quotes": [],
+        "rationale": "Morning-care help and a statement about walker use do not identify an actual walking event or human assistance during walking.",
+        "translation_notes": "Literal coding-agent translation; preserves the source modality and event boundaries. Not human-reviewed gold."
+      },
+      "blind_annotation_b": {
+        "note_id": "nm_0865",
+        "label": "UNCLEAR",
+        "original_dutch_evidence": [],
+        "rationale": "Morning-care help and use of a walker are mentioned, but no actual walking event is described.",
+        "ambiguity_notes": "Do not convert bathing/dressing help or device use into walking assistance.",
+        "review_provenance": "Independent coding-agent B review of original Dutch and fixed targets before predictions; not human expert gold."
+      },
+      "final_label": "UNCLEAR",
+      "final_evidence": [],
+      "adjudication": "Both coding-agent reviewers agreed; exact contiguous whole-sentence evidence from translation A retained.",
+      "translation_change": "Changed ambiguous Helped well to Cooperated well to preserve the resident as the person cooperating with care."
+    },
+    {
+      "note_id": "nc_1659",
+      "selection_stratum": "device_transfer_control",
+      "annotation_a": {
+        "note_id": "nc_1659",
+        "translation": "The resident took part in a memory game in the activity room. Noticeable difficulty concentrating, but participated enthusiastically. Very tired afterwards; helped with the transfer to bed for a rest.",
+        "gold_label": "UNCLEAR",
+        "gold_evidence_quotes": [],
+        "rationale": "The only assisted movement is a transfer to bed. The target explicitly excludes that transfer and no walking event is documented.",
+        "translation_notes": "Literal coding-agent translation; preserves the source modality and event boundaries. Not human-reviewed gold."
+      },
+      "blind_annotation_b": {
+        "note_id": "nc_1659",
+        "label": "UNCLEAR",
+        "original_dutch_evidence": [],
+        "rationale": "The documented help is a transfer to bed after the memory game; no walking event is reported.",
+        "ambiguity_notes": "The fixed target explicitly excludes the bed transfer.",
+        "review_provenance": "Independent coding-agent B review of original Dutch and fixed targets before predictions; not human expert gold."
+      },
+      "final_label": "UNCLEAR",
+      "final_evidence": [],
+      "adjudication": "Both coding-agent reviewers agreed; exact contiguous whole-sentence evidence from translation A retained.",
+      "translation_change": null
+    },
+    {
+      "note_id": "nn_1576",
+      "selection_stratum": "device_transfer_control",
+      "annotation_a": {
+        "note_id": "nn_1576",
+        "translation": "The resident needed help with the morning routine again, especially with bathing because of lower back pain. Forgot the walker, but no fall occurred.",
+        "gold_label": "UNCLEAR",
+        "gold_evidence_quotes": [],
+        "rationale": "Help is tied to bathing and morning care. Forgetting the walker and absence of a fall do not document an actual walking event or its assistance.",
+        "translation_notes": "Literal coding-agent translation; preserves the source modality and event boundaries. Not human-reviewed gold."
+      },
+      "blind_annotation_b": {
+        "note_id": "nn_1576",
+        "label": "UNCLEAR",
+        "original_dutch_evidence": [],
+        "rationale": "Help is for the morning routine and bathing, and the walker was forgotten. The note does not document a walking event or its human assistance.",
+        "ambiguity_notes": "The absence of a fall does not establish an unaided walk.",
+        "review_provenance": "Independent coding-agent B review of original Dutch and fixed targets before predictions; not human expert gold."
+      },
+      "final_label": "UNCLEAR",
+      "final_evidence": [],
+      "adjudication": "Both coding-agent reviewers agreed; exact contiguous whole-sentence evidence from translation A retained.",
+      "translation_change": null
+    },
+    {
+      "note_id": "nc_0922",
+      "selection_stratum": "device_transfer_control",
+      "annotation_a": {
+        "note_id": "nc_0922",
+        "translation": "Sunday breakfast: the resident enjoyed fresh croissants. Asked whether she could come along to the church service in the building. Wheelchair put ready.",
+        "gold_label": "UNCLEAR",
+        "gold_evidence_quotes": [],
+        "rationale": "A proposed church visit and wheelchair setup do not document completed walking or human walking assistance.",
+        "translation_notes": "Literal coding-agent translation; preserves the source modality and event boundaries. Not human-reviewed gold."
+      },
+      "blind_annotation_b": {
+        "note_id": "nc_0922",
+        "label": "UNCLEAR",
+        "original_dutch_evidence": [],
+        "rationale": "The note describes breakfast, a request about attending a church service, and preparation of a wheelchair. No actual walk is documented.",
+        "ambiguity_notes": "Plans and wheelchair preparation are distinct from completed walking.",
+        "review_provenance": "Independent coding-agent B review of original Dutch and fixed targets before predictions; not human expert gold."
+      },
+      "final_label": "UNCLEAR",
+      "final_evidence": [],
+      "adjudication": "Both coding-agent reviewers agreed; exact contiguous whole-sentence evidence from translation A retained.",
+      "translation_change": null
+    }
+  ]
+}

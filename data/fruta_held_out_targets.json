@@ -1,0 +1,170 @@
+{
+  "na_0145": {
+    "resident_id": "fruta-ca_02",
+    "resident_name": "Fruta synthetic resident ca_02",
+    "context_key": "other_walk",
+    "observed_on": "2024-06-05",
+    "target_cue": "walk to the shared room this morning"
+  },
+  "nd_0902": {
+    "resident_id": "fruta-cd_04",
+    "resident_name": "Fruta synthetic resident cd_04",
+    "context_key": "other_walk",
+    "observed_on": "2024-12-30",
+    "target_cue": "short walk with the walker"
+  },
+  "nm_1286": {
+    "resident_id": "fruta-cm_07",
+    "resident_name": "Fruta synthetic resident cm_07",
+    "context_key": "garden_walk",
+    "observed_on": "2024-06-01",
+    "target_cue": "garden walk used as distraction"
+  },
+  "na_0762": {
+    "resident_id": "fruta-ca_05",
+    "resident_name": "Fruta synthetic resident ca_05",
+    "context_key": "other_walk",
+    "observed_on": "2024-10-20",
+    "target_cue": "walk with the walker described before sitting on the sofa"
+  },
+  "na_0689": {
+    "resident_id": "fruta-ca_05",
+    "resident_name": "Fruta synthetic resident ca_05",
+    "context_key": "other_walk",
+    "observed_on": "2024-09-29",
+    "target_cue": "short walk with the walker after lunch"
+  },
+  "nk_1089": {
+    "resident_id": "fruta-ck_06",
+    "resident_name": "Fruta synthetic resident ck_06",
+    "context_key": "other_walk",
+    "observed_on": "2024-12-18",
+    "target_cue": "walking in the episode described in this note"
+  },
+  "nl_1309": {
+    "resident_id": "fruta-cl_08",
+    "resident_name": "Fruta synthetic resident cl_08",
+    "context_key": "other_walk",
+    "observed_on": "2024-08-13",
+    "target_cue": "walking around this morning"
+  },
+  "nb_0960": {
+    "resident_id": "fruta-cb_05",
+    "resident_name": "Fruta synthetic resident cb_05",
+    "context_key": "walking_attempt",
+    "observed_on": "2024-09-10",
+    "target_cue": "attempt to walk to her room with the walker"
+  },
+  "nm_0182": {
+    "resident_id": "fruta-cm_02",
+    "resident_name": "Fruta synthetic resident cm_02",
+    "context_key": "garden_walk",
+    "observed_on": "2024-03-28",
+    "target_cue": "garden walk after lunch"
+  },
+  "nb_0890": {
+    "resident_id": "fruta-cb_05",
+    "resident_name": "Fruta synthetic resident cb_05",
+    "context_key": "garden_walk",
+    "observed_on": "2024-08-18",
+    "target_cue": "afternoon garden walk"
+  },
+  "nk_0846": {
+    "resident_id": "fruta-ck_05",
+    "resident_name": "Fruta synthetic resident ck_05",
+    "context_key": "other_walk",
+    "observed_on": "2024-10-26",
+    "target_cue": "short walk at the end of the day"
+  },
+  "nl_0727": {
+    "resident_id": "fruta-cl_04",
+    "resident_name": "Fruta synthetic resident cl_04",
+    "context_key": "other_walk",
+    "observed_on": "2024-07-17",
+    "target_cue": "walking around during lunch; exclude help to sit back down"
+  },
+  "nn_1577": {
+    "resident_id": "fruta-cn_06",
+    "resident_name": "Fruta synthetic resident cn_06",
+    "context_key": "other_walk",
+    "observed_on": "2024-06-28",
+    "target_cue": "short afternoon walk with the walker"
+  },
+  "nn_2000": {
+    "resident_id": "fruta-cn_07",
+    "resident_name": "Fruta synthetic resident cn_07",
+    "context_key": "hallway_walk",
+    "observed_on": "2024-08-27",
+    "target_cue": "short hallway walk"
+  },
+  "nm_0341": {
+    "resident_id": "fruta-cm_02",
+    "resident_name": "Fruta synthetic resident cm_02",
+    "context_key": "hallway_walk",
+    "observed_on": "2024-05-20",
+    "target_cue": "short hallway walk with the walker"
+  },
+  "nk_0797": {
+    "resident_id": "fruta-ck_04",
+    "resident_name": "Fruta synthetic resident ck_04",
+    "context_key": "other_walk",
+    "observed_on": "2024-07-03",
+    "target_cue": "walk with the walking frame during the afternoon shift"
+  },
+  "nb_1319": {
+    "resident_id": "fruta-cb_07",
+    "resident_name": "Fruta synthetic resident cb_07",
+    "context_key": "other_walk",
+    "observed_on": "2024-04-04",
+    "target_cue": "short walk with the walking stick"
+  },
+  "nd_0297": {
+    "resident_id": "fruta-cd_02",
+    "resident_name": "Fruta synthetic resident cd_02",
+    "context_key": "other_walk",
+    "observed_on": "2025-01-23",
+    "target_cue": "walk before the wheezing was observed"
+  },
+  "na_1633": {
+    "resident_id": "fruta-ca_08",
+    "resident_name": "Fruta synthetic resident ca_08",
+    "context_key": "other_walk",
+    "observed_on": "2024-03-05",
+    "target_cue": "aimless walking before the carer took him to the garden"
+  },
+  "nn_2108": {
+    "resident_id": "fruta-cn_07",
+    "resident_name": "Fruta synthetic resident cn_07",
+    "context_key": "other_walk",
+    "observed_on": "2024-09-25",
+    "target_cue": "quiet walk in the sun at the end of the afternoon"
+  },
+  "nm_0865": {
+    "resident_id": "fruta-cm_04",
+    "resident_name": "Fruta synthetic resident cm_04",
+    "context_key": "other_walk",
+    "observed_on": "2025-03-04",
+    "target_cue": "any walking described during morning care"
+  },
+  "nc_1659": {
+    "resident_id": "fruta-cc_07",
+    "resident_name": "Fruta synthetic resident cc_07",
+    "context_key": "other_walk",
+    "observed_on": "2024-05-14",
+    "target_cue": "any walking described after the memory game; exclude the transfer to bed"
+  },
+  "nn_1576": {
+    "resident_id": "fruta-cn_06",
+    "resident_name": "Fruta synthetic resident cn_06",
+    "context_key": "other_walk",
+    "observed_on": "2024-06-28",
+    "target_cue": "any walking described during the morning routine"
+  },
+  "nc_0922": {
+    "resident_id": "fruta-cc_05",
+    "resident_name": "Fruta synthetic resident cc_05",
+    "context_key": "other_walk",
+    "observed_on": "2024-02-18",
+    "target_cue": "any walking described before the proposed church service"
+  }
+}
