@@ -1,0 +1,33 @@
+{
+  "mode": "Fixture demo",
+  "liveApiCalls": 0,
+  "events": [
+    {
+      "name": "Elena: same note / more help than usual",
+      "seconds": 6.42
+    },
+    {
+      "name": "Ruth: same note / matches usual routine",
+      "seconds": 10.45
+    },
+    {
+      "name": "Attach replacement: full new note",
+      "seconds": 15.54
+    },
+    {
+      "name": "Replacement active: Unclear and preserved history",
+      "seconds": 20.14
+    },
+    {
+      "name": "Staff-confirmed baseline: review and explicit confirmation",
+      "seconds": 24.74
+    },
+    {
+      "name": "End: clean demo screen",
+      "seconds": 30.14
+    }
+  ],
+  "errors": [],
+  "videoPath": "assets/08-silent-walkthrough.mp4",
+  "timing_note": "Approximate timestamps relative to the capture script. The encoded reference is 29.4 seconds; use visual frames when trimming."
+}

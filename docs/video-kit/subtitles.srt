@@ -1,0 +1,91 @@
+1
+00:00:00,000 --> 00:00:05,688
+During a memory-care handoff, a note may
+mention a walker, an aide, and several
+
+2
+00:00:05,688 --> 00:00:10,156
+activities. CareSignal helps reviewers see
+what the documentation says about one
+
+3
+00:00:10,156 --> 00:00:13,000
+selected walk and check the supporting
+evidence.
+
+4
+00:00:13,000 --> 00:00:15,500
+This walkthrough uses fictional residents
+
+5
+00:00:15,500 --> 00:00:18,000
+and fixed fixture results for a repeatable
+demonstration.
+
+6
+00:00:18,000 --> 00:00:25,304
+For Elena’s breakfast walk, the note
+describes an aide beside her. Her
+
+7
+00:00:25,304 --> 00:00:28,200
+staff-confirmed usual level is
+independent.
+
+8
+00:00:28,200 --> 00:00:32,000
+CareSignal shows more help than usual.
+
+9
+00:00:32,000 --> 00:00:39,429
+Switch to Ruth. The note stays the same.
+Her usual level already includes
+
+10
+00:00:39,429 --> 00:00:44,000
+supervision, so her card matches the usual
+routine.
+
+11
+00:00:44,000 --> 00:00:49,600
+Open the evidence. The relevant words are
+highlighted beside the source date,
+
+12
+00:00:49,600 --> 00:00:54,733
+version, and confirmed baseline. Both
+sources remain available so reviewers can
+
+13
+00:00:54,733 --> 00:00:58,000
+check the finding. Code calculates the
+comparison.
+
+14
+00:00:58,000 --> 00:01:05,129
+Now attach a replacement. It mentions a
+walker but leaves human help unspecified.
+
+15
+00:01:05,129 --> 00:01:12,806
+The result becomes unclear, the old flag
+clears, and version one stays in history
+
+16
+00:01:12,806 --> 00:01:15,000
+with its original text.
+
+17
+00:01:15,000 --> 00:01:20,000
+CareSignal also supports Gemini extraction
+and reproducible evaluation on public
+
+18
+00:01:20,000 --> 00:01:24,000
+synthetic notes. Results and limitations
+are recorded separately.
+
+19
+00:01:24,000 --> 00:01:30,000
+This project is a prototype and is not
+medical advice.

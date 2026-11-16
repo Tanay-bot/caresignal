@@ -6,6 +6,8 @@ This project is a prototype and is not medical advice.
 
 ![CareSignal handoff result and exact source evidence](docs/screenshots/desktop.png)
 
+For a narrated demo, use the [Claude video kit](docs/video-kit/): a master prompt, seven actual UI screenshots, illustrated brief, storyboard, captions and silent reference footage.
+
 ## Run the prototype
 
 Requires Python 3.11+ and [uv](https://docs.astral.sh/uv/).

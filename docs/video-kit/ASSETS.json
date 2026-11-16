@@ -1,0 +1,71 @@
+{
+  "project": "CareSignal",
+  "purpose": "Claude video production handoff",
+  "repository": "https://github.com/Tanay-bot/caresignal",
+  "capture_mode": "Fixture demo",
+  "is_live_inference_footage": false,
+  "live_api_calls_during_capture": 0,
+  "screenshots": [
+    {
+      "filename": "01-elena-more-help.png",
+      "path": "assets/screenshots/01-elena-more-help.png",
+      "title": "Elena: more help than usual",
+      "visible_proof": "Documented staff supervision is compared with Elena’s confirmed independent breakfast routine.",
+      "kind": "actual_app_screenshot"
+    },
+    {
+      "filename": "02-ruth-matches.png",
+      "path": "assets/screenshots/02-ruth-matches.png",
+      "title": "Ruth: matches usual routine",
+      "visible_proof": "The same note matches Ruth’s confirmed supervision baseline. The baseline changes the comparison.",
+      "kind": "actual_app_screenshot"
+    },
+    {
+      "filename": "03-evidence-detail.png",
+      "path": "assets/screenshots/03-evidence-detail.png",
+      "title": "Exact evidence, two separate sources",
+      "visible_proof": "The highlighted quote comes from the active note. The usual-assistance description and confirmation date stay separate.",
+      "kind": "actual_app_screenshot"
+    },
+    {
+      "filename": "04-attach-replacement.png",
+      "path": "assets/screenshots/04-attach-replacement.png",
+      "title": "A complete replacement",
+      "visible_proof": "The original revision is visible while a full new note is prepared for explicit submission.",
+      "kind": "actual_app_screenshot"
+    },
+    {
+      "filename": "05-correction-history.png",
+      "path": "assets/screenshots/05-correction-history.png",
+      "title": "New source, preserved history",
+      "visible_proof": "The walker-only replacement leaves human help unspecified. Version 2 is Active; version 1 stays Corrected in history.",
+      "kind": "actual_app_screenshot"
+    },
+    {
+      "filename": "06-confirm-usual-assistance.png",
+      "path": "assets/screenshots/06-confirm-usual-assistance.png",
+      "title": "Explicit staff confirmation",
+      "visible_proof": "Review the specific help level, description and date; check agreement before the confirmation action.",
+      "kind": "actual_app_screenshot"
+    },
+    {
+      "filename": "07-mobile.png",
+      "path": "assets/screenshots/07-mobile.png",
+      "title": "Narrow-screen layout",
+      "visible_proof": "Context, result and evidence stack before editing controls at a 390-pixel viewport.",
+      "kind": "actual_app_screenshot"
+    }
+  ],
+  "reference_video": {
+    "path": "assets/08-silent-walkthrough.mp4",
+    "kind": "actual_silent_app_screen_recording",
+    "duration_seconds": 29.4,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "has_audio": false,
+    "note": "Optional editing source. Not the finished 90-second narrated film. Approximate scene times are listed in capture-events.json."
+  },
+  "disclosure": "The core walkthrough is a fixed fictional fixture, not live Gemini inference.",
+  "required_statement": "This project is a prototype and is not medical advice."
+}
