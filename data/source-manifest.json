@@ -1,0 +1,38 @@
+{
+  "manifest_version": "1.0",
+  "fictional_development": {
+    "dataset_id": "fictional-caresignal-development",
+    "dataset_revision": "v1",
+    "translation_id": "original-en-v1",
+    "path": "data/fictional_development.jsonl",
+    "split": "development",
+    "description": "Original fictional English notes authored to exercise workflow and evaluation plumbing. These are not Fruta data or a held-out performance benchmark."
+  },
+  "fruta_development_example": {
+    "source_note_id": "nn_1093",
+    "status": "frozen_development_source_translation_unreviewed",
+    "source_url": "https://huggingface.co/datasets/ekrombouts/fruta_records/blob/579141e3431c18a932fa3a0870e9f1c131f10367/data/train-00000-of-00001.parquet",
+    "dataset_revision": "579141e3431c18a932fa3a0870e9f1c131f10367",
+    "translation_id": "caresignal-agent-en-literal-v1",
+    "translation_method": "English translation authored by the Codex coding agent from the frozen Dutch original; not independently reviewed. No separate translation API was invoked.",
+    "original_dutch_text": "Mw. maakte een poging om zelf te lopen, maar stelde vast dat ze steun nodig had. We gaven haar fysieke ondersteuning en verduidelijkten de veiligheid.",
+    "frozen_english_text": "The resident attempted to walk on her own, but found that she needed support. We gave her physical support and clarified safety.",
+    "source_parquet_sha256": "205ae14313c65f57c03cc15a0fa16ac33aa827c5c242bfbc1215db621aac1c4f",
+    "original_note_sha256": "3a38084484b4f8af683d8b5c97bd15a259225be9d7948d6b12ab94bd75f41a0d",
+    "translation_sha256": "2562a37612a79e1672a3106140d1b681dc6d3d73698c4e102850b058a843ab35",
+    "license": "mit",
+    "frozen_source_path": "data/fruta_nn_1093.json",
+    "evaluation_input_path": "data/fruta_development.jsonl",
+    "expected_label_from_brief": "HANDS_ON",
+    "live_check_status": "pending",
+    "note": "Development example only. Translation authored by the coding agent and not independently reviewed. No held-out score or live result is implied."
+  },
+  "held_out_fruta_evaluation": {
+    "status": "pending_frozen_dataset_gold_and_live_run",
+    "dataset_revision": null,
+    "translation_id": null,
+    "annotation_id": null,
+    "results_path": null,
+    "note": "No held-out public experiment or model performance claim is recorded by this manifest."
+  }
+}

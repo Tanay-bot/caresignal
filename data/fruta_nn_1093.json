@@ -1,0 +1,34 @@
+{
+  "id": "nn_1093",
+  "note_id": "nn_1093",
+  "split": "development",
+  "dataset_id": "ekrombouts/fruta_records",
+  "dataset_revision": "579141e3431c18a932fa3a0870e9f1c131f10367",
+  "translation_id": "caresignal-agent-en-literal-v1",
+  "translation_method": "English translation authored by the Codex coding agent from the frozen Dutch original; not independently reviewed. No separate translation API was invoked.",
+  "source_url": "https://huggingface.co/datasets/ekrombouts/fruta_records/blob/579141e3431c18a932fa3a0870e9f1c131f10367/data/train-00000-of-00001.parquet",
+  "dataset_card_url": "https://huggingface.co/datasets/ekrombouts/fruta_records/blob/579141e3431c18a932fa3a0870e9f1c131f10367/README.md",
+  "license": "mit",
+  "author": "Eva Rombouts",
+  "source_client_id": "cn_04",
+  "source_scenario_id": "sn_046",
+  "source_datetime": "2024-03-07 08:00:00+00:00",
+  "original_language": "nl",
+  "original_note": "Mw. maakte een poging om zelf te lopen, maar stelde vast dat ze steun nodig had. We gaven haar fysieke ondersteuning en verduidelijkten de veiligheid.",
+  "note": "The resident attempted to walk on her own, but found that she needed support. We gave her physical support and clarified safety.",
+  "target": {
+    "resident_id": "fruta-cn_04",
+    "resident_name": "Fruta synthetic resident cn_04",
+    "context_key": "walking_attempt",
+    "observed_on": "2024-03-07",
+    "target_cue": "attempt to walk on her own"
+  },
+  "gold_label": "HANDS_ON",
+  "gold_evidence": [
+    "The resident attempted to walk on her own, but found that she needed support. We gave her physical support and clarified safety."
+  ],
+  "annotation_status": "Development expectation from project brief; reviewed against the frozen original by the coding agent. Not held-out gold.",
+  "source_parquet_sha256": "205ae14313c65f57c03cc15a0fa16ac33aa827c5c242bfbc1215db621aac1c4f",
+  "original_note_sha256": "3a38084484b4f8af683d8b5c97bd15a259225be9d7948d6b12ab94bd75f41a0d",
+  "translation_sha256": "2562a37612a79e1672a3106140d1b681dc6d3d73698c4e102850b058a843ab35"
+}

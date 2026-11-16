@@ -1,0 +1,172 @@
+CareSignal
+Product and engineering handoff
+Build target · A working AI + Health hackathon prototype for reviewing walking assistance in memory-care shift notes
+Source · CareSignal Project Brief v1.1 and the subsequent judge review
+Audience · The developer or Codex agent implementing the app
+Project status · Dataset feasibility screen complete. This handoff specifies work to build and verify. Model scores are pending.
+The product in one sentence
+CareSignal highlights what a shift note documents about human help for a selected walk, then compares that evidence with a staff-confirmed description of the resident’s usual help when one is available.
+
+Start here · Features · Screen and interactions · Data contracts · AI and evidence · Evaluation · Build order
+1. Start here
+Build a small Python application with one reliable path from a full note to a traceable finding. The strongest demo is a public synthetic note that the model reads correctly, followed by two fictional residents who get different comparison cards for the same note. Finish with a correction that clears a flag while preserving the original entry in history.
+Step	Build	What a reviewer can verify
+1	Domain types, evidence validation, comparison rules and correction semantics	Known examples produce the expected outcomes, including incomplete corrections
+2	A structured-output language-model adapter and a phrase matcher	Both methods read the same full note and target walk through the same interface
+3	A notebook and frozen tests	The team can inspect exact evidence, replay the demo and run a reproducible comparison
+4	A one-screen Streamlit app	A reviewer can switch residents, inspect both sources and replace a note without reviewing code
+5	A judge-ready handoff	The repo contains setup instructions, a recorded experiment if one ran, and a concise demo script
+
+
+First test before UI work. Run the real extractor on Fruta note nn_1093 with its walking attempt as the target. Expect Hands-on help and an exact evidence span covering the walking attempt and the physical support in the following sentence. This is a development example. If live model credentials are unavailable, exercise the full application logic with a fixture and record the live inference check as pending.
+
+Working stack. Use Python 3.11 or later, Pydantic for contracts, Streamlit for the screen, SQLite for a local evidence history, and pytest for verification. Use the OpenAI Python SDK for the initial structured-output adapter. Select an available compatible model at build time and record its identifier. Keep the model adapter replaceable. A notebook calls the package functions that the app uses.
+
+First action for Codex. Inspect the existing repo and its instructions. Reuse equivalent modules where they already exist. Create the project skeleton and executable fixtures, implement the comparator and correction tests, then implement extraction. Continue through a runnable vertical slice and verify it. Document any step that genuinely depends on credentials or data that the team still needs to supply.
+2. Product scope and goals
+User and moment
+An incoming memory-care aide reads a fictional resident’s shift note during handoff. The aide wants to know whether the note describes a staff member walking beside the resident, hands-on help, or independent walking for one specific event. When there is a recorded usual level for the same walk, the aide can review how the new observation compares.
+What matters most
+1. One event. Tie the finding to the selected resident, walk and observation date. Notes can describe multiple people, activities and times.
+2. One verifiable finding. Use the words in the note to support the label. Allow the evidence to span adjacent sentences when that is what a human reviewer needs.
+3. One optional comparison. Use a structured baseline confirmed for that resident and context. The model reads the note. Code compares the levels.
+4. One active source. A correction replaces the note used for the finding. The original is still available as history.
+5. One reproducible experiment. Quantify how often the AI and a simple phrase matcher get both the assistance label and its evidence right on held-out Fruta notes.
+Boundaries for this prototype
+The intended evaluation set is public synthetic Fruta data. Demo residents and custom walkthrough inputs are fictional. The product reports what the documentation says about walking assistance. Design the UI around evidence review and handoff. Treat clinical interpretation, urgency, fall-risk scoring, treatment, production patient records, and integration with clinical systems as outside this prototype’s scope. Carry this sentence into the app and submitted write-up verbatim.
+This project is a prototype and is not medical advice.
+
+What is demonstrated and what is measured
+Claim	How to show it
+The app can locate and label documented walking help for a selected event	Evaluate the extractor and phrase matcher on frozen, translated, held-out Fruta notes
+The same finding can yield different cards when resident baselines differ	Run the two-resident fictional fixture through the actual comparison function
+A replacement can invalidate the prior flag and citation	Replace the active note in the app and verify the new card and original history item
+The team knows where the extraction fails	Report a real held-out error with its note, target, expected label and evidence
+
+
+Any statements about scoring apply to the held-out synthetic sample processed by the named translation method. The fictional checks provide workflow evidence. Fruta’s candidate screen left comparable usual-assistance pairs unverified, so the public experiment evaluates extraction.
+3. Feature inventory and acceptance criteria
+ID	Priority	Feature	Acceptance criterion
+F01	P0	Load fictional demo cases	Elena and Ruth show the same note text and different staff-confirmed breakfast baselines. Reset restores both cases in the demo workspace.
+F02	P0	Select a resident and observation	The selected resident, date and walking context are visible. Changing resident clears the previous case selection and evidence panel before rendering the new case.
+F03	P0	Enter a note for a target walk	Save the whole note plus the target date and context. Accept short notes and multi-sentence notes with distractors. Retain original text for evidence links.
+F04	P0	Extract assistance with AI	The live adapter returns one of the five labels. The search for help is scoped to the selected event. Evidence strings must resolve in the active note.
+F05	P0	Display exact evidence	Opening the evidence control reveals the original source and highlights the relevant words with the date and source version. Escape note text before rendering.
+F06	P0	Enter a usual-assistance baseline	A manual record contains the resident, canonical walk context, staff-confirmed specific help level, description and confirmation date.
+F07	P0	Compare specific levels	With two comparable levels, the card shows More help than usual, Less help than usual, or Matches usual routine. The card can cite both sides.
+F08	P0	Explain an unclear result	A completed run can explain absent evidence, unspecified help, ambiguous attribution or a missing comparable baseline. An unavailable model has its own retryable status.
+F09	P0	Attach a replacement	A replacement is linked to the precise active note revision. It takes effect as soon as it is committed. The card invalidates the prior result and recalculates.
+F10	P0	Review version history	History shows original and replacement text, version, date and active/corrected state. Only the active note can supply current card evidence.
+F11	P0	Run the public evaluation	A notebook or command runs both extractors on the frozen notes and writes per-example results plus a summary. The experiment identifies model, prompt, translation and dataset versions.
+F12	P0	Run without credentials for development	A visible Fixture demo preset supports the fixed walkthrough and offline tests. Arbitrary input in fixture mode explains how to enable live extraction.
+F13	P1	Load one citable public example	A Fruta example preset loads a translated development note and its target, displays the source note ID and offers the original Dutch text in evidence. It uses the selected extractor mode.
+F14	P1	Improve demo presentation	One-click resident switching, readable evidence cards and a clear correction history work at laptop width and on a narrow viewport.
+F15	P1	Export evaluation summary	Write an exact, reproducible results table as JSON or CSV and render a compact project README table from it.
+
+
+P0 is the complete story. Finish the end-to-end test before adding P1. Feature IDs are for planning and tests.
+4. Screen and interactions
+Page layout
+Use one main screen titled CareSignal. A quiet, professional layout should put the result and the evidence within one screenful on a laptop. Use accessible system fonts or Inter, dark text on light surfaces, and a restrained teal accent for primary actions. Use text and icons for state labels, with color as an additional cue. Evidence highlights need clear contrast. Use the notebook and repo for detailed methods.
+Area	Contents	Behavior
+Header	CareSignal, mode indicator and Load demo	Distinguish Live AI, Fixture demo and any intentionally selected Phrase matcher mode
+Context row	Resident, target walk and observation date	Show what the finding is about. Label outbound and return walks distinctly where relevant.
+Handoff result	Documented help, comparison status, concise reason and View evidence	The headline shows the comparison when supported and the extraction finding when a comparison is unavailable. Display each field with a clear name.
+Evidence panel	Active shift note and Usual assistance	Show exact text, source label and date. Highlight the note span. Show the verified baseline description when one is used.
+Actions	Analyze note, Set usual assistance, Attach replacement	Use short forms with explicit submission. Preserve work when input validation fails.
+History	Collapsed Note history with immutable revisions	Present current source first, then previous versions marked Corrected. Opening history never changes the active note.
+Footer	Required prototype statement	Preserve exact language from the Health brief.
+
+
+Suggested desktop order in the two-column body is result and evidence on one side, entry and context on the other. Place the context and result before evidence and editing on narrow layouts. Use simple vertical stacking if that is faster and more robust in Streamlit. Keep the active note and baseline easy to distinguish without scrolling through forms.
+Main flows
+Analyze a note
+1. Select a fictional resident, date, canonical walk and optional target cue such as “outbound walk this morning.”
+2. Paste or load the complete note. For a public preset, show the dataset and note ID.
+3. Submit Analyze note. Store the observation and active note. Run the selected adapter for that revision.
+4. Show Documented help with the validated evidence. If a compatible baseline is present, show the comparison and give the aide access to both sources.
+5. On an adapter failure, show a retry action scoped to the same revision. If the user switches cases before a result returns, render only the selected case.
+Confirm usual assistance
+1. Select Set usual assistance from the active case.
+2. Show the resident and walking context as part of the form. Require one of the three specific levels, a short source description and a confirmation date. If a provided description and its selected level conflict, the user must resolve the description before treating it as confirmed. For the first release, use a level field and explicit confirmation step that displays both values for checking. A free-text baseline never sets the rank by itself.
+3. Save the confirmation. Recompute the comparison from the existing validated finding. This edit does not require an additional model call.
+4. Show the confirmation date and the source text on the card. An empty baseline is normal. The extraction result still gives the aide something to review.
+Attach a replacement
+1. Open Attach replacement from the active note. Show the original revision number and text so the aide can confirm the target.
+2. Explain the action in one sentence. “This replacement becomes the source for the current card. The previous note stays in history.”
+3. Require nonblank replacement text. Commit it as a new full version of the note for the same observation case.
+4. Immediately invalidate the previous card and its highlighted excerpt. Show Analyzing replacement until the new result arrives.
+5. With missing evidence, show Unclear and cite the replacement as the active source. With an error, show a retryable error. The previous flag stays cleared in either case.
+Card copy
+Condition	User-facing text
+Extracted and ranked higher than usual	More help than usual · Documented Staff beside or supervising. Usual Independent.
+Extracted and ranked lower than usual	Less help than usual · Show the documented and usual levels and their sources.
+Extracted and equal to usual	Matches usual routine · Both sources show the same level for this walk.
+Human help present, subtype unresolved	Help documented, type unspecified · “The note describes help without specifying the level needed for a comparison.”
+Walker mentioned by itself	Unclear · “The note mentions a walker. Human assistance for this walk is unspecified.”
+Compatible confirmed baseline absent	Show the extracted label. Comparison reason is “A usual level for this walk hasn’t been confirmed.”
+Replacement lacks usable evidence	Unclear · “The replacement became the active note. It leaves human assistance unspecified.”
+Model timed out or returned invalid output	Analysis unavailable · “Retry the active note.” Show the mode and a short error category when helpful.
+
+
+5. Assistance taxonomy and attribution
+The five extraction labels
+Enum	UI label	Gold-label rule
+INDEPENDENT	Independent	The note explicitly says the resident walked unaided or on their own for the selected event, with any device listed separately.
+SUPERVISION	Staff beside or supervising	The note describes a person accompanying, staying alongside or supervising for walking support or safety during the selected event. A person’s presence by itself is insufficient.
+HANDS_ON	Hands-on help	The note describes physical support given to the resident during the walk, such as holding their arm or steadying them while walking.
+HELP_UNSPECIFIED	Help documented, type unspecified	The note establishes that a person helped on this walk. The evidence leaves supervision versus physical support unresolved, or specifies a form of help outside those ranked levels, such as verbal cueing alone.
+UNCLEAR	Unclear	The note leaves help ambiguous or unspecified, conflicts about the selected walk, or describes a different person, activity or time.
+
+
+Annotation and extraction policy
+- Anchor the target first. Read the selected resident, date, canonical context and optional cue. In a resident-specific note, an unambiguous pronoun may refer to that resident. Explicit mentions of roommates or other residents override that default.
+- Extract the documented event. Distinguish what happened from plans, general ability, recommendations, future intentions and declined or unavailable help. The fictional phrase “needed an aide beside her on the way to breakfast” is accepted as a report of the level documented for that completed trip. An explicit statement that the help was absent controls the label when the note describes what actually happened.
+- Bind assistance to walking. Getting out of bed, transfers, dressing, eating and wheelchair transport are distinct from the walking event. Setting up or mentioning a walker is a device detail. Interpreting a general need for assistance as walking help creates false flags.
+- Distinguish route and time. Outbound breakfast, return from breakfast and a later lunch walk are separate events. Do the same for yesterday versus the current observation. When the target is still ambiguous, return UNCLEAR with a reason.
+- Recognize supervision even when the person can walk unaided. General ability can coexist with a staff member keeping close for fall prevention on a documented walk. If the note clearly describes both during that event, code the documented supervision. If the descriptions contradict each other and attribution cannot resolve the conflict, use UNCLEAR.
+- Use the highest supported help level within one event. Explicit hands-on support during the selected walk is sufficient for HANDS_ON even if a staff member also walked alongside at other moments in that same walk. Evidence from a different event does not contribute.
+- Preserve modality and negation. “Nobody helped her” can support independence when it describes the completed walk. “I didn’t see whether anyone helped” leaves the help unknown. “I would have held her arm if she needed it” describes a conditional.
+- Preserve ambiguous language in translation. A Dutch term like begeleiding can indicate accompaniment or guidance without resolving whether there was physical contact. Use the surrounding source text before assigning a specific level.
+Ranking for the comparison
+The rank is an internal rule for this prototype. It orders the three specific documentation categories. It does not encode severity or a medical recommendation.
+Level	Rank
+Independent	0
+Staff beside or supervising	1
+Hands-on help	2
+
+
+Only compare a completed, validated extraction and a confirmed baseline for the same resident and canonical context. For a historical observation, use a baseline confirmed by the observation date. The active extraction must belong to the active note revision. Preserve the baseline ID and the confirmation date behind any displayed comparison. Return UNCLEAR for an unspecified type or an ineligible baseline. Render the extracted label separately whenever it is available.
+def compare_assistance(observed_rank: int, usual_rank: int) -> str:
+    if observed_rank > usual_rank:
+        return "MORE_HELP"
+    if observed_rank < usual_rank:
+        return "LESS_HELP"
+    return "MATCHES"
+The service checks comparability before calling this pure function. Keep the eligibility check, comparison calculation and user-facing wording independently testable.
+6. Data model and repository contracts
+Entities
+Entity	Required fields	Invariants and relationships
+Resident	id, workspace_id, display_name, is_demo	Fictional identifiers. Each case and baseline references one resident.
+WalkingContext	key, label	A small fixed catalog. Use exact key equality for rank comparisons.
+ObservationCase	id, resident_id, context_key, observed_on, optional target_cue, active_revision_id, created_at	The case identifies one selected walk. It remains stable across full note replacements. Selecting a different event creates a different case.
+NoteRevision	id, case_id, integer version, body, created_at, optional supersedes_id, source_kind, optional source_note_id	Store text exactly as submitted or frozen. Revisions are immutable. Version is unique per case. Derive Active from the case pointer.
+UsualAssistance	id, resident_id, context_key, specific level, source_description, confirmed_on, saved_at	Preserve each confirmation snapshot. Baseline choices come from explicit staff confirmation in the fictional workflow.
+ExtractionRun	id, revision_id, extractor_mode, extractor_version, optional model_id, prompt_version, input_hash, status, optional label, reason_code, optional evidence, optional device, created_at	An extraction is anchored to one revision and target. Keep provider failure distinct from a valid UNCLEAR prediction.
+EvidenceSpan	revision_id, start, end, quote	Half-open Python string indices. Require note_body[start:end] == quote. The span belongs to the source revision shown.
+ComparisonView	case_id, revision_id, optional extraction_id, optional baseline_id, status, reason_code	Derive from the active note, its selected run and the applicable confirmation. Retain IDs for tracing.
+
+
+Context catalog
+Start with to_breakfast, from_breakfast, hallway_walk, garden_walk, walking_attempt and other_walk. The first four represent comparable contexts when selected consistently. walking_attempt and other_walk support extraction and use UNCLEAR for comparison unless the repo later introduces a specific matching context. Treat an optional target cue as part of event selection. Its presence alone never upgrades a generic context into a comparable one.
+Storage and service boundaries
+- Enable SQLite foreign keys on each connection. Use parameterized queries. Keep the database in a configured local data directory outside source control.
+- Scope repository reads and writes to a workspace and verify case ownership before following source pointers. A default launch is a local demo. If opened to a shared audience, use isolated per-session demo workspaces with fictional data. The app should explicitly state which persistence behavior it supports.
+- Keep active_revision_id on the case as the source of truth. Validate that any linked revision belongs to that case. Add UNIQUE(case_id, version) and checks for supported enum values.
+- Select the latest baseline for the same resident/context with confirmed_on <= observed_on, ordered by confirmed_on then saved_at. Treat confirmation dates as date granularity. Display the exact baseline used so a reviewer can check it.
+- Preserve provenance for public presets. Store the Fruta note ID, dataset revision and translation identifiers in the source manifest. The rendered evidence links to the frozen English text and can expose the Dutch original separately.
+- Read and write via a service layer. Streamlit screen code should call functions such as create_case, confirm_usual_assistance, analyze_active_revision, replace_active_revision and get_handoff_view. The notebook can call the pure extraction and evaluation functions directly.
+Replacement integrity
+Use a short transaction to verify that the expected original revision is still active, insert the new revision and update the case pointer. If the active pointer changed, return a conflict and show the latest note before the user retries. If insertion or pointer update fails, roll back both. Begin the model call after the transaction commits.
+
+On completion, associate the result with the exact revision requested. Before rendering, re-read the active pointer and check it against the result revision. If another correction became active during inference, the earlier result remains associated with history. A retry reads the active note again, avoids old input, and preserves the revision history.

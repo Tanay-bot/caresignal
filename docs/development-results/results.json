@@ -1,0 +1,386 @@
+{
+  "methods": [
+    {
+      "dataset": {
+        "ids": [
+          "fictional-caresignal-development"
+        ],
+        "revisions": [
+          "v1"
+        ],
+        "sha256": "aa4328faf11e6e114ed00400448e777385fd7e8ccdc570ac793393cb4cf82ab6",
+        "splits": {
+          "development": 7
+        },
+        "translation_ids": [
+          "original-en-v1"
+        ]
+      },
+      "examples": [
+        {
+          "annotation_id": null,
+          "dataset_id": "fictional-caresignal-development",
+          "dataset_revision": "v1",
+          "error_category": null,
+          "evidence_correct": true,
+          "example_id": "fictional-demo-supervision",
+          "gold_evidence": [
+            {
+              "end": 67,
+              "quote": "This morning she needed an aide beside her on the way to breakfast.",
+              "start": 0
+            }
+          ],
+          "gold_label": "SUPERVISION",
+          "joint_correct": true,
+          "label_correct": true,
+          "note": "This morning she needed an aide beside her on the way to breakfast. She ate her breakfast in the dining room.",
+          "original_note": null,
+          "predicted_evidence": [
+            {
+              "end": 67,
+              "quote": "This morning she needed an aide beside her on the way to breakfast.",
+              "start": 0
+            }
+          ],
+          "predicted_label": "SUPERVISION",
+          "reason_code": "PHRASE_MATCH",
+          "source_note_id": null,
+          "source_url": null,
+          "split": "development",
+          "status": "COMPLETE",
+          "target": {
+            "context_key": "to_breakfast",
+            "observed_on": "2026-01-15",
+            "resident_id": "fictional-elena",
+            "resident_name": "Elena",
+            "target_cue": null
+          },
+          "translation_id": "original-en-v1"
+        },
+        {
+          "annotation_id": null,
+          "dataset_id": "fictional-caresignal-development",
+          "dataset_revision": "v1",
+          "error_category": null,
+          "evidence_correct": false,
+          "example_id": "fictional-demo-replacement",
+          "gold_evidence": [
+            {
+              "end": 53,
+              "quote": "This morning she walked to breakfast with her walker.",
+              "start": 0
+            }
+          ],
+          "gold_label": "UNCLEAR",
+          "joint_correct": false,
+          "label_correct": true,
+          "note": "This morning she walked to breakfast with her walker. The note does not say whether anyone helped during the walk.",
+          "original_note": null,
+          "predicted_evidence": [],
+          "predicted_label": "UNCLEAR",
+          "reason_code": "NO_SCOPED_PHRASE",
+          "source_note_id": null,
+          "source_url": null,
+          "split": "development",
+          "status": "COMPLETE",
+          "target": {
+            "context_key": "to_breakfast",
+            "observed_on": "2026-01-15",
+            "resident_id": "fictional-elena",
+            "resident_name": "Elena",
+            "target_cue": null
+          },
+          "translation_id": "original-en-v1"
+        },
+        {
+          "annotation_id": null,
+          "dataset_id": "fictional-caresignal-development",
+          "dataset_revision": "v1",
+          "error_category": null,
+          "evidence_correct": true,
+          "example_id": "fictional-walking-attempt",
+          "gold_evidence": [
+            {
+              "end": 113,
+              "quote": "She tried walking to the lounge this morning. An aide held her arm and steadied her while she took several steps.",
+              "start": 0
+            }
+          ],
+          "gold_label": "HANDS_ON",
+          "joint_correct": true,
+          "label_correct": true,
+          "note": "She tried walking to the lounge this morning. An aide held her arm and steadied her while she took several steps. Later, her roommate walked independently to lunch.",
+          "original_note": null,
+          "predicted_evidence": [
+            {
+              "end": 113,
+              "quote": "She tried walking to the lounge this morning. An aide held her arm and steadied her while she took several steps.",
+              "start": 0
+            }
+          ],
+          "predicted_label": "HANDS_ON",
+          "reason_code": "PHRASE_MATCH",
+          "source_note_id": null,
+          "source_url": null,
+          "split": "development",
+          "status": "COMPLETE",
+          "target": {
+            "context_key": "walking_attempt",
+            "observed_on": "2026-01-15",
+            "resident_id": "fictional-elena",
+            "resident_name": "Elena",
+            "target_cue": null
+          },
+          "translation_id": "original-en-v1"
+        },
+        {
+          "annotation_id": null,
+          "dataset_id": "fictional-caresignal-development",
+          "dataset_revision": "v1",
+          "error_category": null,
+          "evidence_correct": true,
+          "example_id": "fictional-independent",
+          "gold_evidence": [
+            {
+              "end": 38,
+              "quote": "She walked to breakfast independently.",
+              "start": 0
+            }
+          ],
+          "gold_label": "INDEPENDENT",
+          "joint_correct": true,
+          "label_correct": true,
+          "note": "She walked to breakfast independently.",
+          "original_note": null,
+          "predicted_evidence": [
+            {
+              "end": 38,
+              "quote": "She walked to breakfast independently.",
+              "start": 0
+            }
+          ],
+          "predicted_label": "INDEPENDENT",
+          "reason_code": "PHRASE_MATCH",
+          "source_note_id": null,
+          "source_url": null,
+          "split": "development",
+          "status": "COMPLETE",
+          "target": {
+            "context_key": "to_breakfast",
+            "observed_on": "2026-01-15",
+            "resident_id": "fictional-elena",
+            "resident_name": "Elena",
+            "target_cue": null
+          },
+          "translation_id": "original-en-v1"
+        },
+        {
+          "annotation_id": null,
+          "dataset_id": "fictional-caresignal-development",
+          "dataset_revision": "v1",
+          "error_category": null,
+          "evidence_correct": true,
+          "example_id": "fictional-unspecified-help",
+          "gold_evidence": [
+            {
+              "end": 50,
+              "quote": "An aide helped her walk to breakfast this morning.",
+              "start": 0
+            }
+          ],
+          "gold_label": "HELP_UNSPECIFIED",
+          "joint_correct": true,
+          "label_correct": true,
+          "note": "An aide helped her walk to breakfast this morning.",
+          "original_note": null,
+          "predicted_evidence": [
+            {
+              "end": 50,
+              "quote": "An aide helped her walk to breakfast this morning.",
+              "start": 0
+            }
+          ],
+          "predicted_label": "HELP_UNSPECIFIED",
+          "reason_code": "PHRASE_MATCH",
+          "source_note_id": null,
+          "source_url": null,
+          "split": "development",
+          "status": "COMPLETE",
+          "target": {
+            "context_key": "to_breakfast",
+            "observed_on": "2026-01-15",
+            "resident_id": "fictional-elena",
+            "resident_name": "Elena",
+            "target_cue": null
+          },
+          "translation_id": "original-en-v1"
+        },
+        {
+          "annotation_id": null,
+          "dataset_id": "fictional-caresignal-development",
+          "dataset_revision": "v1",
+          "error_category": null,
+          "evidence_correct": false,
+          "example_id": "fictional-transfer-distractor",
+          "gold_evidence": [],
+          "gold_label": "UNCLEAR",
+          "joint_correct": false,
+          "label_correct": true,
+          "note": "An aide held her arm while helping her out of bed. She walked to breakfast with her walker.",
+          "original_note": null,
+          "predicted_evidence": [
+            {
+              "end": 91,
+              "quote": "She walked to breakfast with her walker.",
+              "start": 51
+            }
+          ],
+          "predicted_label": "UNCLEAR",
+          "reason_code": "HUMAN_HELP_UNSPECIFIED",
+          "source_note_id": null,
+          "source_url": null,
+          "split": "development",
+          "status": "COMPLETE",
+          "target": {
+            "context_key": "to_breakfast",
+            "observed_on": "2026-01-15",
+            "resident_id": "fictional-elena",
+            "resident_name": "Elena",
+            "target_cue": null
+          },
+          "translation_id": "original-en-v1"
+        },
+        {
+          "annotation_id": null,
+          "dataset_id": "fictional-caresignal-development",
+          "dataset_revision": "v1",
+          "error_category": null,
+          "evidence_correct": true,
+          "example_id": "fictional-conditional",
+          "gold_evidence": [],
+          "gold_label": "UNCLEAR",
+          "joint_correct": true,
+          "label_correct": true,
+          "note": "If she walks to breakfast tomorrow, an aide will hold her arm.",
+          "original_note": null,
+          "predicted_evidence": [],
+          "predicted_label": "UNCLEAR",
+          "reason_code": "NO_SCOPED_PHRASE",
+          "source_note_id": null,
+          "source_url": null,
+          "split": "development",
+          "status": "COMPLETE",
+          "target": {
+            "context_key": "to_breakfast",
+            "observed_on": "2026-01-15",
+            "resident_id": "fictional-elena",
+            "resident_name": "Elena",
+            "target_cue": null
+          },
+          "translation_id": "original-en-v1"
+        }
+      ],
+      "extractor": {
+        "mode": "phrase",
+        "model_id": null,
+        "prompt_version": "rules-v1",
+        "version": "phrase-v1"
+      },
+      "metrics_policy": "Exact span-set match; all examples including errors remain in denominator.",
+      "schema_version": "1.0",
+      "scope": "fictional_development",
+      "summary": {
+        "completed": 7,
+        "errors": 0,
+        "evidence_accuracy": 0.7142857142857143,
+        "evidence_correct": 5,
+        "joint_accuracy": 0.7142857142857143,
+        "joint_correct": 5,
+        "label_accuracy": 1.0,
+        "label_correct": 7,
+        "total": 7
+      }
+    },
+    {
+      "dataset": {
+        "ids": [
+          "ekrombouts/fruta_records"
+        ],
+        "revisions": [
+          "579141e3431c18a932fa3a0870e9f1c131f10367"
+        ],
+        "sha256": "402f819b3b610fd760591c8dc876ff4cc4597c1c030e03c5b2923f2cad56c49e",
+        "splits": {
+          "development": 1
+        },
+        "translation_ids": [
+          "caresignal-agent-en-literal-v1"
+        ]
+      },
+      "examples": [
+        {
+          "annotation_id": "brief-development-expectation-v1",
+          "dataset_id": "ekrombouts/fruta_records",
+          "dataset_revision": "579141e3431c18a932fa3a0870e9f1c131f10367",
+          "error_category": null,
+          "evidence_correct": true,
+          "example_id": "nn_1093",
+          "gold_evidence": [
+            {
+              "end": 128,
+              "quote": "The resident attempted to walk on her own, but found that she needed support. We gave her physical support and clarified safety.",
+              "start": 0
+            }
+          ],
+          "gold_label": "HANDS_ON",
+          "joint_correct": true,
+          "label_correct": true,
+          "note": "The resident attempted to walk on her own, but found that she needed support. We gave her physical support and clarified safety.",
+          "original_note": "Mw. maakte een poging om zelf te lopen, maar stelde vast dat ze steun nodig had. We gaven haar fysieke ondersteuning en verduidelijkten de veiligheid.",
+          "predicted_evidence": [
+            {
+              "end": 128,
+              "quote": "The resident attempted to walk on her own, but found that she needed support. We gave her physical support and clarified safety.",
+              "start": 0
+            }
+          ],
+          "predicted_label": "HANDS_ON",
+          "reason_code": "PHRASE_MATCH",
+          "source_note_id": "nn_1093",
+          "source_url": "https://huggingface.co/datasets/ekrombouts/fruta_records/blob/579141e3431c18a932fa3a0870e9f1c131f10367/data/train-00000-of-00001.parquet",
+          "split": "development",
+          "status": "COMPLETE",
+          "target": {
+            "context_key": "walking_attempt",
+            "observed_on": "2024-03-07",
+            "resident_id": "fruta-cn_04",
+            "resident_name": "Fruta synthetic resident cn_04",
+            "target_cue": "attempt to walk on her own"
+          },
+          "translation_id": "caresignal-agent-en-literal-v1"
+        }
+      ],
+      "extractor": {
+        "mode": "phrase",
+        "model_id": null,
+        "prompt_version": "rules-v1",
+        "version": "phrase-v1"
+      },
+      "metrics_policy": "Exact span-set match; all examples including errors remain in denominator.",
+      "schema_version": "1.0",
+      "scope": "public_development",
+      "summary": {
+        "completed": 1,
+        "errors": 0,
+        "evidence_accuracy": 1.0,
+        "evidence_correct": 1,
+        "joint_accuracy": 1.0,
+        "joint_correct": 1,
+        "label_accuracy": 1.0,
+        "label_correct": 1,
+        "total": 1
+      }
+    }
+  ]
+}
