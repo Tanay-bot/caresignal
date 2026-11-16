@@ -2,6 +2,8 @@
 
 A ready-to-use production handoff for a **90-second hackathon demo video**.
 
+For a quick tour of the working app, [watch or download the captioned feature recording](assets/09-quick-feature-tour.mp4). This separate MP4 shows resident comparisons, exact evidence, baseline confirmation, corrections and history, new-note analysis, AI settings, and the phone layout. It uses fictional data, fixture results and actual phrase-matcher extraction; the AI settings segment makes no live provider request. [Matching captions](assets/09-quick-feature-tour.srt) are included beside the recording.
+
 ## Start here
 
 1. Download [the complete ZIP](../CareSignal-Claude-Kit.zip), then unzip it.

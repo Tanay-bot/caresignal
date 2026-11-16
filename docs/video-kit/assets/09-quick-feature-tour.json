@@ -1,0 +1,61 @@
+{
+  "file": "09-quick-feature-tour.mp4",
+  "duration_seconds": 47.87,
+  "source": "Actual browser recording of the working CareSignal app",
+  "modes": [
+    "Fixture demo",
+    "Phrase matcher",
+    "Live AI settings only"
+  ],
+  "live_api_calls": 0,
+  "page_errors": [],
+  "audio": false,
+  "captions": "Burned in; matching SRT included",
+  "fictional_demo_data": true,
+  "chapters": [
+    {
+      "seconds": 0.0,
+      "caption": "CareSignal: walking assistance grounded in the note\nFictional data \u2022 Fixture demo"
+    },
+    {
+      "seconds": 2.0,
+      "caption": "Exact source evidence + staff-confirmed usual assistance"
+    },
+    {
+      "seconds": 6.62,
+      "caption": "Same note, different resident: compare with their own routine"
+    },
+    {
+      "seconds": 11.46,
+      "caption": "Staff review and explicitly confirm the usual help level"
+    },
+    {
+      "seconds": 16.37,
+      "caption": "Correct an observation by attaching a complete replacement note"
+    },
+    {
+      "seconds": 23.21,
+      "caption": "Missing help evidence clears the old flag\nThe active note and corrected version stay in history"
+    },
+    {
+      "seconds": 27.03,
+      "caption": "Analyze a new fictional shift note with the phrase matcher"
+    },
+    {
+      "seconds": 32.16,
+      "caption": "New observation: Independent, matching the confirmed baseline\nActual phrase-matcher result"
+    },
+    {
+      "seconds": 35.37,
+      "caption": "Optional Live AI settings: choose Gemini or OpenAI\nSettings shown only; no live AI request in this recording"
+    },
+    {
+      "seconds": 41.03,
+      "caption": "Responsive layout: review the same result on a phone"
+    },
+    {
+      "seconds": 45.06,
+      "caption": "This project is a prototype and is not medical advice."
+    }
+  ]
+}

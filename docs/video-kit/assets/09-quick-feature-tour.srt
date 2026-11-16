@@ -1,0 +1,48 @@
+1
+00:00:00,000 --> 00:00:02,000
+CareSignal: walking assistance grounded in the note
+Fictional data • Fixture demo
+
+2
+00:00:02,000 --> 00:00:06,621
+Exact source evidence + staff-confirmed usual assistance
+
+3
+00:00:06,621 --> 00:00:11,460
+Same note, different resident: compare with their own routine
+
+4
+00:00:11,460 --> 00:00:16,369
+Staff review and explicitly confirm the usual help level
+
+5
+00:00:16,369 --> 00:00:23,209
+Correct an observation by attaching a complete replacement note
+
+6
+00:00:23,209 --> 00:00:27,028
+Missing help evidence clears the old flag
+The active note and corrected version stay in history
+
+7
+00:00:27,028 --> 00:00:32,163
+Analyze a new fictional shift note with the phrase matcher
+
+8
+00:00:32,163 --> 00:00:35,369
+New observation: Independent, matching the confirmed baseline
+Actual phrase-matcher result
+
+9
+00:00:35,369 --> 00:00:41,029
+Optional Live AI settings: choose Gemini or OpenAI
+Settings shown only; no live AI request in this recording
+
+10
+00:00:41,029 --> 00:00:45,063
+Responsive layout: review the same result on a phone
+
+11
+00:00:45,063 --> 00:00:47,866
+This project is a prototype and is not medical advice.
+
