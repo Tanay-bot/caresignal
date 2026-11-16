@@ -12,7 +12,12 @@ from uuid import uuid4
 import streamlit as st
 
 from caresignal.evidence import highlight_evidence
-from caresignal.extractors import FixtureExtractor, OpenAIExtractor, PhraseMatcher
+from caresignal.extractors import (
+    FixtureExtractor,
+    GeminiExtractor,
+    OpenAIExtractor,
+    PhraseMatcher,
+)
 from caresignal.fixtures import DEMO_DATE, DEMO_NOTE, DEMO_REPLACEMENT
 from caresignal.models import CONTEXTS, LABELS, AssistanceLevel, RunStatus
 from caresignal.service import CareSignalService, RevisionConflictError
@@ -54,10 +59,13 @@ def _make_service() -> CareSignalService:
 
 
 def _extractor(mode: str):
+    if mode == "Live AI":
+        if st.session_state.get("live_provider") == "Gemini":
+            return GeminiExtractor()
+        return OpenAIExtractor()
     return {
         "Fixture demo": FixtureExtractor,
         "Phrase matcher": PhraseMatcher,
-        "Live AI": OpenAIExtractor,
     }[mode]()
 
 
@@ -315,10 +323,18 @@ def main() -> None:
                 "A conservative phrase baseline. Ambiguous event attribution produces Unclear."
             )
         else:
-            st.caption("Structured extraction using the configured OpenAI model.")
-            if not os.environ.get("OPENAI_API_KEY"):
+            provider = st.selectbox(
+                "AI provider",
+                ["Gemini", "OpenAI"],
+                index=0 if os.environ.get("GEMINI_API_KEY") else 1,
+                key="live_provider",
+            )
+            st.caption(f"Structured extraction using {provider}.")
+            st.caption(f"Configured model: {_extractor(mode).model_id}")
+            key_name = "GEMINI_API_KEY" if provider == "Gemini" else "OPENAI_API_KEY"
+            if not os.environ.get(key_name):
                 st.info(
-                    "Set OPENAI_API_KEY to enable live extraction. The demo still works offline."
+                    f"Set {key_name} to enable {provider} extraction. The demo still works offline."
                 )
         st.divider()
         st.caption("PUBLIC SYNTHETIC DEVELOPMENT EXAMPLE")
@@ -361,7 +377,8 @@ def main() -> None:
     title, controls = st.columns([4, 1])
     with title:
         st.title("CareSignal")
-        st.caption(f"Walking assistance, grounded in the note · {mode}")
+        mode_label = f"{mode} · {st.session_state.live_provider}" if mode == "Live AI" else mode
+        st.caption(f"Walking assistance, grounded in the note · {mode_label}")
     with controls:
         st.write("")
         if st.button("Load demo", use_container_width=True):

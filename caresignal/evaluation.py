@@ -303,7 +303,7 @@ def summary_markdown(report: dict[str, Any]) -> str:
     if any(method["scope"] != "held_out_public" for method in reports):
         output += [
             "",
-            "Development results verify the workflow only. Held-out Fruta performance and live inference are pending unless separately recorded.",
+            "Development results verify these examples only. They do not estimate held-out Fruta performance.",
         ]
     return "\n".join(output) + "\n"
 
@@ -352,6 +352,12 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument(
         "--mode", choices=["phrase", "fixture", "live", "compare"], default="phrase"
     )
+    parser.add_argument(
+        "--provider",
+        choices=["openai", "gemini"],
+        default="openai",
+        help="Live adapter for --mode live/compare; offline modes do not call a provider.",
+    )
     parser.add_argument("--output-dir", type=Path, default=Path("artifacts/evaluation"))
     args = parser.parse_args(argv)
     try:
@@ -362,11 +368,19 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     if args.mode == "fixture" and any(example.split == "held_out" for example in examples):
         parser.error("Fixture answer lookups cannot be evaluated as held-out extraction.")
+
+    def make_live_extractor():
+        if args.provider == "gemini":
+            from .extractors import GeminiExtractor
+
+            return GeminiExtractor()
+        return OpenAIExtractor()
+
     extractors = {
         "phrase": lambda: [PhraseMatcher()],
         "fixture": lambda: [FixtureExtractor()],
-        "live": lambda: [OpenAIExtractor()],
-        "compare": lambda: [PhraseMatcher(), OpenAIExtractor()],
+        "live": lambda: [make_live_extractor()],
+        "compare": lambda: [PhraseMatcher(), make_live_extractor()],
     }[args.mode]()
     reports = [evaluate_examples(examples, extractor) for extractor in extractors]
     report = reports[0] if len(reports) == 1 else {"schema_version": "1.0", "methods": reports}

@@ -20,8 +20,20 @@ Tests cover immutable revisions and snapshots, workspace ownership, rollback, st
 
 Recorded development phrase results and per-example evidence mismatches are in [development-results](development-results/). The public source and translation method are in [fruta-source.md](fruta-source.md). Neither development check is a held-out performance estimate.
 
-Live OpenAI inference remains pending because no API key was configured. `gpt-4.1-mini` is the requested default, not a verified successful model call. Held-out dataset selection, translation review, independent gold annotations, model comparison and a real held-out error analysis remain pending.
+At the initial starter verification, no API key was configured. OpenAI live inference remains pending: `gpt-4.1-mini` is the requested default, not a verified successful model call. The subsequent Gemini check is recorded below. Held-out dataset selection, translation review, independent gold annotations, model comparison and a real held-out error analysis remain pending.
 
 The GitHub workflow runs checks on Python 3.11 and 3.12. The local results above are from Python 3.12; remote workflow outcomes are recorded separately by GitHub Actions.
+
+## Gemini provider update
+
+Added native Google Gen AI SDK support with a Live AI provider selector and evaluation `--provider gemini`. Both live adapters use the same full-note/target contract, five-label schema, prompt and exact evidence validator.
+
+- Full local suite: **161 tests passed**, including provider routing for every app action, actual SDK response-object parsing with mocked transport, rejection of unsupported citations, blocked/truncated responses, sanitized provider failures and correction invalidation.
+- Ruff lint/format checks and source/wheel builds passed.
+- **Actual live check:** `gemini-3.8-flash` returned `HANDS_ON` on frozen Fruta development example `nn_1093`, with the complete exact two-sentence span. Label, evidence and joint checks each passed for this one disclosed development example. This is not a held-out estimate.
+- Exact JSON/CSV and a generated summary are in [gemini-development-results](gemini-development-results/). No additional live request was used to generate the documentation.
+- Credentials are read from the process environment. A local `.env` is excluded from Git and can be loaded explicitly with `uv run --env-file .env ...`.
+
+The Google SDK is locked to version 3.3.0 in `uv.lock`. `GEMINI_MODEL` changes the requested model. OpenAI inference and all held-out results remain pending.
 
 This project is a prototype and is not medical advice.

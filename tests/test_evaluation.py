@@ -69,7 +69,8 @@ def test_exact_metrics_and_reproducible_exports(tmp_path):
         assert first[name].read_bytes() == second[name].read_bytes()
     restored = json.loads(first["json"].read_text())
     assert restored["examples"][0]["predicted_evidence"][0]["quote"] == NOTE
-    assert "Development results verify the workflow only" in first["markdown"].read_text()
+    assert "Development results verify these examples only" in first["markdown"].read_text()
+    assert "live inference" not in first["markdown"].read_text()
     assert "dataset_sha256" in first["csv"].read_text()
 
 
@@ -226,3 +227,85 @@ def test_cli_fixture_held_out_fails_before_inference(tmp_path):
         main(["--dataset", str(path), "--mode", "fixture", "--output-dir", str(tmp_path / "out")])
     assert exc.value.code == 2
     assert not (tmp_path / "out").exists()
+
+
+@pytest.mark.parametrize("provider", [None, "openai", "gemini"])
+@pytest.mark.parametrize("mode", ["live", "compare"])
+def test_cli_selects_live_provider_and_preserves_frozen_metadata(
+    tmp_path, monkeypatch, provider, mode
+):
+    from caresignal import extractors
+
+    constructed = []
+    calls = []
+
+    def fake_adapter(name):
+        class Adapter(CorrectExtractor):
+            def __init__(self):
+                constructed.append(name)
+                self.mode = (
+                    "gemini" if name == "gemini" else "live" if name == "openai" else "phrase"
+                )
+                self.version = f"{name}-mock-v1"
+                self.model_id = f"{name}-mock-model" if name != "phrase" else None
+                self.prompt_version = "shared-policy-v1"
+
+            def extract(self, note_body, target, revision_id):
+                calls.append((name, note_body, target.model_dump(mode="json"), revision_id))
+                return super().extract(note_body, target, revision_id)
+
+        return Adapter
+
+    monkeypatch.setattr(extractors, "OpenAIExtractor", fake_adapter("openai"))
+    monkeypatch.setattr(extractors, "GeminiExtractor", fake_adapter("gemini"), raising=False)
+    monkeypatch.setattr(extractors, "PhraseMatcher", fake_adapter("phrase"))
+    path = tmp_path / "frozen.jsonl"
+    path.write_text(json.dumps(record()) + "\n")
+    output = tmp_path / "results"
+    arguments = ["--dataset", str(path), "--mode", mode, "--output-dir", str(output)]
+    if provider is not None:
+        arguments += ["--provider", provider]
+    assert main(arguments) == 0
+    selected = provider or "openai"
+    assert constructed == (["phrase", selected] if mode == "compare" else [selected])
+    report = json.loads((output / "results.json").read_text())
+    methods = report["methods"] if mode == "compare" else [report]
+    expected_hash = dataset_hash([FrozenExample.model_validate(record())])
+    assert {method["dataset"]["sha256"] for method in methods} == {expected_hash}
+    assert methods[-1]["extractor"] == {
+        "mode": "gemini" if selected == "gemini" else "live",
+        "version": f"{selected}-mock-v1",
+        "model_id": f"{selected}-mock-model",
+        "prompt_version": "shared-policy-v1",
+    }
+    assert all(method["summary"]["joint_accuracy"] == 1 for method in methods)
+    assert all(call[1] == NOTE and call[2] == record()["target"] for call in calls)
+    assert len({call[3] for call in calls}) == 1
+
+
+def test_cli_offline_mode_does_not_construct_a_live_provider(tmp_path, monkeypatch):
+    from caresignal import extractors
+
+    def forbidden():
+        raise AssertionError("Offline evaluation must not instantiate an API adapter.")
+
+    monkeypatch.setattr(extractors, "OpenAIExtractor", forbidden)
+    monkeypatch.setattr(extractors, "GeminiExtractor", forbidden, raising=False)
+    monkeypatch.setattr(extractors, "PhraseMatcher", CorrectExtractor)
+    path = tmp_path / "frozen.jsonl"
+    path.write_text(json.dumps(record()) + "\n")
+    assert (
+        main(
+            [
+                "--dataset",
+                str(path),
+                "--mode",
+                "phrase",
+                "--provider",
+                "gemini",
+                "--output-dir",
+                str(tmp_path / "out"),
+            ]
+        )
+        == 0
+    )

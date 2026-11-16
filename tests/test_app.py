@@ -4,6 +4,7 @@ from pathlib import Path
 
 from streamlit.testing.v1 import AppTest
 
+from caresignal import extractors
 from caresignal.fixtures import DEMO_NOTE, DEMO_REPLACEMENT
 from caresignal.models import AssistanceLevel
 
@@ -120,3 +121,74 @@ def test_baseline_requires_review_and_fresh_confirmation(monkeypatch, tmp_path):
     _button(app, "Confirm usual assistance").click().run()
     assert not app.exception
     assert "Matches usual routine" in _text(app)
+
+
+def test_gemini_provider_routes_all_note_actions_without_openai(monkeypatch, tmp_path):
+    calls = []
+
+    class MockGeminiExtractor:
+        mode = "gemini"
+        version = "mock-gemini-v1"
+        model_id = "gemini-test-model"
+        prompt_version = "walking-assistance-v1"
+
+        def extract(self, note_body, target, revision_id):
+            calls.append((note_body, target, revision_id))
+            return extractors.FixtureExtractor().extract(note_body, target, revision_id)
+
+    class UnexpectedOpenAIExtractor:
+        def __init__(self):
+            raise AssertionError("Gemini selection must never construct the OpenAI adapter")
+
+    monkeypatch.setenv("GEMINI_API_KEY", "test-only-not-a-real-key")
+    monkeypatch.setattr(extractors, "GeminiExtractor", MockGeminiExtractor)
+    monkeypatch.setattr(extractors, "OpenAIExtractor", UnexpectedOpenAIExtractor)
+    app = _app(monkeypatch, tmp_path)
+    app.radio[0].set_value("Live AI").run()
+    assert not app.exception
+    provider = next(item for item in app.selectbox if item.label == "AI provider")
+    assert provider.value == "Gemini"
+    assert "Configured model: gemini-test-model" in _text(app)
+
+    _button(app, "Analyze active note").click().run()
+    assert not app.exception
+    assert "Analysis mode: gemini" in _text(app)
+    assert "model gemini-test-model" in _text(app)
+    _button(app, "Use demo replacement").click().run()
+    _button(app, "Attach replacement").click().run()
+    assert not app.exception
+    assert "Version 2 · Active" in _text(app)
+    assert "More help than usual" not in _text(app)
+    _button(app, "Analyze note").click().run()
+    assert not app.exception
+    _button(app, "Load Fruta example").click().run()
+    assert not app.exception
+    assert "Hands-on help" in _text(app)
+    _button(app, "Analyze active note").click().run()
+    assert not app.exception
+    assert len(calls) == 5
+    assert [call[0] for call in calls[:3]] == [DEMO_NOTE, DEMO_REPLACEMENT, DEMO_NOTE]
+    assert calls[3][2] == calls[4][2]  # A retry stays scoped to the same active revision.
+
+
+def test_gemini_missing_key_is_retryable_and_clears_prior_flag(monkeypatch, tmp_path):
+    monkeypatch.delenv("GEMINI_API_KEY", raising=False)
+    monkeypatch.delenv("GOOGLE_API_KEY", raising=False)
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    monkeypatch.setenv("GEMINI_MODEL", "gemini-configured-test-model")
+    app = _app(monkeypatch, tmp_path)
+    app.radio[0].set_value("Live AI").run()
+    provider = next(item for item in app.selectbox if item.label == "AI provider")
+    assert provider.value == "OpenAI"
+    provider.set_value("Gemini").run()
+    assert not app.exception
+    assert "Set GEMINI_API_KEY to enable Gemini extraction" in _text(app)
+    assert "Configured model: gemini-configured-test-model" in _text(app)
+    _button(app, "Analyze active note").click().run()
+    assert not app.exception
+    rendered = _text(app)
+    assert "Analysis unavailable" in rendered
+    assert "missing_credentials" in rendered
+    assert "More help than usual" not in rendered
+    assert "Analysis mode: gemini" in rendered
+    assert _button(app, "Retry active note")

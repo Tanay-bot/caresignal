@@ -138,6 +138,9 @@ class CareSignalService:
                 "authentication",
                 "connection_error",
                 "refusal",
+                "incomplete_response",
+                "permission_denied",
+                "incompatible_model",
             }
             category = getattr(exc, "category", "provider_error")
             status, result = RunStatus.UNAVAILABLE, None

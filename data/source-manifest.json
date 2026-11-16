@@ -24,8 +24,27 @@
     "frozen_source_path": "data/fruta_nn_1093.json",
     "evaluation_input_path": "data/fruta_development.jsonl",
     "expected_label_from_brief": "HANDS_ON",
-    "live_check_status": "pending",
-    "note": "Development example only. Translation authored by the coding agent and not independently reviewed. No held-out score or live result is implied."
+    "live_check_status": "complete_gemini_development",
+    "note": "Development example only. Translation authored by the coding agent and not independently reviewed. Gemini live inference completed on this one disclosed example; held-out performance and OpenAI live inference remain pending.",
+    "live_check": {
+      "provider": "gemini",
+      "mode": "gemini",
+      "model_id": "gemini-3.8-flash",
+      "extractor_version": "gemini-structured-v1",
+      "prompt_version": "walking-assistance-v1",
+      "dataset_sha256": "402f819b3b610fd760591c8dc876ff4cc4597c1c030e03c5b2923f2cad56c49e",
+      "translation_id": "caresignal-agent-en-literal-v1",
+      "status": "COMPLETE",
+      "predicted_label": "HANDS_ON",
+      "label_correct": true,
+      "evidence_correct": true,
+      "joint_correct": true,
+      "total": 1,
+      "errors": 0,
+      "results_path": "docs/gemini-development-results/results.json",
+      "scope": "One disclosed development example; not a held-out performance estimate."
+    },
+    "openai_live_check_status": "pending"
   },
   "held_out_fruta_evaluation": {
     "status": "pending_frozen_dataset_gold_and_live_run",

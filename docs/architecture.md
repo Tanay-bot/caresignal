@@ -11,8 +11,16 @@ The app reviews documentation about one selected walk. It does not derive a clin
 - `comparison.py` checks the active revision, completed result, specific help levels, resident, canonical context and confirmation date before comparing ranks. The rank is a documentation rule without clinical meaning.
 - `repository.py` uses parameterized SQLite queries, foreign keys on every connection and workspace-scoped access. Composite foreign keys bind active and superseded revisions to the same case. Revisions, baseline confirmations and extraction runs are immutable snapshots.
 - `service.py` owns analysis, usual-assistance confirmation, replacements and the current handoff view. The app and notebook use these operations.
-- `extractors.py` provides fixture, phrase and structured OpenAI implementations behind the same full-note/target interface.
+- `extractors.py` provides fixture, phrase and native structured Gemini/OpenAI implementations behind the same full-note/target interface.
 - `evaluation.py` reads frozen examples and writes source-traceable per-example and summary artifacts.
+
+## Live providers
+
+`GeminiExtractor` uses the Google Gen AI Python SDK and `GEMINI_API_KEY`; its requested model defaults to `gemini-3.8-flash` and can be changed with `GEMINI_MODEL`. `OpenAIExtractor` keeps the OpenAI SDK path with `OPENAI_API_KEY` and optional `OPENAI_MODEL` (default `gpt-4.1-mini`). Both use the shared full-note/target prompt and validate exact quotes with the same local evidence functions. Provider selection does not change baseline comparison or revision rules.
+
+Runs distinguish Gemini's `gemini` mode / `gemini-structured-v1` version from OpenAI's existing `live` mode / `openai-structured-v1` version, and retain the requested model, shared prompt version and input hash. API keys stay in the process environment and are not stored in the evidence history. The app does not load `.env` automatically. The evaluation CLI uses `--provider gemini|openai` for live/compare runs and defaults to OpenAI for backward compatibility; offline modes do not construct live adapters. Provider errors stay separate from completed predictions.
+
+Gemini `gemini-3.8-flash` completed one recorded live development check on disclosed public synthetic note `nn_1093`, returning Hands-on help with exact evidence; see [the result](gemini-development-results/results.json). OpenAI live availability and all held-out performance remain pending. SDK mocks verify transport and validation behavior, while that single development result does not estimate general extraction quality.
 
 ## Corrections and concurrency
 
@@ -32,6 +40,6 @@ The default data directory is the operating system’s temporary directory under
 
 Fixture results are predetermined walkthrough results and are visibly identified as fixtures. The phrase matcher is a conservative baseline. Structured model output must pass the same exact-evidence validation as the other methods. Provider failures, refusal and invalid citations are unavailable/invalid runs, separate from a completed `UNCLEAR` prediction.
 
-The included public Fruta note is a development example with a pinned source revision and a coding-agent translation. It is not a held-out experiment. Live model availability and held-out performance must be verified before claiming measured AI quality.
+The included public Fruta note is a development example with a pinned source revision and a coding-agent translation. It is not a held-out experiment. The recorded Gemini development check is one successful path, using a coding-agent translation that has not been independently reviewed. Held-out performance must be measured before claiming general extraction quality.
 
 This project is a prototype and is not medical advice.

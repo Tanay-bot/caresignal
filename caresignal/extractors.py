@@ -462,3 +462,112 @@ class OpenAIExtractor:
             return validate_evidence(note_body, revision_id, result)
         except ValueError as exc:
             raise InvalidExtraction("The model output failed exact evidence validation.") from exc
+
+
+class GeminiExtractor:
+    """Native Gemini structured output with the shared prompt and citation rules."""
+
+    mode = "gemini"
+    version = "gemini-structured-v1"
+    prompt_version = "walking-assistance-v1"
+
+    def __init__(self, model_id: str | None = None, client=None) -> None:
+        self.model_id = model_id or os.getenv("GEMINI_MODEL") or "gemini-3.8-flash"
+        self._client = client
+
+    def extract(self, note_body: str, target: Target, revision_id: str) -> ExtractionResult:
+        from contextlib import nullcontext
+
+        payload = json.dumps(
+            {"target": target.model_dump(mode="json"), "note": note_body}, ensure_ascii=False
+        )
+        try:
+            if self._client is None:
+                key = os.getenv("GEMINI_API_KEY", "").strip()
+                if not key:
+                    raise ExtractionUnavailable("missing_credentials")
+                from google import genai
+
+                # A locally created client is closed after the request. Injected
+                # clients stay owned by their caller. Timeout is milliseconds.
+                manager = genai.Client(
+                    api_key=key,
+                    http_options={"timeout": 30_000, "retry_options": {"attempts": 1}},
+                )
+            else:
+                manager = nullcontext(self._client)
+            with manager as client:
+                response = client.models.generate_content(
+                    model=self.model_id,
+                    contents=payload,
+                    config={
+                        "system_instruction": SYSTEM_PROMPT,
+                        "response_mime_type": "application/json",
+                        "response_json_schema": _StructuredPrediction.model_json_schema(),
+                        "max_output_tokens": 4096,
+                    },
+                )
+        except ExtractionUnavailable:
+            raise
+        except Exception as exc:
+            # Provider error strings may contain submitted notes or credentials.
+            # Expose a bounded category derived only from status/type instead.
+            code = getattr(exc, "code", None)
+            details = getattr(exc, "details", None)
+            error = details.get("error", {}) if isinstance(details, dict) else {}
+            reasons = (
+                {item.get("reason") for item in error.get("details", []) if isinstance(item, dict)}
+                if isinstance(error, dict)
+                else set()
+            )
+            if code in {401, 403} or reasons & {"API_KEY_INVALID", "API_KEY_EXPIRED"}:
+                category = "authentication"
+            elif code == 429:
+                category = "rate_limit"
+            elif code in {408, 504} or "Timeout" in type(exc).__name__:
+                category = "timeout"
+            elif code in {400, 404}:
+                category = "incompatible_model"
+            elif type(exc).__name__ in {"ConnectError", "NetworkError"}:
+                category = "connection_error"
+            elif isinstance(exc, ValueError):
+                raise InvalidExtraction("Gemini returned invalid structured output.") from exc
+            else:
+                category = "provider_error"
+            raise ExtractionUnavailable(category) from exc
+
+        feedback = getattr(response, "prompt_feedback", None)
+        blocked = getattr(feedback, "block_reason", None)
+        if blocked and getattr(blocked, "value", blocked) != "BLOCKED_REASON_UNSPECIFIED":
+            raise ExtractionUnavailable("refusal")
+        candidates = getattr(response, "candidates", None) or []
+        if len(candidates) != 1:
+            raise InvalidExtraction("Gemini did not return a single completed prediction.")
+        finish = getattr(candidates[0], "finish_reason", None)
+        finish = getattr(finish, "value", finish)
+        if finish in {
+            "SAFETY",
+            "RECITATION",
+            "BLOCKLIST",
+            "PROHIBITED_CONTENT",
+            "SPII",
+            "MODEL_ARMOR",
+        }:
+            raise ExtractionUnavailable("refusal")
+        if finish != "STOP":
+            raise ExtractionUnavailable("incomplete_response")
+        try:
+            # Parse and validate locally even though the provider constrains JSON.
+            prediction = _StructuredPrediction.model_validate_json(getattr(response, "text", None))
+            result = ExtractionResult(
+                label=prediction.label,
+                reason_code=prediction.reason_code,
+                reason=prediction.reason,
+                evidence=[
+                    find_evidence(note_body, revision_id, quote) for quote in prediction.quotes
+                ],
+                device=prediction.device,
+            )
+            return validate_evidence(note_body, revision_id, result)
+        except (ValueError, TypeError) as exc:
+            raise InvalidExtraction("Gemini output failed exact evidence validation.") from exc

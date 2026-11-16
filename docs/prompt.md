@@ -4,18 +4,22 @@ The adapter contract accepts the complete note, one `Target`, and the exact sour
 
 ## Live structured extraction
 
-- Adapter: `OpenAIExtractor`, version `openai-structured-v1`.
-- Prompt: `walking-assistance-v1`; the complete text is the `SYSTEM_PROMPT` constant in [extractors.py](../caresignal/extractors.py).
-- Default model: `gpt-4.1-mini`, configurable with `OPENAI_MODEL`. Every stored run records the actual requested identifier.
-- API: OpenAI Python SDK `client.responses.parse`, using a Pydantic response schema. See the [official structured outputs guide](https://developers.openai.com/api/docs/guides/structured-outputs).
-- Input: a system policy and a JSON user message containing the complete original note and target. The policy treats note text and target cues as source data, including any embedded instructions.
-- Output: one of five labels, a reason code, reason, exact source quotes, and optional device. The application resolves unique quotes to Python string offsets and validates the source revision and exact substring. Adjacent sentences can form one contiguous quote.
+The native Gemini and OpenAI adapters share `SYSTEM_PROMPT` (`walking-assistance-v1`) in [extractors.py](../caresignal/extractors.py), the full-note/target input contract, five-label output schema and local exact-evidence validator.
+
+| Adapter | Mode | Extractor version | Default model | Environment variables |
+| --- | --- | --- | --- | --- |
+| `GeminiExtractor` | `gemini` | `gemini-structured-v1` | `gemini-3.8-flash` | `GEMINI_API_KEY`, optional `GEMINI_MODEL` |
+| `OpenAIExtractor` | `live` | `openai-structured-v1` | `gpt-4.1-mini` | `OPENAI_API_KEY`, optional `OPENAI_MODEL` |
+
+Gemini uses the Google Gen AI Python SDK's native `client.models.generate_content` structured JSON schema support; see the [official Pydantic schema documentation](https://github.com/googleapis/python-genai#pydantic-model-schema-support). Obtain a Gemini API key from [Google AI Studio](https://aistudio.google.com/api-keys). OpenAI uses `client.responses.parse` with a Pydantic response schema; see the [official structured outputs guide](https://developers.openai.com/api/docs/guides/structured-outputs). The default Gemini model completed the recorded development check; OpenAI live availability and alternative model availability have not been verified. Every stored run records the requested identifier.
+
+Input is a system policy and a JSON user payload containing the complete original note and target. The policy treats note text and target cues as source data, including embedded instructions. Output includes one of five labels, a reason code, reason, exact source quotes and optional device. The application resolves unique quotes to Python string offsets and validates the source revision and exact substring. Adjacent sentences can form one contiguous quote.
 
 The prompt separates actual walking help from transfers, device setup, other people, other times, future plans, conditional assistance, and declined help. It preserves uncertainty. Code compares confirmed baselines; the model does not make that comparison or interpret clinical risk.
 
 Malformed output, refusals, absent structured predictions, and unresolved evidence are invalid analyses. Credentials, timeouts, rate limits, and provider failures are unavailable analyses. Neither failure becomes a completed `UNCLEAR` prediction. Provider exception details are not exposed as card copy because they may contain submitted text or sensitive headers.
 
-The transport and validation paths have mocked tests. The public Fruta `nn_1093` source note and an agent-authored English translation are now frozen with provenance in [fruta-source.md](fruta-source.md). A real model inference remains pending until live credentials are available and an actual run is recorded. The separate fictional walking-attempt fixture is explicitly authored for development and is not represented as that Fruta note.
+The transport and validation paths have mocked tests. The public Fruta `nn_1093` source note and an agent-authored English translation are now frozen with provenance in [fruta-source.md](fruta-source.md). A real Gemini run using `gemini-3.8-flash`, extractor `gemini-structured-v1` and shared prompt `walking-assistance-v1` returned Hands-on help with exact two-sentence evidence on that one disclosed development example; see [the actual result](gemini-development-results/results.json). OpenAI live inference and held-out public performance remain pending. The English translation has not been independently reviewed, and one successful development example does not estimate general accuracy. The separate fictional walking-attempt fixture is explicitly authored for development and is not represented as that Fruta note.
 
 ## Fixture demo
 
