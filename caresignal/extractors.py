@@ -468,11 +468,11 @@ class GeminiExtractor:
     """Native Gemini structured output with the shared prompt and citation rules."""
 
     mode = "gemini"
-    version = "gemini-structured-v1"
+    version = "gemini-structured-v2"
     prompt_version = "walking-assistance-v1"
 
     def __init__(self, model_id: str | None = None, client=None) -> None:
-        self.model_id = model_id or os.getenv("GEMINI_MODEL") or "gemini-3.8-flash"
+        self.model_id = model_id or os.getenv("GEMINI_MODEL") or "gemini-3.1-flash-lite"
         self._client = client
 
     def extract(self, note_body: str, target: Target, revision_id: str) -> ExtractionResult:

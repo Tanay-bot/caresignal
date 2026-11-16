@@ -50,6 +50,8 @@ Gold evidence uses the minimal contiguous full sentence(s) needed to identify th
 
 The [freeze manifest](../data/fruta_held_out_manifest.json) records source selection, targets, annotation ledger, exact JSONL file and canonical dataset hashes, the pre-inference extractor-source hash and planned model/prompt versions. The dataset and its review were committed before evaluation. Predictions must not be used to revise this frozen version. Any changes informed by these results require a new version and a clearly labeled follow-up analysis.
 
+The initial planned model, `gemini-3.8-flash`, returned no usable predictions: the serial attempt was stopped after 14 provider failures, with the 15th request interrupted. Those attempts remain in [initial-provider-failures.json](heldout-results/initial-provider-failures.json). Separate checks on disclosed development note `nn_1093` found `gemini-3.1-flash-lite` available. The runtime amendment selects that model with extractor `gemini-structured-v2` before any successful held-out prediction. It changes the default model, not the prompt, notes, targets, translations, labels, or evidence. The full comparison records the working model explicitly; the stopped infrastructure attempt is not silently treated as a completed 24-note accuracy run.
+
 Run the paired comparison on identical full notes and targets:
 
 ```bash

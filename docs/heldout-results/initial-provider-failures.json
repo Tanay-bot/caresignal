@@ -1,0 +1,110 @@
+{
+  "protocol_id": "caresignal-fruta-24-v1",
+  "status": "stopped_after_repeated_provider_failures",
+  "freeze_commit": "b28451c45fe6a4814855a816f50e310b269f4b8e",
+  "model_id": "gemini-3.8-flash",
+  "extractor_version": "gemini-structured-v1",
+  "prompt_version": "walking-assistance-v1",
+  "planned_examples": 24,
+  "completed_attempts": 14,
+  "successful_predictions": 0,
+  "interrupted_example_id": "nm_0341",
+  "unattempted_example_ids": [
+    "nk_0797",
+    "nb_1319",
+    "nd_0297",
+    "na_1633",
+    "nn_2108",
+    "nm_0865",
+    "nc_1659",
+    "nn_1576",
+    "nc_0922"
+  ],
+  "attempts": [
+    {
+      "example_id": "na_0145",
+      "status": "UNAVAILABLE",
+      "error_category": "provider_error",
+      "elapsed_seconds": 23.1
+    },
+    {
+      "example_id": "nd_0902",
+      "status": "UNAVAILABLE",
+      "error_category": "timeout",
+      "elapsed_seconds": 28.3
+    },
+    {
+      "example_id": "nm_1286",
+      "status": "UNAVAILABLE",
+      "error_category": "timeout",
+      "elapsed_seconds": 28.2
+    },
+    {
+      "example_id": "na_0762",
+      "status": "UNAVAILABLE",
+      "error_category": "timeout",
+      "elapsed_seconds": 28.4
+    },
+    {
+      "example_id": "na_0689",
+      "status": "UNAVAILABLE",
+      "error_category": "timeout",
+      "elapsed_seconds": 28.3
+    },
+    {
+      "example_id": "nk_1089",
+      "status": "UNAVAILABLE",
+      "error_category": "timeout",
+      "elapsed_seconds": 28.3
+    },
+    {
+      "example_id": "nl_1309",
+      "status": "UNAVAILABLE",
+      "error_category": "timeout",
+      "elapsed_seconds": 28.4
+    },
+    {
+      "example_id": "nb_0960",
+      "status": "UNAVAILABLE",
+      "error_category": "timeout",
+      "elapsed_seconds": 28.7
+    },
+    {
+      "example_id": "nm_0182",
+      "status": "UNAVAILABLE",
+      "error_category": "timeout",
+      "elapsed_seconds": 28.2
+    },
+    {
+      "example_id": "nb_0890",
+      "status": "UNAVAILABLE",
+      "error_category": "timeout",
+      "elapsed_seconds": 28.3
+    },
+    {
+      "example_id": "nk_0846",
+      "status": "UNAVAILABLE",
+      "error_category": "timeout",
+      "elapsed_seconds": 28.2
+    },
+    {
+      "example_id": "nl_0727",
+      "status": "UNAVAILABLE",
+      "error_category": "timeout",
+      "elapsed_seconds": 28.4
+    },
+    {
+      "example_id": "nn_1577",
+      "status": "UNAVAILABLE",
+      "error_category": "timeout",
+      "elapsed_seconds": 28.4
+    },
+    {
+      "example_id": "nn_2000",
+      "status": "UNAVAILABLE",
+      "error_category": "timeout",
+      "elapsed_seconds": 28.2
+    }
+  ],
+  "note": "Recorded from flushed runner progress before stopping the serial run. No model labels or evidence were returned. This partial infrastructure attempt is not a 24-example accuracy result; interrupted and unattempted rows are not silently scored. Frozen labels/targets were not changed."
+}

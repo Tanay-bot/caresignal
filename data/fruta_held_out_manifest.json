@@ -87,5 +87,16 @@
     "References and translations were reviewed by coding agents, not humans or clinical experts.",
     "Few examples of specific categories; several notes share synthetic residents/scenarios.",
     "Usual-assistance comparisons are tested with fictional fixtures, not inferred from this public dataset."
-  ]
+  ],
+  "runtime_amendment_before_successful_predictions": {
+    "recorded_at_utc": "2026-11-16T01:13:50.913789+00:00",
+    "reason": "Initial gemini-3.8-flash generation failed repeatedly; a separate development-only availability check found gemini-3.1-flash-lite working. No labels/evidence were returned for the held-out notes in the stopped first attempt. Frozen note text, targets, reference labels/evidence and dataset hash are unchanged.",
+    "original_planned_model": "gemini-3.8-flash",
+    "selected_model": "gemini-3.1-flash-lite",
+    "extractor_version": "gemini-structured-v2",
+    "prompt_version": "walking-assistance-v1",
+    "extractor_source_sha256": "3e393e25aa034e7c1b6cb8b8669d04add361f6d6dbeb70c84304b764186cb01e",
+    "stopped_attempt_path": "docs/heldout-results/initial-provider-failures.json",
+    "selection_basis": "Availability on disclosed development example nn_1093, not held-out prediction accuracy."
+  }
 }
