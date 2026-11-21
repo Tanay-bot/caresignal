@@ -1,0 +1,831 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data: blob:; font-src 'none'; connect-src 'none'; media-src 'none'; frame-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<link rel="icon" href="data:,">
+<title>Divergence</title>
+<style>
+:root{
+  --bg:#0b0d12; --panel:#151a24; --ink:#f6f4ef; --ink2:#cdd3de; --line:#8f99ad;
+  --gold:#ffffff; --base:#ff9f1c; --model:#4ea8ff; --both:#dfe3ea; --neither:#161a23;
+  --ui:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --serif:Georgia,"Times New Roman",Times,serif;
+}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);overflow:hidden}
+#viewport{position:fixed;inset:0;background:var(--bg)}
+#stage{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0;background:var(--bg);
+  color:var(--ink);font-family:var(--ui);font-size:24px;overflow:hidden}
+.scene{position:absolute;inset:0;display:none}
+.scene.on{display:block}
+.hdr{position:absolute;left:70px;right:70px;top:34px;display:flex;justify-content:space-between;align-items:baseline}
+.act{font-size:40px;font-weight:800;letter-spacing:.01em}
+.act .num{color:var(--ink2);font-weight:700;margin-right:14px}
+.meta{font-size:24px;color:var(--ink2);font-weight:600;text-align:right}
+.sub{position:absolute;left:70px;width:1230px;top:96px;font-size:22px;line-height:31px;color:var(--ink2)}
+.sub b{color:var(--ink)}
+.ctx{position:absolute;left:100px;right:100px;top:104px;font-size:26px;color:var(--ink2)}
+.ctx b{color:var(--ink)}
+.ov{position:absolute;left:0;top:0;width:1920px;height:1080px;pointer-events:none;overflow:visible}
+#nText{position:absolute;left:100px;top:178px;width:1720px;font-family:var(--serif);line-height:2.05;color:var(--ink);
+  user-select:text;z-index:2}
+#nText .missingText{font-family:var(--ui);font-size:32px;border:3px dashed var(--line);padding:30px}
+#nFront{z-index:3}
+#nLegend{position:absolute;left:100px;width:1720px;top:650px;z-index:2}
+.lrow{display:grid;grid-template-columns:100px 250px 270px 1fr;align-items:center;column-gap:18px;min-height:62px;
+  border-top:2px solid #2b3240;font-size:24px}
+.lrow:last-of-type{border-bottom:2px solid #2b3240}
+.lrow .role{font-weight:800;font-size:26px}
+.lrow .lab{font-weight:800;font-size:26px;letter-spacing:.02em}
+.lrow .desc{color:var(--ink2)}
+.lrow .desc b{color:var(--ink)}
+.verdict{display:inline-block;font-weight:800;font-size:22px;padding:2px 10px;border:2px solid var(--ink);border-radius:4px;margin-left:10px}
+.verdict.no{border-style:dashed}
+.rationale{margin-top:18px;font-size:22px;line-height:32px;color:var(--ink2)}
+.rationale b{color:var(--ink)}
+.chip{display:inline-block;font-size:22px;font-weight:800;padding:1px 10px;border:2px solid var(--model);color:var(--model);border-radius:4px;letter-spacing:.03em;vertical-align:middle}
+#counters{position:absolute;left:1340px;top:160px;width:520px}
+.cgroup{position:relative;margin-bottom:18px}
+.ctitle{font-size:24px;font-weight:800;letter-spacing:.05em;margin-bottom:6px}
+.ctitle span{font-weight:600;letter-spacing:0;color:var(--ink2)}
+.crow{position:relative;margin-top:12px}
+.cline{display:flex;justify-content:space-between;align-items:flex-end;min-height:56px;column-gap:8px}
+.cname{font-size:23px;font-weight:700;line-height:28px;flex:1 1 auto;min-width:0}
+.cname small{display:block;font-size:22px;font-weight:500;color:var(--ink2)}
+.odo{height:56px;overflow:hidden;user-select:none;text-align:right;flex:0 0 250px}
+.odocol{will-change:transform}
+.odocol div{height:56px;line-height:56px;font-size:40px;font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap}
+.odocol div span{font-size:26px;font-weight:700;color:var(--ink2);margin-left:10px}
+.barwrap{position:relative;height:28px;margin-top:6px;background:#0f1219;border:2px solid var(--line);box-sizing:content-box;width:500px}
+.bar{position:absolute;left:0;top:0;height:28px;width:500px;transform-origin:0 50%;will-change:transform}
+.bar.base{background:var(--base)}
+.bar.model{background:var(--model)}
+.bar.model.replay{background:repeating-linear-gradient(135deg,var(--model) 0 11px,#0d2c52 11px 18px)}
+.ghost{position:absolute;top:-6px;height:36px;border:3px dashed var(--ink);border-left:none;box-sizing:border-box;left:0}
+.ccap{font-size:22px;line-height:28px;margin-top:8px;color:var(--ink)}
+.ccap b{color:var(--model)}
+.tick{position:absolute;width:4px;background:var(--ink);top:0;bottom:0;z-index:2}
+.ticklab{position:absolute;font-size:22px;font-weight:700;white-space:nowrap;transform:translateX(-50%);top:-2px}
+#swing{margin-top:6px;font-size:22px;line-height:29px;border-left:5px solid var(--ink);padding-left:16px}
+#swing .big{display:block;font-size:32px;line-height:40px;font-weight:800}
+#swing b{color:var(--ink)}
+footer{position:absolute;left:70px;right:70px;bottom:22px;display:flex;justify-content:space-between;font-size:22px;color:var(--ink2);z-index:5}
+footer b{color:var(--ink)}
+.overlay{position:absolute;inset:0;background:rgba(6,8,12,.94);display:none;z-index:20}
+.overlay.on{display:block}
+.panel{position:absolute;left:220px;right:220px;top:110px;bottom:110px;border:3px solid var(--ink);background:var(--panel);padding:44px 56px;box-sizing:border-box}
+.panel h2{margin:0 0 26px;font-size:42px}
+.keys{display:grid;grid-template-columns:260px 1fr;row-gap:12px;font-size:26px}
+.keys .k{font-weight:800;font-family:ui-monospace,Menlo,Consolas,monospace}
+.limits h2{font-size:46px;margin:0 0 10px}
+.limits .lede{font-size:26px;color:var(--ink2);margin-bottom:22px}
+.limits ol{margin:0;padding-left:0;list-style:none}
+.limits li{display:grid;grid-template-columns:420px 1fr;column-gap:30px;padding:16px 0;border-top:2px solid #39414f;font-size:25px;line-height:35px}
+.limits li b{font-size:30px}
+#endScene .limits{position:absolute;left:100px;right:100px;top:70px}
+#toast{position:absolute;left:50%;bottom:76px;transform:translateX(-50%);background:var(--ink);color:#000;font-size:24px;font-weight:800;
+  padding:10px 22px;border-radius:6px;opacity:0;z-index:30;white-space:nowrap}
+.banner{position:absolute;left:70px;right:70px;bottom:66px;border:3px dashed var(--ink);padding:14px 20px;font-size:24px;z-index:4;background:var(--bg)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+</style>
+</head>
+<body>
+<div id="viewport"><div id="stage">
+  <section id="noteScene" class="scene">
+    <div class="hdr"><div class="act" id="nAct"></div><div class="meta" id="nMeta"></div></div>
+    <div class="ctx" id="nCtx"></div>
+    <svg id="nBack" class="ov" viewBox="0 0 1920 1080" width="1920" height="1080" aria-hidden="true"></svg>
+    <div id="nText"></div>
+    <svg id="nFront" class="ov" viewBox="0 0 1920 1080" width="1920" height="1080" aria-hidden="true"></svg>
+    <div id="nLegend"></div>
+  </section>
+  <section id="boardScene" class="scene">
+    <div class="hdr"><div class="act" id="bAct"></div><div class="meta" id="bMeta"></div></div>
+    <div class="sub" id="bSub"></div>
+    <svg id="board" class="ov" viewBox="0 0 1920 1080" width="1920" height="1080" role="img" aria-label="Divergence ribbon">
+      <defs>
+        <pattern id="hatchN" width="14" height="14" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+          <rect width="14" height="14" fill="#161a23"/><rect width="5" height="14" fill="#343c4c"/>
+        </pattern>
+        <pattern id="hatchM" width="12" height="12" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+          <rect width="12" height="12" fill="#0d2c52"/><rect width="7" height="12" fill="#4ea8ff"/>
+        </pattern>
+      </defs>
+      <g id="gCols"></g><g id="gIdx"></g><g id="gRib"></g><g id="gArcs"></g>
+    </svg>
+    <div id="counters"></div>
+    <div id="bBanner"></div>
+  </section>
+  <section id="endScene" class="scene"><div class="limits" id="endLimits"></div></section>
+  <footer><span id="fKeys"><b>→</b> next · <b>←</b> back · <b>?</b> keys · <b>l</b> limitations</span><span id="fSrc"></span></footer>
+  <div id="ovKeys" class="overlay"><div class="panel" id="keysPanel"></div></div>
+  <div id="ovLimits" class="overlay"><div class="panel limits" id="limitsPanel"></div></div>
+  <div id="toast" role="status"></div>
+</div></div>
+<script>
+"use strict";
+const D = {"act1_note_id":"nk_0797","always_unclear_label_correct":14,"degraded_ribbon_only":false,"expected_notes":24,"missing_expected_ids":[],"notes":[{"context_key":"other_walk","gold":{"label":"UNCLEAR","spans":[{"end":162,"offset_source":"stored","quote":"He had some difficulty walking to the shared room, but with the walker it went reasonably well.","start":67}]},"id":"na_0145","index":0,"pred":{"baseline":{"correctness_source":"stored","error_category":null,"evidence_correct":false,"joint_correct":false,"label":"UNCLEAR","label_correct":true,"reason_code":"NO_SCOPED_PHRASE","spans":[],"status":"COMPLETE"},"v1":{"correctness_source":"stored","error_category":null,"evidence_correct":true,"joint_correct":false,"label":"HELP_UNSPECIFIED","label_correct":false,"reason_code":"WALK_ASSISTANCE_UNSPECIFIED","spans":[{"end":162,"offset_source":"stored","quote":"He had some difficulty walking to the shared room, but with the walker it went reasonably well.","start":67}],"status":"COMPLETE"},"v2":{"correctness_source":"stored","error_category":null,"evidence_correct":true,"joint_correct":true,"label":"UNCLEAR","label_correct":true,"reason_code":"AMBIGUOUS_WALKING_HELP","retried_after_rate_limit":false,"spans":[{"end":162,"offset_source":"stored","quote":"He had some difficulty walking to the shared room, but with the walker it went reasonably well.","start":67}],"status":"COMPLETE"}},"rationale":"Human help is documented for getting up and dressing, not for the selected walk. A walker and tremors do not establish human walking assistance.","selection_stratum":"physical_cue","sentences":[[0,66],[67,162],[163,225]],"target_cue":"walk to the shared room this morning","text":"The resident was helped with getting up and dressing this morning. He had some difficulty walking to the shared room, but with the walker it went reasonably well. The tremors are visible, especially when grasping the handles."},{"context_key":"other_walk","gold":{"label":"HELP_UNSPECIFIED","spans":[{"end":104,"offset_source":"stored","quote":"Provided support during a shorter walk with the walker, during which her balance and awareness improved.","start":0}]},"id":"nd_0902","index":1,"pred":{"baseline":{"correctness_source":"stored","error_category":null,"evidence_correct":true,"joint_correct":false,"label":"UNCLEAR","label_correct":false,"reason_code":"HUMAN_HELP_UNSPECIFIED","spans":[{"end":104,"offset_source":"stored","quote":"Provided support during a shorter walk with the walker, during which her balance and awareness improved.","start":0}],"status":"COMPLETE"},"v1":{"correctness_source":"stored","error_category":null,"evidence_correct":false,"joint_correct":false,"label":"HANDS_ON","label_correct":false,"reason_code":"PHYSICAL_SUPPORT_DOCUMENTED","spans":[{"end":54,"offset_source":"stored","quote":"Provided support during a shorter walk with the walker","start":0}],"status":"COMPLETE"},"v2":{"correctness_source":"stored","error_category":null,"evidence_correct":false,"joint_correct":false,"label":"HELP_UNSPECIFIED","label_correct":true,"reason_code":"GENERIC_SUPPORT","retried_after_rate_limit":false,"spans":[{"end":54,"offset_source":"stored","quote":"Provided support during a shorter walk with the walker","start":0}],"status":"COMPLETE"}},"rationale":"The note reports support during the selected walk, but does not specify physical contact or a clear supervision subtype.","selection_stratum":"physical_cue","sentences":[[0,104],[105,142]],"target_cue":"short walk with the walker","text":"Provided support during a shorter walk with the walker, during which her balance and awareness improved. The resident said that she felt safe."},{"context_key":"garden_walk","gold":{"label":"HANDS_ON","spans":[{"end":254,"offset_source":"stored","quote":"Taken for a short walk in the garden as a distraction. Walked unsteadily; support had to be provided.","start":153}]},"id":"nm_1286","index":2,"pred":{"baseline":{"correctness_source":"stored","error_category":null,"evidence_correct":false,"joint_correct":false,"label":"UNCLEAR","label_correct":false,"reason_code":"NO_SCOPED_PHRASE","spans":[],"status":"COMPLETE"},"v1":{"correctness_source":"stored","error_category":null,"evidence_correct":true,"joint_correct":true,"label":"HANDS_ON","label_correct":true,"reason_code":"PHYSICAL_SUPPORT_REQUIRED","spans":[{"end":254,"offset_source":"stored","quote":"Taken for a short walk in the garden as a distraction. Walked unsteadily; support had to be provided.","start":153}],"status":"COMPLETE"},"v2":{"correctness_source":"stored","error_category":null,"evidence_correct":true,"joint_correct":true,"label":"HANDS_ON","label_correct":true,"reason_code":"PHYSICAL_SUPPORT_DOCUMENTED","retried_after_rate_limit":false,"spans":[{"end":254,"offset_source":"stored","quote":"Taken for a short walk in the garden as a distraction. Walked unsteadily; support had to be provided.","start":153}],"status":"COMPLETE"}},"rationale":"The garden walk is immediately followed by unsteady walking requiring support. The bodily instability context supports physical support during that event.","selection_stratum":"physical_cue","sentences":[[0,44],[45,105],[106,152],[153,207],[208,254]],"target_cue":"garden walk used as distraction","text":"The resident was sitting in the living room. Kept asking where her bag was (not brought in on admission). Became restless when we said it was not there. Taken for a short walk in the garden as a distraction. Walked unsteadily; support had to be provided."},{"context_key":"other_walk","gold":{"label":"HELP_UNSPECIFIED","spans":[{"end":84,"offset_source":"stored","quote":"The resident had difficulty walking with the walker. We provided additional support.","start":0}]},"id":"na_0762","index":3,"pred":{"baseline":{"correctness_source":"stored","error_category":null,"evidence_correct":false,"joint_correct":false,"label":"UNCLEAR","label_correct":false,"reason_code":"AMBIGUOUS_EVENT","spans":[],"status":"COMPLETE"},"v1":{"correctness_source":"stored","error_category":null,"evidence_correct":false,"joint_correct":false,"label":"HELP_UNSPECIFIED","label_correct":true,"reason_code":"ASSISTANCE_PROVIDED","spans":[{"end":84,"offset_source":"stored","quote":"We provided additional support.","start":53},{"end":196,"offset_source":"stored","quote":"After a short walk, she sat on the sofa for a while to recover.","start":133}],"status":"COMPLETE"},"v2":{"correctness_source":"stored","error_category":null,"evidence_correct":false,"joint_correct":false,"label":"HELP_UNSPECIFIED","label_correct":true,"reason_code":"GENERIC_SUPPORT_WALK","retried_after_rate_limit":false,"spans":[{"end":84,"offset_source":"stored","quote":"The resident had difficulty walking with the walker. We provided additional support.","start":0},{"end":196,"offset_source":"stored","quote":"After a short walk, she sat on the sofa for a while to recover.","start":133}],"status":"COMPLETE"}},"rationale":"Two adjacent sentences bind offered support to walking, but generic additional support does not establish physical contact or supervision subtype.","selection_stratum":"physical_cue","sentences":[[0,52],[53,84],[85,132],[133,196]],"target_cue":"walk with the walker described before sitting on the sofa","text":"The resident had difficulty walking with the walker. We provided additional support. She was visibly anxious after last week's fall. After a short walk, she sat on the sofa for a while to recover."},{"context_key":"other_walk","gold":{"label":"HANDS_ON","spans":[{"end":206,"offset_source":"stored","quote":"After lunch, we took a short walk together with the walker. She had difficulty keeping her balance, but with my support it went reasonably well.","start":62}]},"id":"na_0689","index":4,"pred":{"baseline":{"correctness_source":"stored","error_category":null,"evidence_correct":false,"joint_correct":false,"label":"UNCLEAR","label_correct":false,"reason_code":"HUMAN_HELP_UNSPECIFIED","spans":[{"end":121,"offset_source":"stored","quote":"After lunch, we took a short walk together with the walker.","start":62}],"status":"COMPLETE"},"v1":{"correctness_source":"stored","error_category":null,"evidence_correct":false,"joint_correct":false,"label":"HANDS_ON","label_correct":true,"reason_code":"PHYSICAL_SUPPORT_DOCUMENTED","spans":[{"end":121,"offset_source":"stored","quote":"After lunch, we took a short walk together with the walker.","start":62},{"end":206,"offset_source":"stored","quote":"She had difficulty keeping her balance, but with my support it went reasonably well.","start":122}],"status":"COMPLETE"},"v2":{"correctness_source":"stored","error_category":null,"evidence_correct":false,"joint_correct":false,"label":"HANDS_ON","label_correct":true,"reason_code":"PHYSICAL_SUPPORT_DOCUMENTED","retried_after_rate_limit":false,"spans":[{"end":121,"offset_source":"stored","quote":"After lunch, we took a short walk together with the walker.","start":62},{"end":206,"offset_source":"stored","quote":"She had difficulty keeping her balance, but with my support it went reasonably well.","start":122}],"status":"COMPLETE"}},"rationale":"The selected completed walk and the support needed to keep bodily balance are adjacent. This describes bodily support during the walk rather than mere presence.","selection_stratum":"physical_cue","sentences":[[0,61],[62,121],[122,206],[207,225]],"target_cue":"short walk with the walker after lunch","text":"At midday, the resident ate well, but she still seemed tired. After lunch, we took a short walk together with the walker. She had difficulty keeping her balance, but with my support it went reasonably well. We took it slowly."},{"context_key":"other_walk","gold":{"label":"UNCLEAR","spans":[]},"id":"nk_1089","index":5,"pred":{"baseline":{"correctness_source":"stored","error_category":null,"evidence_correct":true,"joint_correct":true,"label":"UNCLEAR","label_correct":true,"reason_code":"NO_SCOPED_PHRASE","spans":[],"status":"COMPLETE"},"v1":{"correctness_source":"stored","error_category":null,"evidence_correct":false,"joint_correct":false,"label":"HANDS_ON","label_correct":false,"reason_code":"SUPPORTED_WALKING","spans":[{"end":64,"offset_source":"stored","quote":"The resident needed some help again during today's toilet visit.","start":0},{"end":134,"offset_source":"stored","quote":"He is visibly tired, but can still walk short distances with support.","start":65}],"status":"COMPLETE"},"v2":{"correctness_source":"stored","error_category":null,"evidence_correct":true,"joint_correct":true,"label":"UNCLEAR","label_correct":true,"reason_code":"GENERAL_ABILITY_NOT_EVENT","retried_after_rate_limit":false,"spans":[],"status":"COMPLETE"}},"rationale":"Help with toileting and a statement of general walking ability do not document an actual selected walking event. Wheelchair rest is separate.","selection_stratum":"physical_cue","sentences":[[0,64],[65,134],[135,205]],"target_cue":"walking in the episode described in this note","text":"The resident needed some help again during today's toilet visit. He is visibly tired, but can still walk short distances with support. After the toilet visit, we let him rest in his wheelchair for a while."},{"context_key":"other_walk","gold":{"label":"INDEPENDENT","spans":[{"end":67,"offset_source":"stored","quote":"The resident was independent this morning and walked around calmly.","start":0}]},"id":"nl_1309","index":6,"pred":{"baseline":{"correctness_source":"stored","error_category":null,"evidence_correct":true,"joint_correct":true,"label":"INDEPENDENT","label_correct":true,"reason_code":"PHRASE_MATCH","spans":[{"end":67,"offset_source":"stored","quote":"The resident was independent this morning and walked around calmly.","start":0}],"status":"COMPLETE"},"v1":{"correctness_source":"stored","error_category":null,"evidence_correct":true,"joint_correct":true,"label":"INDEPENDENT","label_correct":true,"reason_code":"EXPLICIT_INDEPENDENCE","spans":[{"end":67,"offset_source":"stored","quote":"The resident was independent this morning and walked around calmly.","start":0}],"status":"COMPLETE"},"v2":{"correctness_source":"stored","error_category":null,"evidence_correct":true,"joint_correct":true,"label":"INDEPENDENT","label_correct":true,"reason_code":"EXPLICIT_INDEPENDENCE","retried_after_rate_limit":false,"spans":[{"end":67,"offset_source":"stored","quote":"The resident was independent this morning and walked around calmly.","start":0}],"status":"COMPLETE"}},"rationale":"Independence and actual walking are linked in the same sentence. The separate general attention to fall risk does not explicitly establish a person supervising the selected walk.","selection_stratum":"independence_cue","sentences":[[0,67],[68,133]],"target_cue":"walking around this morning","text":"The resident was independent this morning and walked around calmly. Attention was paid to his fall risk, but there were no incidents."},{"context_key":"walking_attempt","gold":{"label":"HELP_UNSPECIFIED","spans":[{"end":115,"offset_source":"stored","quote":"The resident tried to walk independently to her room with the walker. She forgot how it works and had to be guided.","start":0}]},"id":"nb_0960","index":7,"pred":{"baseline":{"correctness_source":"stored","error_category":null,"evidence_correct":false,"joint_correct":false,"label":"INDEPENDENT","label_correct":false,"reason_code":"PHRASE_MATCH","spans":[{"end":69,"offset_source":"stored","quote":"The resident tried to walk independently to her room with the walker.","start":0}],"status":"COMPLETE"},"v1":{"correctness_source":"stored","error_category":null,"evidence_correct":false,"joint_correct":false,"label":"HANDS_ON","label_correct":false,"reason_code":"DIRECT_GUIDANCE_EVIDENCE","spans":[{"end":69,"offset_source":"stored","quote":"The resident tried to walk independently to her room with the walker.","start":0},{"end":115,"offset_source":"stored","quote":"She forgot how it works and had to be guided.","start":70}],"status":"COMPLETE"},"v2":{"correctness_source":"stored","error_category":null,"evidence_correct":false,"joint_correct":false,"label":"HELP_UNSPECIFIED","label_correct":true,"reason_code":"GUIDANCE_ONLY","retried_after_rate_limit":false,"spans":[{"end":69,"offset_source":"stored","quote":"The resident tried to walk independently to her room with the walker.","start":0},{"end":115,"offset_source":"stored","quote":"She forgot how it works and had to be guided.","start":70}],"status":"COMPLETE"}},"rationale":"Independent walking was attempted, then guidance became necessary for that attempt. The guidance subtype is unspecified.","selection_stratum":"independence_cue","sentences":[[0,69],[70,115]],"target_cue":"attempt to walk to her room with the walker","text":"The resident tried to walk independently to her room with the walker. She forgot how it works and had to be guided."},{"context_key":"garden_walk","gold":{"label":"UNCLEAR","spans":[{"end":79,"offset_source":"stored","quote":"Afterwards, a short walk in the garden with a walker.","start":26}]},"id":"nm_0182","index":8,"pred":{"baseline":{"correctness_source":"stored","error_category":null,"evidence_correct":false,"joint_correct":false,"label":"UNCLEAR","label_correct":true,"reason_code":"NO_SCOPED_PHRASE","spans":[],"status":"COMPLETE"},"v1":{"correctness_source":"stored","error_category":null,"evidence_correct":true,"joint_correct":false,"label":"INDEPENDENT","label_correct":false,"reason_code":"DEVICE_ONLY","spans":[{"end":79,"offset_source":"stored","quote":"Afterwards, a short walk in the garden with a walker.","start":26}],"status":"COMPLETE"},"v2":{"correctness_source":"stored","error_category":null,"evidence_correct":true,"joint_correct":true,"label":"UNCLEAR","label_correct":true,"reason_code":"DEVICE_NOT_INDICATION_OF_INDEPENDENCE","retried_after_rate_limit":false,"spans":[{"end":79,"offset_source":"stored","quote":"Afterwards, a short walk in the garden with a walker.","start":26}],"status":"COMPLETE"}},"rationale":"The independence refers to eating. The selected garden walk mentions a device but leaves human assistance unspecified.","selection_stratum":"independence_cue","sentences":[[0,25],[26,79],[80,110],[111,174]],"target_cue":"garden walk after lunch","text":"Lunch: ate independently. Afterwards, a short walk in the garden with a walker. Visibly enjoyed the fresh air. Talked about his former garden; seemed to be a positive memory."},{"context_key":"garden_walk","gold":{"label":"UNCLEAR","spans":[{"end":84,"offset_source":"stored","quote":"During the afternoon walk in the garden, the resident used her walker independently.","start":0}]},"id":"nb_0890","index":9,"pred":{"baseline":{"correctness_source":"stored","error_category":null,"evidence_correct":true,"joint_correct":false,"label":"INDEPENDENT","label_correct":false,"reason_code":"PHRASE_MATCH","spans":[{"end":84,"offset_source":"stored","quote":"During the afternoon walk in the garden, the resident used her walker independently.","start":0}],"status":"COMPLETE"},"v1":{"correctness_source":"stored","error_category":null,"evidence_correct":true,"joint_correct":false,"label":"INDEPENDENT","label_correct":false,"reason_code":"EXPLICIT_INDEPENDENCE","spans":[{"end":84,"offset_source":"stored","quote":"During the afternoon walk in the garden, the resident used her walker independently.","start":0}],"status":"COMPLETE"},"v2":{"correctness_source":"stored","error_category":null,"evidence_correct":true,"joint_correct":true,"label":"UNCLEAR","label_correct":true,"reason_code":"INDEPENDENCE_MODIFIES_DEVICE","retried_after_rate_limit":false,"spans":[{"end":84,"offset_source":"stored","quote":"During the afternoon walk in the garden, the resident used her walker independently.","start":0}],"status":"COMPLETE"}},"rationale":"Independently using the walker is explicitly situated within the selected completed garden walk; this supports unaided walking with a device.","selection_stratum":"independence_cue","sentences":[[0,84],[85,161]],"target_cue":"afternoon garden walk","text":"During the afternoon walk in the garden, the resident used her walker independently. She walked calmly and said that the pain in her knees was not too bad today."},{"context_key":"other_walk","gold":{"label":"HELP_UNSPECIFIED","spans":[{"end":83,"offset_source":"stored","quote":"She took a short walk with guidance.","start":47}]},"id":"nk_0846","index":10,"pred":{"baseline":{"correctness_source":"stored","error_category":null,"evidence_correct":true,"joint_correct":true,"label":"HELP_UNSPECIFIED","label_correct":true,"reason_code":"PHRASE_MATCH","spans":[{"end":83,"offset_source":"stored","quote":"She took a short walk with guidance.","start":47}],"status":"COMPLETE"},"v1":{"correctness_source":"stored","error_category":null,"evidence_correct":true,"joint_correct":false,"label":"SUPERVISION","label_correct":false,"reason_code":"SUPERVISED_WALK","spans":[{"end":83,"offset_source":"stored","quote":"She took a short walk with guidance.","start":47}],"status":"COMPLETE"},"v2":{"correctness_source":"stored","error_category":null,"evidence_correct":true,"joint_correct":true,"label":"HELP_UNSPECIFIED","label_correct":true,"reason_code":"GUIDANCE_ONLY","retried_after_rate_limit":false,"spans":[{"end":83,"offset_source":"stored","quote":"She took a short walk with guidance.","start":47}],"status":"COMPLETE"}},"rationale":"Guidance is documented during the selected walk, without a resolved physical-support versus supervision subtype.","selection_stratum":"guidance_cue","sentences":[[0,46],[47,83],[84,175]],"target_cue":"short walk at the end of the day","text":"At the end of the day, the resident was tired. She took a short walk with guidance. It was a quiet day, but she is having some difficulty getting used to the new surroundings."},{"context_key":"other_walk","gold":{"label":"UNCLEAR","spans":[{"end":74,"offset_source":"stored","quote":"The resident was restless during lunch and kept getting up to walk around.","start":0}]},"id":"nl_0727","index":11,"pred":{"baseline":{"correctness_source":"stored","error_category":null,"evidence_correct":false,"joint_correct":false,"label":"UNCLEAR","label_correct":true,"reason_code":"NO_SCOPED_PHRASE","spans":[],"status":"COMPLETE"},"v1":{"correctness_source":"stored","error_category":null,"evidence_correct":true,"joint_correct":false,"label":"INDEPENDENT","label_correct":false,"reason_code":"NO_HELP_DOCUMENTED","spans":[{"end":74,"offset_source":"stored","quote":"The resident was restless during lunch and kept getting up to walk around.","start":0}],"status":"COMPLETE"},"v2":{"correctness_source":"stored","error_category":null,"evidence_correct":false,"joint_correct":false,"label":"HELP_UNSPECIFIED","label_correct":false,"reason_code":"VERBAL_GUIDANCE_ONLY","retried_after_rate_limit":false,"spans":[{"end":113,"offset_source":"stored","quote":"The resident was restless during lunch and kept getting up to walk around. He accepted guidance to sit back down.","start":0}],"status":"COMPLETE"}},"rationale":"The selected walking is described, but the human guidance belongs to sitting back down, which is excluded by the target.","selection_stratum":"guidance_cue","sentences":[[0,74],[75,113]],"target_cue":"walking around during lunch; exclude help to sit back down","text":"The resident was restless during lunch and kept getting up to walk around. He accepted guidance to sit back down."},{"context_key":"other_walk","gold":{"label":"HELP_UNSPECIFIED","spans":[{"end":106,"offset_source":"stored","quote":"The afternoon activity was a short walk with the walker, during which we regularly reminded her to use it.","start":0}]},"id":"nn_1577","index":12,"pred":{"baseline":{"correctness_source":"stored","error_category":null,"evidence_correct":true,"joint_correct":false,"label":"UNCLEAR","label_correct":false,"reason_code":"HUMAN_HELP_UNSPECIFIED","spans":[{"end":106,"offset_source":"stored","quote":"The afternoon activity was a short walk with the walker, during which we regularly reminded her to use it.","start":0}],"status":"COMPLETE"},"v1":{"correctness_source":"stored","error_category":null,"evidence_correct":true,"joint_correct":true,"label":"HELP_UNSPECIFIED","label_correct":true,"reason_code":"VERBAL_CUEING","spans":[{"end":106,"offset_source":"stored","quote":"The afternoon activity was a short walk with the walker, during which we regularly reminded her to use it.","start":0}],"status":"COMPLETE"},"v2":{"correctness_source":"stored","error_category":null,"evidence_correct":true,"joint_correct":true,"label":"HELP_UNSPECIFIED","label_correct":true,"reason_code":"VERBAL_CUEING","retried_after_rate_limit":false,"spans":[{"end":106,"offset_source":"stored","quote":"The afternoon activity was a short walk with the walker, during which we regularly reminded her to use it.","start":0}],"status":"COMPLETE"}},"rationale":"Verbal reminders are explicit human help during the walk, but verbal cueing alone is outside the ranked supervision/physical-support categories.","selection_stratum":"guidance_cue","sentences":[[0,106],[107,136]],"target_cue":"short afternoon walk with the walker","text":"The afternoon activity was a short walk with the walker, during which we regularly reminded her to use it. She liked the light exercise."},{"context_key":"hallway_walk","gold":{"label":"HELP_UNSPECIFIED","spans":[{"end":123,"offset_source":"stored","quote":"The resident was guided for a short walk in the hallway; he was enthusiastic but sometimes had to be reminded about safety.","start":0}]},"id":"nn_2000","index":13,"pred":{"baseline":{"correctness_source":"stored","error_category":null,"evidence_correct":false,"joint_correct":false,"label":"UNCLEAR","label_correct":false,"reason_code":"NO_SCOPED_PHRASE","spans":[],"status":"COMPLETE"},"v1":{"correctness_source":"stored","error_category":null,"evidence_correct":true,"joint_correct":false,"label":"SUPERVISION","label_correct":false,"reason_code":"GUIDANCE_AND_SAFETY_MONITORING","spans":[{"end":123,"offset_source":"stored","quote":"The resident was guided for a short walk in the hallway; he was enthusiastic but sometimes had to be reminded about safety.","start":0}],"status":"COMPLETE"},"v2":{"correctness_source":"stored","error_category":null,"evidence_correct":true,"joint_correct":true,"label":"HELP_UNSPECIFIED","label_correct":true,"reason_code":"GUIDANCE_ONLY","retried_after_rate_limit":false,"spans":[{"end":123,"offset_source":"stored","quote":"The resident was guided for a short walk in the hallway; he was enthusiastic but sometimes had to be reminded about safety.","start":0}],"status":"COMPLETE"}},"rationale":"Guidance and safety reminders establish human help on this walk. They do not explicitly establish physical contact or sustained safety supervision beyond verbal cueing.","selection_stratum":"guidance_cue","sentences":[[0,123]],"target_cue":"short hallway walk","text":"The resident was guided for a short walk in the hallway; he was enthusiastic but sometimes had to be reminded about safety."},{"context_key":"hallway_walk","gold":{"label":"UNCLEAR","spans":[{"end":40,"offset_source":"stored","quote":"Short walk with a walker in the hallway.","start":0}]},"id":"nm_0341","index":14,"pred":{"baseline":{"correctness_source":"stored","error_category":null,"evidence_correct":true,"joint_correct":true,"label":"UNCLEAR","label_correct":true,"reason_code":"HUMAN_HELP_UNSPECIFIED","spans":[{"end":40,"offset_source":"stored","quote":"Short walk with a walker in the hallway.","start":0}],"status":"COMPLETE"},"v1":{"correctness_source":"stored","error_category":null,"evidence_correct":true,"joint_correct":true,"label":"UNCLEAR","label_correct":true,"reason_code":"AMBIGUOUS_SUPPORT_LEVEL","spans":[{"end":40,"offset_source":"stored","quote":"Short walk with a walker in the hallway.","start":0}],"status":"COMPLETE"},"v2":{"correctness_source":"stored","error_category":null,"evidence_correct":true,"joint_correct":true,"label":"UNCLEAR","label_correct":true,"reason_code":"NO_HUMAN_ASSISTANCE_DOCUMENTED","retried_after_rate_limit":false,"spans":[{"end":40,"offset_source":"stored","quote":"Short walk with a walker in the hallway.","start":0}],"status":"COMPLETE"}},"rationale":"The walk, device, instability and source risk statement do not document a person providing help.","selection_stratum":"guidance_cue","sentences":[[0,40],[41,84],[85,111],[112,148]],"target_cue":"short hallway walk with the walker","text":"Short walk with a walker in the hallway. The resident was very unsteady on his feet. Had to stop often to rest. Fall risk appears to have increased."},{"context_key":"other_walk","gold":{"label":"SUPERVISION","spans":[{"end":196,"offset_source":"stored","quote":"During the afternoon shift, the resident took a short walk with the walking frame. He was somewhat restless and saw things that were not there. We kept an extra close eye on whether he might fall.","start":0}]},"id":"nk_0797","index":15,"pred":{"baseline":{"correctness_source":"stored","error_category":null,"evidence_correct":false,"joint_correct":false,"label":"UNCLEAR","label_correct":false,"reason_code":"NO_SCOPED_PHRASE","spans":[],"status":"COMPLETE"},"v1":{"correctness_source":"stored","error_category":null,"evidence_correct":false,"joint_correct":false,"label":"INDEPENDENT","label_correct":false,"reason_code":"NO_SUPPORT_DOCUMENTED","spans":[{"end":82,"offset_source":"stored","quote":"During the afternoon shift, the resident took a short walk with the walking frame.","start":0}],"status":"COMPLETE"},"v2":{"correctness_source":"stored","error_category":null,"evidence_correct":false,"joint_correct":false,"label":"SUPERVISION","label_correct":true,"reason_code":"SAFETY_WATCH_DURING_WALK","retried_after_rate_limit":false,"spans":[{"end":82,"offset_source":"stored","quote":"During the afternoon shift, the resident took a short walk with the walking frame.","start":0},{"end":196,"offset_source":"stored","quote":"We kept an extra close eye on whether he might fall.","start":144}],"status":"COMPLETE"}},"rationale":"The walking event is followed by explicit close staff observation for fall prevention, before the note transitions to help with lunch. This is actual safety supervision during the selected walk.","selection_stratum":"guidance_cue","sentences":[[0,82],[83,143],[144,196],[197,259],[260,282]],"target_cue":"walk with the walking frame during the afternoon shift","text":"During the afternoon shift, the resident took a short walk with the walking frame. He was somewhat restless and saw things that were not there. We kept an extra close eye on whether he might fall. After the walk, we helped him with his lunch, which went well. He ate with enjoyment."},{"context_key":"other_walk","gold":{"label":"UNCLEAR","spans":[{"end":97,"offset_source":"stored","quote":"During a short walk with the walking stick, the resident said that she felt a little more stable.","start":0}]},"id":"nb_1319","index":16,"pred":{"baseline":{"correctness_source":"stored","error_category":null,"evidence_correct":false,"joint_correct":false,"label":"UNCLEAR","label_correct":true,"reason_code":"NO_SCOPED_PHRASE","spans":[],"status":"COMPLETE"},"v1":{"correctness_source":"stored","error_category":null,"evidence_correct":true,"joint_correct":false,"label":"INDEPENDENT","label_correct":false,"reason_code":"NO_HELP_DOCUMENTED","spans":[{"end":97,"offset_source":"stored","quote":"During a short walk with the walking stick, the resident said that she felt a little more stable.","start":0}],"status":"COMPLETE"},"v2":{"correctness_source":"stored","error_category":null,"evidence_correct":true,"joint_correct":true,"label":"UNCLEAR","label_correct":true,"reason_code":"INSUFFICIENT_EVIDENCE","retried_after_rate_limit":true,"spans":[{"end":97,"offset_source":"stored","quote":"During a short walk with the walking stick, the resident said that she felt a little more stable.","start":0}],"status":"COMPLETE"}},"rationale":"The device and the resident's reported stability do not specify human assistance during this walk.","selection_stratum":"other_walk","sentences":[[0,97],[98,119]],"target_cue":"short walk with the walking stick","text":"During a short walk with the walking stick, the resident said that she felt a little more stable. She did tire quickly."},{"context_key":"other_walk","gold":{"label":"UNCLEAR","spans":[{"end":117,"offset_source":"stored","quote":"The resident was noticed to have increased wheezing in her chest after a walk; help and comfort were quickly offered.","start":0}]},"id":"nd_0297","index":17,"pred":{"baseline":{"correctness_source":"stored","error_category":null,"evidence_correct":true,"joint_correct":false,"label":"HELP_UNSPECIFIED","label_correct":false,"reason_code":"PHRASE_MATCH","spans":[{"end":117,"offset_source":"stored","quote":"The resident was noticed to have increased wheezing in her chest after a walk; help and comfort were quickly offered.","start":0}],"status":"COMPLETE"},"v1":{"correctness_source":"stored","error_category":null,"evidence_correct":false,"joint_correct":false,"label":"UNCLEAR","label_correct":true,"reason_code":"NO_SUPPORT_DOCUMENTED","spans":[{"end":77,"offset_source":"stored","quote":"The resident was noticed to have increased wheezing in her chest after a walk","start":0}],"status":"COMPLETE"},"v2":{"correctness_source":"stored","error_category":null,"evidence_correct":true,"joint_correct":true,"label":"UNCLEAR","label_correct":true,"reason_code":"AMBIGUOUS_ASSISTANCE","retried_after_rate_limit":false,"spans":[{"end":117,"offset_source":"stored","quote":"The resident was noticed to have increased wheezing in her chest after a walk; help and comfort were quickly offered.","start":0}],"status":"COMPLETE"}},"rationale":"The offered help and comfort occur after the selected walk in response to wheezing. The note does not say who helped during the walk.","selection_stratum":"other_walk","sentences":[[0,117]],"target_cue":"walk before the wheezing was observed","text":"The resident was noticed to have increased wheezing in her chest after a walk; help and comfort were quickly offered."},{"context_key":"other_walk","gold":{"label":"UNCLEAR","spans":[{"end":85,"offset_source":"stored","quote":"He walked around aimlessly and seemed anxious.","start":39}]},"id":"na_1633","index":18,"pred":{"baseline":{"correctness_source":"stored","error_category":null,"evidence_correct":false,"joint_correct":false,"label":"UNCLEAR","label_correct":true,"reason_code":"NO_SCOPED_PHRASE","spans":[],"status":"COMPLETE"},"v1":{"correctness_source":"stored","error_category":null,"evidence_correct":false,"joint_correct":false,"label":"SUPERVISION","label_correct":false,"reason_code":"DIRECT_SUPERVISION_COMPLETED","spans":[{"end":138,"offset_source":"stored","quote":"He walked around aimlessly and seemed anxious. The carer took him to the garden for some fresh air.","start":39}],"status":"COMPLETE"},"v2":{"correctness_source":"stored","error_category":null,"evidence_correct":false,"joint_correct":false,"label":"SUPERVISION","label_correct":false,"reason_code":"DIRECTED_ACCOMPANIMENT","retried_after_rate_limit":false,"spans":[{"end":138,"offset_source":"stored","quote":"The carer took him to the garden for some fresh air.","start":86}],"status":"COMPLETE"}},"rationale":"The target is the aimless walking before the later garden visit. No human walking assistance is documented for that earlier event.","selection_stratum":"other_walk","sentences":[[0,38],[39,85],[86,138],[139,170]],"target_cue":"aimless walking before the carer took him to the garden","text":"The resident had a restless afternoon. He walked around aimlessly and seemed anxious. The carer took him to the garden for some fresh air. This helped him relax a little."},{"context_key":"other_walk","gold":{"label":"UNCLEAR","spans":[{"end":48,"offset_source":"stored","quote":"The afternoon ends with a quiet walk in the sun.","start":0}]},"id":"nn_2108","index":19,"pred":{"baseline":{"correctness_source":"stored","error_category":null,"evidence_correct":false,"joint_correct":false,"label":"UNCLEAR","label_correct":true,"reason_code":"NO_SCOPED_PHRASE","spans":[],"status":"COMPLETE"},"v1":{"correctness_source":"stored","error_category":null,"evidence_correct":false,"joint_correct":false,"label":"HELP_UNSPECIFIED","label_correct":false,"reason_code":"VERBAL_CUEING","spans":[{"end":125,"offset_source":"stored","quote":"The afternoon ends with a quiet walk in the sun. The client is quiet and follows well, which helps to end his day positively.","start":0}],"status":"COMPLETE"},"v2":{"correctness_source":"stored","error_category":null,"evidence_correct":false,"joint_correct":false,"label":"HELP_UNSPECIFIED","label_correct":false,"reason_code":"GUIDANCE_ONLY","retried_after_rate_limit":true,"spans":[{"end":48,"offset_source":"stored","quote":"The afternoon ends with a quiet walk in the sun.","start":0},{"end":125,"offset_source":"stored","quote":"The client is quiet and follows well, which helps to end his day positively.","start":49}],"status":"COMPLETE"}},"rationale":"The walk is documented, but follows well does not explicitly say that a person provided walking support or supervision.","selection_stratum":"other_walk","sentences":[[0,48],[49,125]],"target_cue":"quiet walk in the sun at the end of the afternoon","text":"The afternoon ends with a quiet walk in the sun. The client is quiet and follows well, which helps to end his day positively."},{"context_key":"other_walk","gold":{"label":"UNCLEAR","spans":[]},"id":"nm_0865","index":20,"pred":{"baseline":{"correctness_source":"stored","error_category":null,"evidence_correct":true,"joint_correct":true,"label":"UNCLEAR","label_correct":true,"reason_code":"NO_SCOPED_PHRASE","spans":[],"status":"COMPLETE"},"v1":{"correctness_source":"stored","error_category":null,"evidence_correct":true,"joint_correct":true,"label":"UNCLEAR","label_correct":true,"reason_code":"NO_WALKING_EVENT","spans":[],"status":"COMPLETE"},"v2":{"correctness_source":"stored","error_category":null,"evidence_correct":true,"joint_correct":true,"label":"UNCLEAR","label_correct":true,"reason_code":"NO_WALKING_EVENT","retried_after_rate_limit":true,"spans":[],"status":"COMPLETE"}},"rationale":"Morning-care help and a statement about walker use do not identify an actual walking event or human assistance during walking.","selection_stratum":"device_transfer_control","sentences":[[0,13],[14,64],[65,107],[108,193],[194,215],[216,246],[247,279]],"target_cue":"any walking described during morning care","text":"Morning care. The resident was already awake and in a good mood. Cooperated well with washing and dressing. Had difficulty with the buttons on his shirt and was frustrated when it did not work. Reassured and helped. COPD symptoms seem less today. Uses the walker without protest."},{"context_key":"other_walk","gold":{"label":"UNCLEAR","spans":[]},"id":"nc_1659","index":21,"pred":{"baseline":{"correctness_source":"stored","error_category":null,"evidence_correct":true,"joint_correct":true,"label":"UNCLEAR","label_correct":true,"reason_code":"NO_SCOPED_PHRASE","spans":[],"status":"COMPLETE"},"v1":{"correctness_source":"stored","error_category":null,"evidence_correct":true,"joint_correct":true,"label":"UNCLEAR","label_correct":true,"reason_code":"NO_WALKING_EVENT","spans":[],"status":"COMPLETE"},"v2":{"correctness_source":"stored","error_category":null,"evidence_correct":true,"joint_correct":true,"label":"UNCLEAR","label_correct":true,"reason_code":"NO_WALKING_EVENT","retried_after_rate_limit":true,"spans":[],"status":"COMPLETE"}},"rationale":"The only assisted movement is a transfer to bed. The target explicitly excludes that transfer and no walking event is documented.","selection_stratum":"device_transfer_control","sentences":[[0,61],[62,133],[134,200]],"target_cue":"any walking described after the memory game; exclude the transfer to bed","text":"The resident took part in a memory game in the activity room. Noticeable difficulty concentrating, but participated enthusiastically. Very tired afterwards; helped with the transfer to bed for a rest."},{"context_key":"other_walk","gold":{"label":"UNCLEAR","spans":[]},"id":"nn_1576","index":22,"pred":{"baseline":{"correctness_source":"stored","error_category":null,"evidence_correct":true,"joint_correct":true,"label":"UNCLEAR","label_correct":true,"reason_code":"NO_SCOPED_PHRASE","spans":[],"status":"COMPLETE"},"v1":{"correctness_source":"stored","error_category":null,"evidence_correct":false,"joint_correct":false,"label":"UNCLEAR","label_correct":true,"reason_code":"NO_COMPLETED_WALK","spans":[{"end":149,"offset_source":"stored","quote":"Forgot the walker, but no fall occurred.","start":109}],"status":"COMPLETE"},"v2":{"correctness_source":"stored","error_category":null,"evidence_correct":true,"joint_correct":true,"label":"UNCLEAR","label_correct":true,"reason_code":"NO_COMPLETED_WALK_EVENT","retried_after_rate_limit":true,"spans":[],"status":"COMPLETE"}},"rationale":"Help is tied to bathing and morning care. Forgetting the walker and absence of a fall do not document an actual walking event or its assistance.","selection_stratum":"device_transfer_control","sentences":[[0,108],[109,149]],"target_cue":"any walking described during the morning routine","text":"The resident needed help with the morning routine again, especially with bathing because of lower back pain. Forgot the walker, but no fall occurred."},{"context_key":"other_walk","gold":{"label":"UNCLEAR","spans":[]},"id":"nc_0922","index":23,"pred":{"baseline":{"correctness_source":"stored","error_category":null,"evidence_correct":true,"joint_correct":true,"label":"UNCLEAR","label_correct":true,"reason_code":"NO_SCOPED_PHRASE","spans":[],"status":"COMPLETE"},"v1":{"correctness_source":"stored","error_category":null,"evidence_correct":true,"joint_correct":true,"label":"UNCLEAR","label_correct":true,"reason_code":"NO_WALKING_EVENT","spans":[],"status":"COMPLETE"},"v2":{"correctness_source":"stored","error_category":null,"evidence_correct":true,"joint_correct":true,"label":"UNCLEAR","label_correct":true,"reason_code":"NO_WALKING_EVENT","retried_after_rate_limit":true,"spans":[],"status":"COMPLETE"}},"rationale":"A proposed church visit and wheelchair setup do not document completed walking or human walking assistance.","selection_stratum":"device_transfer_control","sentences":[[0,56],[57,130],[131,152]],"target_cue":"any walking described before the proposed church service","text":"Sunday breakfast: the resident enjoyed fresh croissants. Asked whether she could come along to the church service in the building. Wheelchair put ready."}],"provenance":{"annotation_process":"Two coding agents independently labeled the original Dutch notes for the same fixed targets without extractor predictions. Agent A translated; agent B then reviewed all A translations. Root adjudicated before inference. Agents share the assistant model family; this is not human or clinical expert gold.","baseline_replay_identical_in_followup":true,"blind_label_agreement":{"agreed":23,"disagreement_ids":["nb_0890"],"total":24},"dataset_revision":["579141e3431c18a932fa3a0870e9f1c131f10367"],"dataset_sha256":"a2d3a2e8dbe1d119c8cb02064963f585849ee2f01d95f2d640c7cbf426b178cf","dataset_vs_freeze_commit":"identical to freeze commit","file_sha256":{"data/annotations/fruta_held_out_v1.json":"e4b04e3205cd61253ba91fb1cac42f05478291e1b1ba51f934d260688bc34c05","data/fruta_held_out.jsonl":"48bb25f8cf61ca5f352581b2ccefd94c5869385597976e2d29875c0c4e8c9b80","data/fruta_held_out_manifest.json":"e7d138791f322b36049e950c924b6a5cc5405a836f83eb1b497b7fd8ddc31a26","docs/heldout-followup/results.json":"ee4312cd680576343e8c695358613ffb0c6de9fc9d2434c65b1e22eb3ad83fc2","docs/heldout-followup/retry-ledger.json":"b8ad03e2441ec0588562bd6f8b9bae40ba6a952f6aa2bacb29065fd444b39889","docs/heldout-results/results.json":"10179ed0cd18c707e9fe58f8423b9a42231a9768f067c9fcdfbcae953e8fe8a6"},"first_pass_runtime_commit":"66cc0c569e4c97849c5ee790016636e0367038ce","followup_evaluation_design":"post_hoc_replay_not_new_held_out","followup_runtime_commit":"9bf75316e58c6bf9c25d2ed0bf560c13004ff650","freeze_commit":"b28451c45fe6a4814855a816f50e310b269f4b8e","freeze_commit_matches_b28451c":true,"v2_retried_ids":["nb_1319","nc_0922","nc_1659","nm_0865","nn_1576","nn_2108"],"v2_retry_policy":{"additional_attempt_count":6,"attempt_history_path":"docs/heldout-followup/retry-ledger.json","final_metric_denominator":24,"final_unavailable":0,"first_attempt_results_path":"docs/heldout-followup/first-attempt-results.json","first_attempt_results_sha256":"ef64fc44ab3f7ced60985f7f1f459d09f28791d0de679d1b817a5e70cd0dc1f1","initial_attempt_count":24,"initial_unavailable":6,"max_additional_attempts_per_rate_limited_example":1,"min_request_interval_seconds":5,"retry_completed_at_utc":"2026-11-16T01:29:26.382787+00:00","retry_results_path":"docs/heldout-followup/retry-results.json","retry_results_sha256":"c10172041765223c6bb2bec38d641be0d2f99360233b11e049766c9ef79ea105","retry_started_at_utc":"2026-11-16T01:28:16.505110+00:00","scope":"post-hoc development replay only; original frozen first-pass results are unchanged","total_api_attempt_count":30}},"schema":"divergence-v1","span_offsets_resolvable":77,"span_offsets_total":77,"systems":{"baseline":{"detail":"phrase rules","extractor":{"mode":"phrase","model_id":null,"prompt_version":"rules-v1","version":"phrase-v1"},"name":"Baseline","present":true,"scope":"held_out_public","scope_note":null,"source_file":"docs/heldout-results/results.json","summary":{"completed":24,"errors":0,"evidence_accuracy":0.5,"evidence_correct":12,"joint_accuracy":0.3333333333333333,"joint_correct":8,"label_accuracy":0.5833333333333334,"label_correct":14,"total":24}},"v1":{"detail":"gemini-3.1-flash-lite · prompt v1","extractor":{"mode":"gemini","model_id":"gemini-3.1-flash-lite","prompt_version":"walking-assistance-v1","version":"gemini-structured-v2"},"name":"Model","present":true,"scope":"held_out_public","scope_note":null,"source_file":"docs/heldout-results/results.json","summary":{"completed":24,"errors":0,"evidence_accuracy":0.5833333333333334,"evidence_correct":14,"joint_accuracy":0.2916666666666667,"joint_correct":7,"label_accuracy":0.4583333333333333,"label_correct":11,"total":24}},"v2":{"detail":"gemini-3.1-flash-lite · prompt v2","extractor":{"mode":"gemini","model_id":"gemini-3.1-flash-lite","prompt_version":"walking-assistance-v2","version":"gemini-structured-v2"},"name":"Model","present":true,"scope":"post_hoc_replay","scope_note":"Post-hoc replay on previously evaluated frozen examples. These descriptive results are not a new held-out performance estimate.","source_file":"docs/heldout-followup/results.json","summary":{"completed":24,"errors":0,"evidence_accuracy":0.6666666666666666,"evidence_correct":16,"joint_accuracy":0.6666666666666666,"joint_correct":16,"label_accuracy":0.875,"label_correct":21,"total":24}}},"warnings":[]};
+
+/* ------------------------------------------------------------------ setup */
+const SVGNS = "http://www.w3.org/2000/svg";
+const EASE = "cubic-bezier(0.22, 0.61, 0.36, 1)";
+const EASE_IO = "cubic-bezier(0.65, 0, 0.35, 1)";
+const REDUCED = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const $ = (id) => document.getElementById(id);
+function h(tag, attrs, parent, text) {
+  const e = document.createElement(tag);
+  if (attrs) for (const k in attrs) e.setAttribute(k, attrs[k]);
+  if (text != null) e.textContent = text;
+  if (parent) parent.appendChild(e);
+  return e;
+}
+function s(tag, attrs, parent, text) {
+  const e = document.createElementNS(SVGNS, tag);
+  if (attrs) for (const k in attrs) e.setAttribute(k, attrs[k]);
+  if (text != null) e.textContent = text;
+  if (parent) parent.appendChild(e);
+  return e;
+}
+
+/* Timing profiles. Every animation below is scheduled from these numbers only. */
+const PROFILES = {
+  standard: { key: "standard", name: "full-length (a)",
+    typeMax: 9600, typePerChar: 34, pauseWeight: 8, markerLead: 300, markerGap: 400, markerDur: 500,
+    ribbonLead: 300, ribbonTotal: 4200, cellDur: 700,
+    swingLead: 400, swingTotal: 7500, arcDur: 1100,
+    holds: [3000, 4000, 6000] },
+  preset3: { key: "preset3", name: "3-minute preset (Shift+3)",
+    typeMax: 30000, typePerChar: 106, pauseWeight: 8, markerLead: 500, markerGap: 800, markerDur: 700,
+    ribbonLead: 300, ribbonTotal: 35000, cellDur: 1200,
+    swingLead: 400, swingTotal: 30000, arcDur: 1800,
+    holds: [22000, 30000, 30000] },
+};
+
+const NOTES = D ? D.notes : [];
+const N = NOTES.length;
+const SYS = D ? D.systems : {};
+const ACT1 = D ? Math.max(0, NOTES.findIndex((n) => n.id === D.act1_note_id)) : 0;
+const DEGRADED = !D || D.degraded_ribbon_only;
+const STATES = {
+  both:    { word: "BOTH RIGHT",    fill: "#dfe3ea", ink: "#0b0d12", dy: 0 },
+  base:    { word: "BASELINE ONLY", fill: "#ff9f1c", ink: "#000000", dy: -72 },
+  model:   { word: "MODEL ONLY",    fill: "#4ea8ff", ink: "#000000", dy: 72 },
+  neither: { word: "NEITHER RIGHT", fill: "url(#hatchN)", ink: "#ffffff", dy: 0, stroke: "#cdd3de" },
+  nodata:  { word: "NO DATA",       fill: "#0b0d12", ink: "#ffffff", dy: 0, stroke: "#ffffff", dash: "8 6" },
+};
+const LABELS = { UNCLEAR: "UNCLEAR", INDEPENDENT: "INDEPENDENT", SUPERVISION: "SUPERVISION",
+  HANDS_ON: "HANDS-ON", HELP_UNSPECIFIED: "HELP (UNSPECIFIED)" };
+const labelWord = (l) => (l == null ? "NOT RECORDED" : LABELS[l] || l);
+const pct = (k, t) => (t ? ((k * 100) / t).toFixed(1) : "—");
+const mkey = (v) => (v === 2 ? "v2" : "v1");
+
+/* ------------------------------------------------------------ derived data */
+function cellState(note, v, basis) {
+  if (!note || note.missing) return "nodata";
+  const b = note.pred.baseline, m = note.pred[mkey(v)];
+  const k = basis === "joint" ? "joint_correct" : "label_correct";
+  if (!b || !m || b[k] == null || m[k] == null) return "nodata";
+  if (b[k] && m[k]) return "both";
+  if (b[k]) return "base";
+  if (m[k]) return "model";
+  return "neither";
+}
+function correct(note, sys, metric) {
+  const p = note.pred[sys];
+  return !!(p && p[metric + "_correct"]);
+}
+function score(sys, metric) {
+  const sm = SYS[sys] && SYS[sys].summary;
+  const counted = NOTES.filter((n) => correct(n, sys, metric)).length;
+  if (sm && sm[metric + "_correct"] != null) {
+    if (sm[metric + "_correct"] !== counted)
+      console.warn(`[divergence] ${sys} ${metric}: stored summary ${sm[metric + "_correct"]} ≠ per-note count ${counted}`);
+    return { k: sm[metric + "_correct"], t: sm.total, src: "stored" };
+  }
+  return { k: counted, t: N, src: "derived from per-note rows" };
+}
+const resolved = (spans) => spans.filter((x) => x.start != null);
+const spanKey = (spans) => resolved(spans).map((x) => x.start + ":" + x.end).sort().join(",");
+function moved(note) {
+  const a = note.pred.v1, b = note.pred.v2;
+  return !!(a && b && note.text && spanKey(a.spans) !== spanKey(b.spans));
+}
+const labelChanged = (n) => !!(n.pred.v1 && n.pred.v2 && n.pred.v1.label !== n.pred.v2.label);
+const STATS = {
+  labelsChanged: NOTES.filter(labelChanged).length,
+  spansMoved: NOTES.filter(moved).length,
+  baselineChanged: D && D.provenance.baseline_replay_identical_in_followup === true ? 0 : null,
+};
+
+/* ------------------------------------------------------------------ stage */
+let SCALE = 1;
+function fit() {
+  SCALE = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+  const st = $("stage");
+  st.style.transform = `scale(${SCALE})`;
+  st.style.left = (window.innerWidth - 1920 * SCALE) / 2 + "px";
+  st.style.top = (window.innerHeight - 1080 * SCALE) / 2 + "px";
+}
+
+/* ------------------------------------------------------------- animations */
+let running = [];
+let gen = 0;
+function anim(elm, frames, opts) {
+  if (REDUCED) return null;
+  const a = elm.animate(frames, Object.assign({ fill: "backwards", easing: EASE }, opts));
+  running.push(a);
+  return a;
+}
+function stopAll() { running.forEach((a) => a.cancel()); running = []; }
+function finishAll() { running.forEach((a) => { try { a.finish(); } catch (e) {} }); running = []; }
+function busy() { return running.some((a) => a.playState === "running" || a.playState === "pending"); }
+function motionEnd() {
+  return running.reduce((m, a) => Math.max(m, a.effect.getComputedTiming().endTime || 0), 0);
+}
+function motionDone() { return Promise.all(running.map((a) => a.finished.catch(() => null))); }
+
+/* ------------------------------------------------------------- timing math */
+function typingPlan(text, P) {
+  const chars = Array.from(text || "");
+  const ends = new Set(((NOTES.find((n) => n.text === text) || {}).sentences || []).map((b) => b[1] - 1));
+  const w = []; let total = 0;
+  chars.forEach((c, i) => { w.push(total); total += 1 + (ends.has(i) ? P.pauseWeight : 0); });
+  const T = Math.min(P.typeMax, chars.length * P.typePerChar);
+  return { T, at: w.map((x) => (total ? (T * x) / total : 0)) };
+}
+function actOneTiming(P, note) {
+  const T = note && note.text ? typingPlan(note.text, P).T : 0;
+  const m0 = T + P.markerLead;
+  return { T, markers: [m0, m0 + P.markerGap, m0 + 2 * P.markerGap], total: m0 + 2 * P.markerGap + P.markerDur };
+}
+function stagger(total, lead, dur, n) { return n > 1 ? (total - lead - dur) / (n - 1) : 0; }
+
+/* ============================================================ NOTE SCENE */
+let charSpans = [];
+function noteFont(len) { return len <= 300 ? 46 : len <= 450 ? 38 : len <= 650 ? 32 : 30; }
+function stageRect() { return $("stage").getBoundingClientRect(); }
+function rangeRects(a, b) {
+  const SR = stageRect(), out = [];
+  for (let i = a; i < b; i++) {
+    const sp = charSpans[i]; if (!sp) continue;
+    const r = sp.getBoundingClientRect();
+    const x = (r.left - SR.left) / SCALE, y = (r.top - SR.top) / SCALE;
+    const w = r.width / SCALE, hh = r.height / SCALE;
+    const last = out[out.length - 1];
+    if (last && Math.abs(last.y - y) < 3) last.x2 = Math.max(last.x2, x + w);
+    else out.push({ x, y, x2: x + w, h: hh });
+  }
+  return out;
+}
+function sentencesTouched(note, spans) {
+  if (!note.sentences) return "";
+  const idx = new Set();
+  resolved(spans).forEach((sp) => note.sentences.forEach((b, i) => { if (sp.start < b[1] && sp.end > b[0]) idx.add(i + 1); }));
+  const list = [...idx].sort((x, y) => x - y);
+  if (!list.length) return "";
+  const lo = list[0], hi = list[list.length - 1];
+  const txt = list.length === hi - lo + 1 && list.length > 1 ? `${lo}–${hi}` : list.join(", ");
+  return ` · sentence${list.length > 1 ? "s" : ""} ${txt} of ${note.sentences.length}`;
+}
+function spanDesc(note, spans) {
+  if (!spans) return "<b>prediction missing</b>";
+  if (!spans.length) return "<b>no span selected</b>";
+  const ok = resolved(spans), bad = spans.length - ok.length;
+  let t = ok.length ? `chars ${ok.map((x) => x.start + "–" + x.end).join(", ")}` + sentencesTouched(note, spans) : "";
+  if (bad) t += (t ? " · " : "") + `<b>${bad} span${bad > 1 ? "s" : ""} could not be located in the text</b>`;
+  return t;
+}
+function verdicts(p) {
+  if (!p) return "";
+  const lab = p.label_correct == null ? ["LABEL NOT SCORED", 1] : p.label_correct ? ["LABEL RIGHT", 0] : ["LABEL WRONG", 1];
+  const ev = p.evidence_correct == null ? ["SPAN NOT SCORED", 1] : p.evidence_correct ? ["SPAN EXACT", 0] : ["SPAN DIFFERS", 1];
+  return [lab, ev].map(([w, no]) => `<span class="verdict${no ? " no" : ""}">${w}</span>`).join("");
+}
+function sample(kind) {
+  const g = `<svg width="92" height="34" viewBox="0 0 92 34" aria-hidden="true">`;
+  if (kind === "gold") return g + `<rect x="6" y="3" width="80" height="26" fill="rgba(255,255,255,0.2)"/><rect x="2" y="1" width="5" height="30" fill="#fff"/><rect x="85" y="1" width="5" height="30" fill="#fff"/></svg>`;
+  if (kind === "base") return g + `<rect x="2" y="13" width="88" height="7" fill="#ff9f1c"/></svg>`;
+  return g + `<line x1="2" y1="17" x2="90" y2="17" stroke="#4ea8ff" stroke-width="7" stroke-dasharray="16 9"/></svg>`;
+}
+function modelName(v) { return v === 2 ? "MODEL · prompt v2" : "MODEL · prompt v1"; }
+
+function buildNoteText(note, typing, P) {
+  const box = $("nText");
+  box.textContent = ""; charSpans = [];
+  if (!note.text) { h("div", { class: "missingText" }, box, `Note text for ${note.id} is missing from the saved artifacts. Its ribbon cell is kept and marked NO DATA.`); return; }
+  box.style.fontSize = noteFont(Array.from(note.text).length) + "px";
+  const plan = typing ? typingPlan(note.text, P) : null;
+  Array.from(note.text).forEach((c, i) => {
+    const sp = h("span", null, box, c);
+    charSpans.push(sp);
+    if (plan) anim(sp, [{ opacity: 0 }, { opacity: 1 }], { duration: 90, delay: plan.at[i], easing: "linear" });
+  });
+}
+function buildLegend(note, v) {
+  const L = $("nLegend"); L.textContent = "";
+  const top = charSpans.length ? Math.max(560, (() => { const r = rangeRects(charSpans.length - 1, charSpans.length)[0]; return r ? r.y + r.h + 70 : 650; })()) : 360;
+  L.style.top = Math.min(top, 700) + "px";
+  const rows = [
+    ["gold", "GOLD", "reference", note.gold.label, spanDesc(note, note.gold.spans), ""],
+    ["base", "BASELINE", "phrase rules", note.pred.baseline && note.pred.baseline.label, spanDesc(note, note.pred.baseline && note.pred.baseline.spans), verdicts(note.pred.baseline)],
+    ["model", v === 2 ? "MODEL v2" : "MODEL v1", v === 2 ? "post-hoc replay" : "held-out run", note.pred[mkey(v)] && note.pred[mkey(v)].label, spanDesc(note, note.pred[mkey(v)] && note.pred[mkey(v)].spans), verdicts(note.pred[mkey(v)])],
+  ];
+  const out = {};
+  rows.forEach(([k, role, sub, label, desc, ver]) => {
+    const r = h("div", { class: "lrow", id: "lrow-" + k }, L);
+    r.innerHTML = `<div>${sample(k)}</div><div class="role">${role}<div style="font-size:22px;font-weight:500;color:var(--ink2)">${sub}</div></div>` +
+      `<div class="lab">${labelWord(label)}</div><div class="desc">${desc}${ver}</div>`;
+    out[k] = r;
+  });
+  const extra = [];
+  if (v === 2 && note.pred.v2 && note.pred.v2.retried_after_rate_limit) extra.push("<b>v2 answer came from a retry</b> after the first attempt was rate-limited.");
+  if (note.rationale) extra.push(`<b>Annotator A rationale:</b> “${escapeHTML(note.rationale)}”`);
+  if (extra.length) { const r = h("div", { class: "rationale" }, L); r.innerHTML = extra.join(" "); out.extra = r; }
+  return out;
+}
+function escapeHTML(t) { return String(t).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]); }
+
+function drawSpans(kind, spans, back, front) {
+  const g = s("g", { class: "mk-" + kind }, kind === "gold" ? back : front);
+  let anchor = null;
+  resolved(spans || []).forEach((sp) => {
+    const rs = rangeRects(sp.start, sp.end);
+    rs.forEach((r, j) => {
+      if (kind === "gold") {
+        s("rect", { x: r.x - 3, y: r.y + 2, width: r.x2 - r.x + 6, height: r.h - 2, fill: "rgba(255,255,255,0.17)" }, g);
+        if (j === 0) s("rect", { x: r.x - 9, y: r.y, width: 5, height: r.h + 2, fill: "#ffffff" }, g);
+        if (j === rs.length - 1) s("rect", { x: r.x2 + 4, y: r.y, width: 5, height: r.h + 2, fill: "#ffffff" }, g);
+      } else if (kind === "base") {
+        s("rect", { x: r.x, y: r.y + r.h + 3, width: r.x2 - r.x, height: 7, fill: "#ff9f1c" }, g);
+      } else {
+        s("line", { x1: r.x, y1: r.y + r.h + 18, x2: r.x2, y2: r.y + r.h + 18, stroke: "#4ea8ff", "stroke-width": 7, "stroke-dasharray": "16 9" }, g);
+      }
+      if (!anchor) anchor = { x: r.x + 10, y: r.y + r.h + 18 };
+    });
+  });
+  return { g, anchor };
+}
+function legendAnchor(row) {
+  const SR = stageRect(), r = row.querySelector(".desc").getBoundingClientRect();
+  return { x: (r.left - SR.left) / SCALE + 12, y: (r.top - SR.top) / SCALE + (r.height / SCALE) / 2 };
+}
+
+/* Render a note. mode: "type" (Act I typing), "swing" (arc from other prompt), or null (instant). */
+function renderNote(idx, v, mode, P) {
+  const note = NOTES[idx];
+  const inSeq = S.mode === "seq";
+  $("nAct").innerHTML = inSeq ? `<span class="num">I</span>The note` : `<span class="num">Note ${idx + 1}</span>${escapeHTML(note.id)}`;
+  const st = cellState(note, v, S.basis);
+  $("nMeta").innerHTML = `Note ${idx + 1} of ${N} · ${escapeHTML(note.id)}<br>${S.basis} basis, prompt v${v}: <b style="color:var(--ink)">${STATES[st].word}</b>`;
+  $("nCtx").innerHTML = note.target_cue ? `Target event: <b>${escapeHTML(note.target_cue)}</b> · synthetic Fruta record, English translation` : "";
+  const back = $("nBack"), front = $("nFront");
+  back.textContent = ""; front.textContent = "";
+  buildNoteText(note, mode === "type", P);
+  const rows = buildLegend(note, v);
+  if (!note.text || DEGRADED) return;
+  const gold = drawSpans("gold", note.gold.spans, back, front);
+  const base = drawSpans("base", note.pred.baseline && note.pred.baseline.spans, back, front);
+  const model = drawSpans("model", note.pred[mkey(v)] && note.pred[mkey(v)].spans, back, front);
+  if (mode === "type") {
+    const t = actOneTiming(P, note);
+    [[gold.g, rows.gold], [base.g, rows.base], [model.g, rows.model]].forEach(([g, row], i) => {
+      anim(g, [{ opacity: 0, transform: "translateY(10px)" }, { opacity: 1, transform: "none" }], { duration: P.markerDur, delay: t.markers[i] });
+      anim(row, [{ opacity: 0, transform: "translateY(14px)" }, { opacity: 1, transform: "none" }], { duration: P.markerDur, delay: t.markers[i] });
+    });
+    if (rows.extra) anim(rows.extra, [{ opacity: 0 }, { opacity: 1 }], { duration: P.markerDur, delay: t.markers[2] });
+  } else if (mode === "swing") {
+    const from = v === 2 ? 1 : 2;
+    const prev = note.pred[mkey(from)];
+    const old = drawSpans("model", prev && prev.spans, back, front);
+    old.g.style.opacity = "0";
+    const a = old.anchor || legendAnchor(rows.model), b = model.anchor || legendAnchor(rows.model);
+    const dur = 1200;
+    anim(old.g, [{ opacity: 1 }, { opacity: 0 }], { duration: 350, delay: 0 });
+    anim(model.g, [{ opacity: 0 }, { opacity: 1 }], { duration: 400, delay: dur - 150 });
+    anim(rows.model, [{ opacity: 0.25 }, { opacity: 1 }], { duration: 400, delay: dur - 150 });
+    if (spanKey(prev ? prev.spans : []) !== spanKey(note.pred[mkey(v)] ? note.pred[mkey(v)].spans : [])) puck(front, a, b, 0, dur, -Math.max(120, Math.abs(b.y - a.y) * 0.6), true);
+  }
+}
+
+/* A blue puck that travels a cubic bezier using transform keyframes only. */
+function bez(p0, c1, c2, p1, t) {
+  const u = 1 - t;
+  return { x: u*u*u*p0.x + 3*u*u*t*c1.x + 3*u*t*t*c2.x + t*t*t*p1.x, y: u*u*u*p0.y + 3*u*u*t*c1.y + 3*u*t*t*c2.y + t*t*t*p1.y };
+}
+function puck(layer, a, b, delay, dur, lift, vertical) {
+  // vertical=true: arc lifts in y (note text). false: arc bulges in x (columns).
+  const c1 = vertical ? { x: a.x, y: Math.min(a.y, b.y) + lift } : { x: a.x + lift, y: a.y };
+  const c2 = vertical ? { x: b.x, y: Math.min(a.y, b.y) + lift } : { x: b.x + lift, y: b.y };
+  const trail = s("path", { d: `M${a.x},${a.y} C${c1.x},${c1.y} ${c2.x},${c2.y} ${b.x},${b.y}`, fill: "none", stroke: "#4ea8ff", "stroke-width": 3, "stroke-dasharray": "6 6", opacity: 0.85 }, layer);
+  const p = s("g", null, layer);
+  s("circle", { cx: 0, cy: 0, r: 11, fill: "#4ea8ff", stroke: "#ffffff", "stroke-width": 3 }, p);
+  p.style.opacity = "0";
+  p.style.transform = `translate(${b.x}px, ${b.y}px)`;
+  const frames = [];
+  for (let i = 0; i <= 24; i++) {
+    const q = bez(a, c1, c2, b, i / 24);
+    frames.push({ offset: i / 24, transform: `translate(${q.x}px, ${q.y}px)`, opacity: i === 0 || i === 24 ? 0 : 1 });
+  }
+  frames[1].opacity = 1;
+  anim(p, frames, { duration: dur, delay, easing: EASE_IO });
+  anim(trail, [{ opacity: 0 }, { opacity: 0.85 }], { duration: dur * 0.6, delay });
+  return p;
+}
+
+/* =========================================================== BOARD SCENE */
+const G = { x0: 70, x1: 1290, colTop: 168, colH: 300, slotY: 494, idxY: 548, ribC: 748, cellH: 210 };
+function pitch() { return (G.x1 - G.x0) / Math.max(N, 1); }
+function cw() { return Math.min(pitch() - 6, 84); }
+function colX(i) { return G.x0 + i * pitch() + (pitch() - cw()) / 2; }
+const maxLen = Math.max(1, ...NOTES.map((n) => (n.text ? Array.from(n.text).length : 0)));
+function colLen(n) { return n.text ? Array.from(n.text).length : 0; }
+function cy(n, c) { return G.colTop + (G.colH * c) / maxLen; }
+function setMid(n, spans) {
+  const r = resolved(spans || []);
+  if (!r.length) return G.slotY;
+  const lo = Math.min(...r.map((x) => x.start)), hi = Math.max(...r.map((x) => x.end));
+  return (cy(n, lo) + cy(n, hi)) / 2;
+}
+function cellXform(i, st) { return `translate(${colX(i)}px, ${G.ribC - G.cellH / 2 + STATES[st].dy}px)`; }
+function makeCell(i, st, layer) {
+  const g = s("g", { class: "cell" }, layer), M = STATES[st], w = cw();
+  g.style.transform = cellXform(i, st);
+  s("rect", { x: 0, y: 0, width: w, height: G.cellH, rx: 5, fill: M.fill, stroke: M.stroke || "none", "stroke-width": M.stroke ? 3 : 0, "stroke-dasharray": M.dash || "none" }, g);
+  s("text", { transform: `translate(${w / 2} ${G.cellH / 2}) rotate(-90)`, "text-anchor": "middle", "dominant-baseline": "central",
+    "font-size": 22, "font-weight": 800, fill: M.ink, "letter-spacing": "0.04em" }, g, M.word);
+  s("title", null, g, `Note ${i + 1} ${NOTES[i].id}: ${M.word}`);
+  return g;
+}
+function modelBars(i, v, layer) {
+  const n = NOTES[i], p = n.pred[mkey(v)], g = s("g", { class: "mbars" }, layer), w = cw(), x = colX(i);
+  if (!p || !n.text) return g;
+  resolved(p.spans).forEach((sp) => s("rect", { x: x + w / 2 + 2, y: cy(n, sp.start), width: w / 2 - 6, height: Math.max(4, cy(n, sp.end) - cy(n, sp.start)), fill: v === 2 ? "url(#hatchM)" : "#4ea8ff" }, g));
+  if (!p.spans.length) s("text", { x: x + (3 * w) / 4, y: G.slotY, "text-anchor": "middle", "dominant-baseline": "central", "font-size": 22, "font-weight": 800, fill: "#4ea8ff" }, g, "∅");
+  return g;
+}
+function makeColumn(i, v, layer) {
+  const n = NOTES[i], g = s("g", { class: "col" }, layer), w = cw(), x = colX(i);
+  if (!n.text) {
+    s("rect", { x, y: G.colTop, width: w, height: G.colH, fill: "none", stroke: "#ffffff", "stroke-width": 2, "stroke-dasharray": "8 6" }, g);
+    s("text", { transform: `translate(${x + w / 2} ${G.colTop + G.colH / 2}) rotate(-90)`, "text-anchor": "middle", "dominant-baseline": "central", "font-size": 22, "font-weight": 800, fill: "#fff" }, g, "NO TEXT");
+    return { g, mb: s("g", null, g) };
+  }
+  const len = colLen(n);
+  s("rect", { x, y: G.colTop, width: w, height: cy(n, len) - G.colTop, fill: "#262d3b", stroke: "#8f99ad", "stroke-width": 2 }, g);
+  (n.sentences || []).slice(1).forEach((b) => s("rect", { x: x + 2, y: cy(n, b[0]) - 1.5, width: w - 4, height: 3, fill: "#0b0d12" }, g));
+  const bp = n.pred.baseline;
+  if (bp) resolved(bp.spans).forEach((sp) => s("rect", { x: x + 4, y: cy(n, sp.start), width: w / 2 - 6, height: Math.max(4, cy(n, sp.end) - cy(n, sp.start)), fill: "#ff9f1c" }, g));
+  resolved(n.gold.spans).forEach((sp) => s("rect", { x: x + 1.5, y: cy(n, sp.start), width: w - 3, height: Math.max(4, cy(n, sp.end) - cy(n, sp.start)), fill: "none", stroke: "#ffffff", "stroke-width": 3 }, g));
+  const unresolvedAny = [n.gold.spans, bp && bp.spans, n.pred.v1 && n.pred.v1.spans, n.pred.v2 && n.pred.v2.spans].some((sp) => sp && sp.some((x) => x.start == null));
+  if (unresolvedAny) s("text", { x: x + w / 4, y: G.slotY, "text-anchor": "middle", "dominant-baseline": "central", "font-size": 22, "font-weight": 800, fill: "#fff" }, g, "?");
+  const mb = modelBars(i, v, g);
+  return { g, mb };
+}
+
+function buildCounters(v) {
+  const C = $("counters"); C.textContent = "";
+  const swingBox = h("div", { id: "swing" });
+  const refs = {};
+  [["label", "LABEL ACCURACY", ""], ["joint", "JOINT ACCURACY", " · label + exact span"]].forEach(([metric, title, sub]) => {
+    const grp = h("div", { class: "cgroup" }, C);
+    h("div", { class: "ctitle" }, grp).innerHTML = `${title}<span>${sub}</span>`;
+    refs[metric] = {};
+    [["baseline", "BASELINE", "phrase rules"], ["model", modelName(v), "gemini-3.1-flash-lite"]].forEach(([who, name, small]) => {
+      const sys = who === "baseline" ? "baseline" : mkey(v);
+      const sc = score(sys, metric);
+      const row = h("div", { class: "crow" }, grp);
+      const line = h("div", { class: "cline" }, row);
+      h("div", { class: "cname" }, line).innerHTML = `${name}<small>${v === 2 && who === "model" ? `<span class="chip">POST-HOC REPLAY</span>` : small}</small>`;
+      const odo = h("div", { class: "odo", "aria-hidden": "true" }, line);
+      const col = h("div", { class: "odocol" }, odo);
+      const t = sc.t || N;
+      for (let k = 0; k <= t; k++) h("div", null, col).innerHTML = `${k}/${t}<span>${pct(k, t)}%</span>`;
+      const wrap = h("div", { class: "barwrap" }, row);
+      const bar = h("div", { class: "bar " + (who === "baseline" ? "base" : "model" + (v === 2 ? " replay" : "")) }, wrap);
+      const ref = { col, bar, t, k: sc.k, sys };
+      col.style.transform = `translateY(${-sc.k * 56}px)`;
+      bar.style.transform = `scaleX(${t ? sc.k / t : 0})`;
+      h("span", { class: "sr" }, row, `${name}: ${sc.k} of ${t}, ${pct(sc.k, t)} percent${v === 2 && who === "model" ? ", post-hoc replay on the same held-out set, not a held-out estimate" : ""}`);
+      if (who === "model" && v === 2) {
+        const v1 = score("v1", metric);
+        const gh = h("div", { class: "ghost" }, wrap);
+        gh.style.width = (500 * v1.k) / (v1.t || N) + "px";
+        ref.ghost = gh;
+        const cap = h("div", { class: "ccap" }, row);
+        cap.innerHTML = metric === "label"
+          ? `<b>${pct(sc.k, t)}%</b> is a <b>post-hoc replay on the same held-out set</b>, not a held-out estimate. Dashed = prompt v1 held-out run (${v1.k}/${v1.t}).`
+          : `Post-hoc replay · dashed = prompt v1 (${v1.k}/${v1.t}).`;
+        ref.cap = cap;
+      }
+      refs[metric][who] = ref;
+    });
+    if (metric === "label" && D.always_unclear_label_correct != null) {
+      const k = D.always_unclear_label_correct;
+      const rows = grp.querySelectorAll(".barwrap");
+      const x = (500 * k) / N + 2;
+      rows.forEach((bw) => { const tk = h("div", { class: "tick" }, bw); tk.style.left = x - 2 + "px"; });
+      const lab = h("div", { class: "ticklab" }, grp, `always UNCLEAR: ${k}/${N}`);
+      lab.style.left = x + "px"; lab.style.top = "-30px";
+      refs.tick = lab;
+    }
+  });
+  C.appendChild(swingBox);
+  return refs;
+}
+/* Counter keyframes that step as each cell lands: value_i after event i. */
+function counterFrames(ref, events, from, total) {
+  const f = [{ offset: 0, v: from }];
+  let cur = from;
+  events.forEach(([t, d]) => { if (!d) return; f.push({ offset: Math.min(1, Math.max(0, (t - 260) / total)), v: cur }); cur += d; f.push({ offset: Math.min(1, t / total), v: cur }); });
+  if (cur !== ref.k) console.warn(`[divergence] counter ${ref.sys}: per-note path ends at ${cur}, stored ${ref.k}; final frame uses stored value`);
+  f.push({ offset: 1, v: ref.k });
+  for (let i = 1; i < f.length; i++) if (f[i].offset < f[i - 1].offset) f[i].offset = f[i - 1].offset;
+  anim(ref.col, f.map((x) => ({ offset: x.offset, transform: `translateY(${-x.v * 56}px)` })), { duration: total, delay: 0, easing: "linear" });
+  anim(ref.bar, f.map((x) => ({ offset: x.offset, transform: `scaleX(${ref.t ? x.v / ref.t : 0})` })), { duration: total, delay: 0, easing: "linear" });
+}
+
+function boardText(v) {
+  const act = v === 2 ? `<span class="num">III</span>The swing` : `<span class="num">II</span>The race`;
+  $("bAct").innerHTML = act;
+  $("bMeta").innerHTML = `${N} held-out notes · ribbon basis: <b style="color:var(--ink)">${S.basis.toUpperCase()}</b>${v === 2 ? "<br>prompt v2 · post-hoc replay" : "<br>prompt v1 · held-out run"}`;
+  const ch = STATS.baselineChanged == null ? "baseline not replayed" : `baseline: <b>${STATS.baselineChanged} of ${N}</b> changed`;
+  $("bSub").innerHTML = v === 2
+    ? `<b>Same ${N} notes, same model;</b> prompt v2 written after reading these errors (post-hoc replay).<br><b>${STATS.labelsChanged} of ${N}</b> model labels changed · <b>${STATS.spansMoved} of ${N}</b> span sets moved · ${ch} · <b>dashed</b> = cell under v1.`
+    : `One cell per note. A cell <b>rises</b> when only the baseline was right and <b>drops</b> when only the model was right.` +
+      (DEGRADED ? "" : `<br>Columns: each note top→bottom · <b>white outline</b> gold span · <b>left bar</b> baseline · <b>right bar</b> model.`);
+  const sw = $("swing");
+  if (v === 2) {
+    const a = score("v1", "label"), b = score("v2", "label"), base = score("baseline", "label");
+    const swing = Math.abs((b.k / b.t - a.k / a.t) * 100).toFixed(1), gap = Math.abs((base.k / base.t - a.k / a.t) * 100).toFixed(1);
+    sw.innerHTML = `<span class="big">${STATS.labelsChanged} of ${N} labels changed.</span>Only the prompt changed. Label score swung <b>${swing} points</b> (to ${pct(b.k, b.t)}%: post-hoc replay on the same held-out set, not a held-out estimate). Held-out gap between the systems: <b>${gap} points</b>.`;
+    sw.style.display = "block";
+  } else sw.style.display = "none";
+  const bn = $("bBanner"); bn.className = ""; bn.textContent = "";
+  const msgs = [];
+  if (DEGRADED) msgs.push("Span offsets unresolvable in saved artifacts — showing the ribbon only.");
+  if (N < D.expected_notes) msgs.push(`Only ${N} of ${D.expected_notes} expected notes are present.`);
+  if (D.missing_expected_ids.length) msgs.push(`Missing: ${D.missing_expected_ids.join(", ")} (cells marked NO DATA).`);
+  if (msgs.length) { bn.className = "banner"; bn.textContent = msgs.join(" "); }
+}
+
+/* mode: null instant · "race" Act II · "swing" Act III (from the other prompt) */
+function renderBoard(v, mode, P) {
+  const cols = $("gCols"), idx = $("gIdx"), rib = $("gRib"), arcs = $("gArcs");
+  [cols, idx, rib, arcs].forEach((g) => (g.textContent = ""));
+  cols.style.display = DEGRADED ? "none" : "";
+  const colRefs = NOTES.map((_, i) => makeColumn(i, v, cols));
+  NOTES.forEach((_, i) => s("text", { x: colX(i) + cw() / 2, y: G.idxY, "text-anchor": "middle", "font-size": 22, "font-weight": 800, fill: "#f6f4ef" }, idx, String(i + 1)));
+  const cells = NOTES.map((n, i) => makeCell(i, cellState(n, v, S.basis), rib));
+  const refs = buildCounters(v);
+  boardText(v);
+  const ghosts = s("g", { class: "ghosts" }, rib);
+  rib.insertBefore(ghosts, rib.firstChild);
+  const ghostEls = [];
+  if (v === 2) NOTES.forEach((n, i) => {
+    const o = cellState(n, 1, S.basis), nw = cellState(n, 2, S.basis);
+    if (o === nw) return;
+    const g = s("g", null, ghosts); g.style.transform = cellXform(i, o);
+    s("rect", { x: 1.5, y: 1.5, width: cw() - 3, height: G.cellH - 3, rx: 5, fill: "none", stroke: "#ffffff", "stroke-width": 3, "stroke-dasharray": "9 7" }, g);
+    s("title", null, g, `Note ${i + 1} under prompt v1: ${STATES[o].word}`);
+    ghostEls[i] = g;
+  });
+  if (mode === "race") {
+    const step = stagger(P.ribbonTotal, P.ribbonLead, P.cellDur, N);
+    const land = (i) => P.ribbonLead + i * step + P.cellDur;
+    cells.forEach((c, i) => {
+      const st = cellState(NOTES[i], v, S.basis), d = P.ribbonLead + i * step;
+      anim(c, [{ opacity: 0, transform: `translate(${colX(i)}px, ${G.ribC - G.cellH / 2}px) scale(0.92)` },
+               { opacity: 1, transform: `translate(${colX(i)}px, ${G.ribC - G.cellH / 2}px)`, offset: 0.45 },
+               { opacity: 1, transform: cellXform(i, st) }], { duration: P.cellDur, delay: d });
+      if (!DEGRADED) anim(colRefs[i].g, [{ opacity: 0, transform: "translateY(16px)" }, { opacity: 1, transform: "none" }], { duration: P.cellDur * 0.7, delay: d });
+    });
+    ["label", "joint"].forEach((metric) => ["baseline", "model"].forEach((who) => {
+      const sys = who === "baseline" ? "baseline" : mkey(v);
+      counterFrames(refs[metric][who], NOTES.map((n, i) => [land(i), correct(n, sys, metric) ? 1 : 0]), 0, P.ribbonTotal);
+    }));
+  } else if (mode === "swing") {
+    const from = v === 2 ? 1 : 2;
+    const step = stagger(P.swingTotal, P.swingLead, P.arcDur, N);
+    const land = (i) => P.swingLead + i * step + P.arcDur;
+    NOTES.forEach((n, i) => {
+      const t0 = P.swingLead + i * step;
+      const oldSt = cellState(n, from, S.basis), newSt = cellState(n, v, S.basis);
+      if (oldSt !== newSt) {
+        const old = makeCell(i, oldSt, rib); old.style.opacity = "0";
+        anim(old, [{ opacity: 1 }, { opacity: 0, transform: cellXform(i, newSt) }], { duration: P.arcDur * 0.45, delay: t0 + P.arcDur * 0.55 });
+        anim(cells[i], [{ opacity: 0, transform: cellXform(i, oldSt) }, { opacity: 1, transform: cellXform(i, newSt) }], { duration: P.arcDur * 0.45, delay: t0 + P.arcDur * 0.55 });
+        if (ghostEls[i]) anim(ghostEls[i], [{ opacity: 0 }, { opacity: 1 }], { duration: P.arcDur * 0.4, delay: t0 + P.arcDur * 0.8 });
+      }
+      if (!DEGRADED && moved(n)) {
+        const oldBars = modelBars(i, from, colRefs[i].g); oldBars.style.opacity = "0";
+        anim(oldBars, [{ opacity: 1 }, { opacity: 0 }], { duration: P.arcDur * 0.3, delay: t0 });
+        anim(colRefs[i].mb, [{ opacity: 0 }, { opacity: 1 }], { duration: P.arcDur * 0.3, delay: t0 + P.arcDur * 0.75 });
+        const x = colX(i) + (3 * cw()) / 4;
+        const a = { x, y: setMid(n, n.pred[mkey(from)].spans) }, b = { x, y: setMid(n, n.pred[mkey(v)].spans) };
+        puck(arcs, a, b, t0, P.arcDur, 34 + Math.abs(b.y - a.y) * 0.35, false);
+      }
+    });
+    ["label", "joint"].forEach((metric) => {
+      const r = refs[metric].model, prevK = score(mkey(from), metric).k;
+      counterFrames(r, NOTES.map((n, i) => [land(i), (correct(n, mkey(v), metric) ? 1 : 0) - (correct(n, mkey(from), metric) ? 1 : 0)]), prevK, P.swingTotal);
+      if (r.ghost) anim(r.ghost, [{ opacity: 0 }, { opacity: 1 }], { duration: 600, delay: 0 });
+      if (r.cap) anim(r.cap, [{ opacity: 0 }, { opacity: 1 }], { duration: 600, delay: 0 });
+    });
+    anim($("swing"), [{ opacity: 0, transform: "translateY(12px)" }, { opacity: 1, transform: "none" }], { duration: 700, delay: P.swingTotal - 700 });
+  }
+}
+
+/* ============================================================ LIMITATIONS */
+function limitsHTML() {
+  const p = D.provenance, rev = (p.dataset_revision || [])[0] || "unrecorded";
+  const v2 = score("v2", "label"), base = score("baseline", "label");
+  const ag = p.blind_label_agreement || {};
+  const au = D.always_unclear_label_correct;
+  const retried = (p.v2_retried_ids || []).length;
+  const tie = au === base.k ? `the same as the baseline's ${base.k}/${base.t}` : `against the baseline's ${base.k}/${base.t}`;
+  return `<h2>The case against this result</h2>
+  <div class="lede">This visual argues against its own author. Read every number on it through these five facts.</div>
+  <ol>
+   <li><b>${N} notes.</b><span>One note moves a score by ${pct(1, N)} points. Some labels have only one or two examples.</span></li>
+   <li><b>Synthetic data, pinned to one revision.</b><span>Public synthetic Fruta records at revision <b style="font-size:25px">${escapeHTML(rev.slice(0, 12))}</b>, translated to English by a coding agent. Not real care notes.</span></li>
+   <li><b>Ground truth from a single labeller.</b><span>Every label and span comes from one assistant model family: two coding agents labelled blind (${ag.agreed ?? "?"}/${ag.total ?? "?"} agreement), an agent adjudicated. No human or clinical expert reviewed them.</span></li>
+   <li><b>v2 is post-hoc.</b><span>Prompt v2 was written after reading the v1 errors on these same notes. Its <b style="font-size:25px">${pct(v2.k, v2.t)}%</b> is a post-hoc replay on the same held-out set, not a held-out estimate. ${retried} of its ${v2.t} answers came from a retry after rate limits.</span></li>
+   <li><b>The trivial answer ties.</b><span>Answering UNCLEAR for every note scores ${au}/${N} on labels — ${tie}.</span></li>
+  </ol>`;
+}
+function keysHTML() {
+  const k = [["space · →", "next (first press completes a running animation)"], ["←", "back — lands instantly"],
+    ["1–9 · 0", "jump to note 1–10 · two digits in quick succession reach 11–24"], ["→ · ← in a note", "next / previous note · Esc or d returns to the ribbon"],
+    ["a", "autoplay, full-length timings"], ["Shift+3", "3-minute preset autoplay (Act I ≤ 30 s · II 35 s · III 30 s)"],
+    ["v", "toggle prompt v1 / v2 — v2 is a post-hoc replay"], ["d", "ribbon view · again on the ribbon: label ⇄ joint basis"],
+    ["l", "limitations"], ["s", "save the current frame as PNG (settled state)"], ["r", "reset"], ["?", "this legend"]];
+  return `<h2>Keys</h2><div class="keys">${k.map(([a, b]) => `<div class="k">${a}</div><div>${b}</div>`).join("")}</div>
+  <div style="margin-top:26px;font-size:24px;color:var(--ink2)">Ribbon words: BOTH RIGHT · BASELINE ONLY (cell rises) · MODEL ONLY (cell drops) · NEITHER RIGHT (hatched) · NO DATA (dashed).</div>`;
+}
+
+/* ================================================================== STATE */
+const S = { mode: "seq", step: 0, note: ACT1, v: 1, basis: "label", profile: "standard", autoplay: false, digit: null, digitTimer: null, autoTimer: null };
+const P = () => PROFILES[S.profile];
+function show(id) { ["noteScene", "boardScene", "endScene"].forEach((x) => $(x).classList.toggle("on", x === id)); }
+
+function enter(step, mode) {
+  stopAll(); gen++;
+  S.mode = "seq"; S.step = step;
+  const g = gen;
+  if (step === 0) {
+    if (DEGRADED) { S.step = 1; return enter(1, mode ? "race" : null); }
+    show("noteScene"); S.note = ACT1; renderNote(ACT1, S.v, mode ? "type" : null, P());
+  } else if (step === 1 || step === 2) {
+    S.v = step === 2 ? 2 : 1;
+    show("boardScene"); renderBoard(S.v, mode, P());
+  } else {
+    show("endScene"); $("endLimits").innerHTML = limitsHTML();
+    if (mode) anim($("endLimits"), [{ opacity: 0, transform: "translateY(18px)" }, { opacity: 1, transform: "none" }], { duration: 800 });
+  }
+  if (mode && running.length) {
+    const actName = mode === "swing" ? (step === 2 ? "Act III (swing v1→v2)" : "Act III reversed (swing v2→v1)") : ["Act I", "Act II", "Act III", "Close"][step];
+    console.log(`[divergence] ${actName} · ${P().name} · measured from animation timeline: ${(motionEnd() / 1000).toFixed(2)} s`);
+  }
+  if (S.autoplay) {
+    motionDone().then(() => {
+      if (g !== gen || !S.autoplay) return;
+      if (S.step >= 3) { S.autoplay = false; toast("Autoplay finished"); return; }
+      S.autoTimer = setTimeout(() => { if (g === gen && S.autoplay) enter(S.step + 1, S.step === 0 ? "race" : S.step === 1 ? "swing" : "fade"); }, REDUCED ? 1500 : P().holds[S.step]);
+    });
+  }
+}
+function inspect(i) {
+  stopAll(); gen++; stopAuto();
+  if (i < 0 || i >= N) { toast(`No note ${i + 1} — ${N} notes present`); return; }
+  S.mode = "inspect"; S.note = i;
+  show("noteScene"); renderNote(i, S.v, null, P());
+}
+function stopAuto() { S.autoplay = false; clearTimeout(S.autoTimer); }
+function toast(msg) {
+  const t = $("toast"); t.textContent = msg; t.style.opacity = "1";
+  clearTimeout(toast.tm); toast.tm = setTimeout(() => (t.style.opacity = "0"), 1600);
+}
+function ribbonView() {
+  stopAuto();
+  if (S.mode === "seq" && (S.step === 1 || S.step === 2)) {
+    S.basis = S.basis === "label" ? "joint" : "label"; stopAll(); renderBoard(S.v, null, P()); toast(`Ribbon basis: ${S.basis}`);
+  } else enter(S.v === 2 ? 2 : 1, null);
+}
+function next() {
+  if (busy()) { finishAll(); return; }
+  stopAuto();
+  if (S.mode === "inspect") return inspect(Math.min(N - 1, S.note + 1));
+  if (S.step >= 3) return;
+  enter(S.step + 1, S.step === 0 ? "race" : S.step === 1 ? "swing" : "fade");
+}
+function back() {
+  stopAuto();
+  if (S.mode === "inspect") return inspect(Math.max(0, S.note - 1));
+  if (S.step > 0) enter(S.step - 1, null);
+  else enter(0, null);
+}
+function toggleV() {
+  stopAuto();
+  if (S.mode === "seq" && (S.step === 1 || S.step === 2)) { stopAll(); enter(S.step === 1 ? 2 : 1, "swing"); return; }
+  S.v = S.v === 2 ? 1 : 2;
+  if (S.mode === "inspect" || (S.mode === "seq" && S.step === 0)) { stopAll(); renderNote(S.note, S.v, "swing", P()); }
+  toast(S.v === 2 ? "Prompt v2 — post-hoc replay on the same held-out set" : "Prompt v1 — held-out run");
+}
+function reset(profile, auto) {
+  stopAuto(); stopAll();
+  Object.assign(S, { v: 1, basis: "label", profile: profile || "standard", autoplay: !!auto });
+  $("ovKeys").classList.remove("on"); $("ovLimits").classList.remove("on");
+  enter(0, "type");
+}
+function digit(d) {
+  clearTimeout(S.digitTimer);
+  if (S.digit != null) {
+    const n = S.digit * 10 + d; S.digit = null;
+    if (n >= 11 && n <= N) return inspect(n - 1);
+  }
+  inspect((d === 0 ? 10 : d) - 1);
+  if ((d === 1 || d === 2) && N > 10) { S.digit = d; S.digitTimer = setTimeout(() => (S.digit = null), 900); }
+}
+
+/* ------------------------------------------------------------- PNG export */
+function exportPNG() {
+  const clone = $("stage").cloneNode(true);
+  clone.style.transform = "none"; clone.style.left = "0px"; clone.style.top = "0px";
+  clone.querySelector("#toast").style.opacity = "0";
+  const css = document.querySelector("style").textContent.replace(/&/g, "&amp;").replace(/</g, "&lt;");
+  const body = new XMLSerializer().serializeToString(clone);
+  const svgStr = `<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080"><foreignObject x="0" y="0" width="1920" height="1080">` +
+    `<div xmlns="http://www.w3.org/1999/xhtml" style="width:1920px;height:1080px;position:relative"><style>${css}</style>${body}</div></foreignObject></svg>`;
+  const img = new Image();
+  img.onload = () => {
+    const c = document.createElement("canvas"); c.width = 1920; c.height = 1080;
+    const ctx = c.getContext("2d"); ctx.fillStyle = "#0b0d12"; ctx.fillRect(0, 0, 1920, 1080); ctx.drawImage(img, 0, 0);
+    c.toBlob((blob) => {
+      if (!blob) { toast("PNG export failed"); return; }
+      const a = document.createElement("a");
+      const where = S.mode === "inspect" ? `note-${S.note + 1}` : `act-${["1", "2", "3", "close"][S.step]}`;
+      a.download = `divergence-${where}-v${S.v}-${S.basis}.png`;
+      a.href = URL.createObjectURL(blob); document.body.appendChild(a); a.click(); a.remove();
+      toast("Saved " + a.download);
+    }, "image/png");
+  };
+  img.onerror = () => toast("PNG export failed");
+  img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svgStr);
+}
+
+/* ------------------------------------------------------------------- keys */
+document.addEventListener("keydown", (e) => {
+  if (e.metaKey || e.ctrlKey || e.altKey) return;
+  if (e.code === "Digit3" && e.shiftKey) { e.preventDefault(); reset("preset3", true); toast("3-minute preset · autoplay"); return; }
+  const k = e.key;
+  if (k === " " || k === "ArrowRight") { e.preventDefault(); next(); }
+  else if (k === "ArrowLeft") { e.preventDefault(); back(); }
+  else if (/^[0-9]$/.test(k)) digit(Number(k));
+  else if (k === "a") {
+    if (S.autoplay) { stopAuto(); toast("Autoplay off"); return; }
+    S.profile = "standard";
+    if (S.mode !== "seq" || S.step >= 3) reset("standard", true);
+    else { S.autoplay = true; enter(S.step, S.step === 0 ? "type" : S.step === 1 ? "race" : "swing"); }
+    toast("Autoplay · full-length");
+  }
+  else if (k === "v") toggleV();
+  else if (k === "d") ribbonView();
+  else if (k === "Escape") { if ($("ovKeys").classList.contains("on") || $("ovLimits").classList.contains("on")) { $("ovKeys").classList.remove("on"); $("ovLimits").classList.remove("on"); } else if (S.mode === "inspect") ribbonView(); }
+  else if (k === "l") { $("limitsPanel").innerHTML = limitsHTML(); $("ovKeys").classList.remove("on"); $("ovLimits").classList.toggle("on"); }
+  else if (k === "?" || k === "/") { $("keysPanel").innerHTML = keysHTML(); $("ovLimits").classList.remove("on"); $("ovKeys").classList.toggle("on"); }
+  else if (k === "s") exportPNG();
+  else if (k === "r") reset("standard", false);
+});
+window.addEventListener("resize", () => {
+  fit();
+  if (busy()) return;
+  if (S.mode === "inspect" || S.step === 0) renderNote(S.note, S.v, null, P());
+});
+
+/* ------------------------------------------------------------------- boot */
+function logTimings() {
+  const note = NOTES[ACT1];
+  const rows = Object.values(PROFILES).map((Pr) => {
+    const a1 = DEGRADED ? 0 : actOneTiming(Pr, note).total, a2 = Pr.ribbonTotal, a3 = Pr.swingTotal, close = 800;
+    const motion = a1 + a2 + a3 + close, holds = Pr.holds.reduce((x, y) => x + y, 0);
+    return { profile: Pr.name, "Act I typing s": (actOneTiming(Pr, note).T / 1000).toFixed(2), "Act I s": (a1 / 1000).toFixed(2),
+      "Act II s": (a2 / 1000).toFixed(2), "Act III s": (a3 / 1000).toFixed(2), "close card s": (close / 1000).toFixed(2),
+      "motion total s": (motion / 1000).toFixed(2), "holds s": (holds / 1000).toFixed(2), "autoplay total s": ((motion + holds) / 1000).toFixed(2),
+      "motion < 100 s": motion < 100000 };
+  });
+  console.log(`[divergence] Act durations (computed from the same schedule the animations use; Act I note ${note ? note.id : "none"}, ${note && note.text ? Array.from(note.text).length : 0} chars)${REDUCED ? " — prefers-reduced-motion is ON: motion is cut to end states" : ""}`);
+  console.table(rows);
+  rows.forEach((r) => console.log(`[divergence] ${r.profile}: Act I ${r["Act I s"]} s (typing ${r["Act I typing s"]} s) · Act II ${r["Act II s"]} s · Act III ${r["Act III s"]} s · close ${r["close card s"]} s · motion ${r["motion total s"]} s · with holds ${r["autoplay total s"]} s`));
+}
+fit();
+if (!D) {
+  document.body.innerHTML = '<p style="font:28px system-ui;color:#fff;padding:60px">No data inlined. Run <code>python scripts/export_divergence.py</code>.</p>';
+} else {
+  $("fSrc").innerHTML = `saved results only · freeze <b>${escapeHTML(String(D.provenance.freeze_commit || "").slice(0, 7))}</b> · no model calls`;
+  logTimings();
+  enter(0, "type");
+}
+</script>
+</body>
+</html>

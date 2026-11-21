@@ -1,0 +1,2187 @@
+{
+ "act1_note_id": "nk_0797",
+ "always_unclear_label_correct": 14,
+ "degraded_ribbon_only": false,
+ "expected_notes": 24,
+ "missing_expected_ids": [],
+ "notes": [
+  {
+   "context_key": "other_walk",
+   "gold": {
+    "label": "UNCLEAR",
+    "spans": [
+     {
+      "end": 162,
+      "offset_source": "stored",
+      "quote": "He had some difficulty walking to the shared room, but with the walker it went reasonably well.",
+      "start": 67
+     }
+    ]
+   },
+   "id": "na_0145",
+   "index": 0,
+   "pred": {
+    "baseline": {
+     "correctness_source": "stored",
+     "error_category": null,
+     "evidence_correct": false,
+     "joint_correct": false,
+     "label": "UNCLEAR",
+     "label_correct": true,
+     "reason_code": "NO_SCOPED_PHRASE",
+     "spans": [],
+     "status": "COMPLETE"
+    },
+    "v1": {
+     "correctness_source": "stored",
+     "error_category": null,
+     "evidence_correct": true,
+     "joint_correct": false,
+     "label": "HELP_UNSPECIFIED",
+     "label_correct": false,
+     "reason_code": "WALK_ASSISTANCE_UNSPECIFIED",
+     "spans": [
+      {
+       "end": 162,
+       "offset_source": "stored",
+       "quote": "He had some difficulty walking to the shared room, but with the walker it went reasonably well.",
+       "start": 67
+      }
+     ],
+     "status": "COMPLETE"
+    },
+    "v2": {
+     "correctness_source": "stored",
+     "error_category": null,
+     "evidence_correct": true,
+     "joint_correct": true,
+     "label": "UNCLEAR",
+     "label_correct": true,
+     "reason_code": "AMBIGUOUS_WALKING_HELP",
+     "retried_after_rate_limit": false,
+     "spans": [
+      {
+       "end": 162,
+       "offset_source": "stored",
+       "quote": "He had some difficulty walking to the shared room, but with the walker it went reasonably well.",
+       "start": 67
+      }
+     ],
+     "status": "COMPLETE"
+    }
+   },
+   "rationale": "Human help is documented for getting up and dressing, not for the selected walk. A walker and tremors do not establish human walking assistance.",
+   "selection_stratum": "physical_cue",
+   "sentences": [
+    [
+     0,
+     66
+    ],
+    [
+     67,
+     162
+    ],
+    [
+     163,
+     225
+    ]
+   ],
+   "target_cue": "walk to the shared room this morning",
+   "text": "The resident was helped with getting up and dressing this morning. He had some difficulty walking to the shared room, but with the walker it went reasonably well. The tremors are visible, especially when grasping the handles."
+  },
+  {
+   "context_key": "other_walk",
+   "gold": {
+    "label": "HELP_UNSPECIFIED",
+    "spans": [
+     {
+      "end": 104,
+      "offset_source": "stored",
+      "quote": "Provided support during a shorter walk with the walker, during which her balance and awareness improved.",
+      "start": 0
+     }
+    ]
+   },
+   "id": "nd_0902",
+   "index": 1,
+   "pred": {
+    "baseline": {
+     "correctness_source": "stored",
+     "error_category": null,
+     "evidence_correct": true,
+     "joint_correct": false,
+     "label": "UNCLEAR",
+     "label_correct": false,
+     "reason_code": "HUMAN_HELP_UNSPECIFIED",
+     "spans": [
+      {
+       "end": 104,
+       "offset_source": "stored",
+       "quote": "Provided support during a shorter walk with the walker, during which her balance and awareness improved.",
+       "start": 0
+      }
+     ],
+     "status": "COMPLETE"
+    },
+    "v1": {
+     "correctness_source": "stored",
+     "error_category": null,
+     "evidence_correct": false,
+     "joint_correct": false,
+     "label": "HANDS_ON",
+     "label_correct": false,
+     "reason_code": "PHYSICAL_SUPPORT_DOCUMENTED",
+     "spans": [
+      {
+       "end": 54,
+       "offset_source": "stored",
+       "quote": "Provided support during a shorter walk with the walker",
+       "start": 0
+      }
+     ],
+     "status": "COMPLETE"
+    },
+    "v2": {
+     "correctness_source": "stored",
+     "error_category": null,
+     "evidence_correct": false,
+     "joint_correct": false,
+     "label": "HELP_UNSPECIFIED",
+     "label_correct": true,
+     "reason_code": "GENERIC_SUPPORT",
+     "retried_after_rate_limit": false,
+     "spans": [
+      {
+       "end": 54,
+       "offset_source": "stored",
+       "quote": "Provided support during a shorter walk with the walker",
+       "start": 0
+      }
+     ],
+     "status": "COMPLETE"
+    }
+   },
+   "rationale": "The note reports support during the selected walk, but does not specify physical contact or a clear supervision subtype.",
+   "selection_stratum": "physical_cue",
+   "sentences": [
+    [
+     0,
+     104
+    ],
+    [
+     105,
+     142
+    ]
+   ],
+   "target_cue": "short walk with the walker",
+   "text": "Provided support during a shorter walk with the walker, during which her balance and awareness improved. The resident said that she felt safe."
+  },
+  {
+   "context_key": "garden_walk",
+   "gold": {
+    "label": "HANDS_ON",
+    "spans": [
+     {
+      "end": 254,
+      "offset_source": "stored",
+      "quote": "Taken for a short walk in the garden as a distraction. Walked unsteadily; support had to be provided.",
+      "start": 153
+     }
+    ]
+   },
+   "id": "nm_1286",
+   "index": 2,
+   "pred": {
+    "baseline": {
+     "correctness_source": "stored",
+     "error_category": null,
+     "evidence_correct": false,
+     "joint_correct": false,
+     "label": "UNCLEAR",
+     "label_correct": false,
+     "reason_code": "NO_SCOPED_PHRASE",
+     "spans": [],
+     "status": "COMPLETE"
+    },
+    "v1": {
+     "correctness_source": "stored",
+     "error_category": null,
+     "evidence_correct": true,
+     "joint_correct": true,
+     "label": "HANDS_ON",
+     "label_correct": true,
+     "reason_code": "PHYSICAL_SUPPORT_REQUIRED",
+     "spans": [
+      {
+       "end": 254,
+       "offset_source": "stored",
+       "quote": "Taken for a short walk in the garden as a distraction. Walked unsteadily; support had to be provided.",
+       "start": 153
+      }
+     ],
+     "status": "COMPLETE"
+    },
+    "v2": {
+     "correctness_source": "stored",
+     "error_category": null,
+     "evidence_correct": true,
+     "joint_correct": true,
+     "label": "HANDS_ON",
+     "label_correct": true,
+     "reason_code": "PHYSICAL_SUPPORT_DOCUMENTED",
+     "retried_after_rate_limit": false,
+     "spans": [
+      {
+       "end": 254,
+       "offset_source": "stored",
+       "quote": "Taken for a short walk in the garden as a distraction. Walked unsteadily; support had to be provided.",
+       "start": 153
+      }
+     ],
+     "status": "COMPLETE"
+    }
+   },
+   "rationale": "The garden walk is immediately followed by unsteady walking requiring support. The bodily instability context supports physical support during that event.",
+   "selection_stratum": "physical_cue",
+   "sentences": [
+    [
+     0,
+     44
+    ],
+    [
+     45,
+     105
+    ],
+    [
+     106,
+     152
+    ],
+    [
+     153,
+     207
+    ],
+    [
+     208,
+     254
+    ]
+   ],
+   "target_cue": "garden walk used as distraction",
+   "text": "The resident was sitting in the living room. Kept asking where her bag was (not brought in on admission). Became restless when we said it was not there. Taken for a short walk in the garden as a distraction. Walked unsteadily; support had to be provided."
+  },
+  {
+   "context_key": "other_walk",
+   "gold": {
+    "label": "HELP_UNSPECIFIED",
+    "spans": [
+     {
+      "end": 84,
+      "offset_source": "stored",
+      "quote": "The resident had difficulty walking with the walker. We provided additional support.",
+      "start": 0
+     }
+    ]
+   },
+   "id": "na_0762",
+   "index": 3,
+   "pred": {
+    "baseline": {
+     "correctness_source": "stored",
+     "error_category": null,
+     "evidence_correct": false,
+     "joint_correct": false,
+     "label": "UNCLEAR",
+     "label_correct": false,
+     "reason_code": "AMBIGUOUS_EVENT",
+     "spans": [],
+     "status": "COMPLETE"
+    },
+    "v1": {
+     "correctness_source": "stored",
+     "error_category": null,
+     "evidence_correct": false,
+     "joint_correct": false,
+     "label": "HELP_UNSPECIFIED",
+     "label_correct": true,
+     "reason_code": "ASSISTANCE_PROVIDED",
+     "spans": [
+      {
+       "end": 84,
+       "offset_source": "stored",
+       "quote": "We provided additional support.",
+       "start": 53
+      },
+      {
+       "end": 196,
+       "offset_source": "stored",
+       "quote": "After a short walk, she sat on the sofa for a while to recover.",
+       "start": 133
+      }
+     ],
+     "status": "COMPLETE"
+    },
+    "v2": {
+     "correctness_source": "stored",
+     "error_category": null,
+     "evidence_correct": false,
+     "joint_correct": false,
+     "label": "HELP_UNSPECIFIED",
+     "label_correct": true,
+     "reason_code": "GENERIC_SUPPORT_WALK",
+     "retried_after_rate_limit": false,
+     "spans": [
+      {
+       "end": 84,
+       "offset_source": "stored",
+       "quote": "The resident had difficulty walking with the walker. We provided additional support.",
+       "start": 0
+      },
+      {
+       "end": 196,
+       "offset_source": "stored",
+       "quote": "After a short walk, she sat on the sofa for a while to recover.",
+       "start": 133
+      }
+     ],
+     "status": "COMPLETE"
+    }
+   },
+   "rationale": "Two adjacent sentences bind offered support to walking, but generic additional support does not establish physical contact or supervision subtype.",
+   "selection_stratum": "physical_cue",
+   "sentences": [
+    [
+     0,
+     52
+    ],
+    [
+     53,
+     84
+    ],
+    [
+     85,
+     132
+    ],
+    [
+     133,
+     196
+    ]
+   ],
+   "target_cue": "walk with the walker described before sitting on the sofa",
+   "text": "The resident had difficulty walking with the walker. We provided additional support. She was visibly anxious after last week's fall. After a short walk, she sat on the sofa for a while to recover."
+  },
+  {
+   "context_key": "other_walk",
+   "gold": {
+    "label": "HANDS_ON",
+    "spans": [
+     {
+      "end": 206,
+      "offset_source": "stored",
+      "quote": "After lunch, we took a short walk together with the walker. She had difficulty keeping her balance, but with my support it went reasonably well.",
+      "start": 62
+     }
+    ]
+   },
+   "id": "na_0689",
+   "index": 4,
+   "pred": {
+    "baseline": {
+     "correctness_source": "stored",
+     "error_category": null,
+     "evidence_correct": false,
+     "joint_correct": false,
+     "label": "UNCLEAR",
+     "label_correct": false,
+     "reason_code": "HUMAN_HELP_UNSPECIFIED",
+     "spans": [
+      {
+       "end": 121,
+       "offset_source": "stored",
+       "quote": "After lunch, we took a short walk together with the walker.",
+       "start": 62
+      }
+     ],
+     "status": "COMPLETE"
+    },
+    "v1": {
+     "correctness_source": "stored",
+     "error_category": null,
+     "evidence_correct": false,
+     "joint_correct": false,
+     "label": "HANDS_ON",
+     "label_correct": true,
+     "reason_code": "PHYSICAL_SUPPORT_DOCUMENTED",
+     "spans": [
+      {
+       "end": 121,
+       "offset_source": "stored",
+       "quote": "After lunch, we took a short walk together with the walker.",
+       "start": 62
+      },
+      {
+       "end": 206,
+       "offset_source": "stored",
+       "quote": "She had difficulty keeping her balance, but with my support it went reasonably well.",
+       "start": 122
+      }
+     ],
+     "status": "COMPLETE"
+    },
+    "v2": {
+     "correctness_source": "stored",
+     "error_category": null,
+     "evidence_correct": false,
+     "joint_correct": false,
+     "label": "HANDS_ON",
+     "label_correct": true,
+     "reason_code": "PHYSICAL_SUPPORT_DOCUMENTED",
+     "retried_after_rate_limit": false,
+     "spans": [
+      {
+       "end": 121,
+       "offset_source": "stored",
+       "quote": "After lunch, we took a short walk together with the walker.",
+       "start": 62
+      },
+      {
+       "end": 206,
+       "offset_source": "stored",
+       "quote": "She had difficulty keeping her balance, but with my support it went reasonably well.",
+       "start": 122
+      }
+     ],
+     "status": "COMPLETE"
+    }
+   },
+   "rationale": "The selected completed walk and the support needed to keep bodily balance are adjacent. This describes bodily support during the walk rather than mere presence.",
+   "selection_stratum": "physical_cue",
+   "sentences": [
+    [
+     0,
+     61
+    ],
+    [
+     62,
+     121
+    ],
+    [
+     122,
+     206
+    ],
+    [
+     207,
+     225
+    ]
+   ],
+   "target_cue": "short walk with the walker after lunch",
+   "text": "At midday, the resident ate well, but she still seemed tired. After lunch, we took a short walk together with the walker. She had difficulty keeping her balance, but with my support it went reasonably well. We took it slowly."
+  },
+  {
+   "context_key": "other_walk",
+   "gold": {
+    "label": "UNCLEAR",
+    "spans": []
+   },
+   "id": "nk_1089",
+   "index": 5,
+   "pred": {
+    "baseline": {
+     "correctness_source": "stored",
+     "error_category": null,
+     "evidence_correct": true,
+     "joint_correct": true,
+     "label": "UNCLEAR",
+     "label_correct": true,
+     "reason_code": "NO_SCOPED_PHRASE",
+     "spans": [],
+     "status": "COMPLETE"
+    },
+    "v1": {
+     "correctness_source": "stored",
+     "error_category": null,
+     "evidence_correct": false,
+     "joint_correct": false,
+     "label": "HANDS_ON",
+     "label_correct": false,
+     "reason_code": "SUPPORTED_WALKING",
+     "spans": [
+      {
+       "end": 64,
+       "offset_source": "stored",
+       "quote": "The resident needed some help again during today's toilet visit.",
+       "start": 0
+      },
+      {
+       "end": 134,
+       "offset_source": "stored",
+       "quote": "He is visibly tired, but can still walk short distances with support.",
+       "start": 65
+      }
+     ],
+     "status": "COMPLETE"
+    },
+    "v2": {
+     "correctness_source": "stored",
+     "error_category": null,
+     "evidence_correct": true,
+     "joint_correct": true,
+     "label": "UNCLEAR",
+     "label_correct": true,
+     "reason_code": "GENERAL_ABILITY_NOT_EVENT",
+     "retried_after_rate_limit": false,
+     "spans": [],
+     "status": "COMPLETE"
+    }
+   },
+   "rationale": "Help with toileting and a statement of general walking ability do not document an actual selected walking event. Wheelchair rest is separate.",
+   "selection_stratum": "physical_cue",
+   "sentences": [
+    [
+     0,
+     64
+    ],
+    [
+     65,
+     134
+    ],
+    [
+     135,
+     205
+    ]
+   ],
+   "target_cue": "walking in the episode described in this note",
+   "text": "The resident needed some help again during today's toilet visit. He is visibly tired, but can still walk short distances with support. After the toilet visit, we let him rest in his wheelchair for a while."
+  },
+  {
+   "context_key": "other_walk",
+   "gold": {
+    "label": "INDEPENDENT",
+    "spans": [
+     {
+      "end": 67,
+      "offset_source": "stored",
+      "quote": "The resident was independent this morning and walked around calmly.",
+      "start": 0
+     }
+    ]
+   },
+   "id": "nl_1309",
+   "index": 6,
+   "pred": {
+    "baseline": {
+     "correctness_source": "stored",
+     "error_category": null,
+     "evidence_correct": true,
+     "joint_correct": true,
+     "label": "INDEPENDENT",
+     "label_correct": true,
+     "reason_code": "PHRASE_MATCH",
+     "spans": [
+      {
+       "end": 67,
+       "offset_source": "stored",
+       "quote": "The resident was independent this morning and walked around calmly.",
+       "start": 0
+      }
+     ],
+     "status": "COMPLETE"
+    },
+    "v1": {
+     "correctness_source": "stored",
+     "error_category": null,
+     "evidence_correct": true,
+     "joint_correct": true,
+     "label": "INDEPENDENT",
+     "label_correct": true,
+     "reason_code": "EXPLICIT_INDEPENDENCE",
+     "spans": [
+      {
+       "end": 67,
+       "offset_source": "stored",
+       "quote": "The resident was independent this morning and walked around calmly.",
+       "start": 0
+      }
+     ],
+     "status": "COMPLETE"
+    },
+    "v2": {
+     "correctness_source": "stored",
+     "error_category": null,
+     "evidence_correct": true,
+     "joint_correct": true,
+     "label": "INDEPENDENT",
+     "label_correct": true,
+     "reason_code": "EXPLICIT_INDEPENDENCE",
+     "retried_after_rate_limit": false,
+     "spans": [
+      {
+       "end": 67,
+       "offset_source": "stored",
+       "quote": "The resident was independent this morning and walked around calmly.",
+       "start": 0
+      }
+     ],
+     "status": "COMPLETE"
+    }
+   },
+   "rationale": "Independence and actual walking are linked in the same sentence. The separate general attention to fall risk does not explicitly establish a person supervising the selected walk.",
+   "selection_stratum": "independence_cue",
+   "sentences": [
+    [
+     0,
+     67
+    ],
+    [
+     68,
+     133
+    ]
+   ],
+   "target_cue": "walking around this morning",
+   "text": "The resident was independent this morning and walked around calmly. Attention was paid to his fall risk, but there were no incidents."
+  },
+  {
+   "context_key": "walking_attempt",
+   "gold": {
+    "label": "HELP_UNSPECIFIED",
+    "spans": [
+     {
+      "end": 115,
+      "offset_source": "stored",
+      "quote": "The resident tried to walk independently to her room with the walker. She forgot how it works and had to be guided.",
+      "start": 0
+     }
+    ]
+   },
+   "id": "nb_0960",
+   "index": 7,
+   "pred": {
+    "baseline": {
+     "correctness_source": "stored",
+     "error_category": null,
+     "evidence_correct": false,
+     "joint_correct": false,
+     "label": "INDEPENDENT",
+     "label_correct": false,
+     "reason_code": "PHRASE_MATCH",
+     "spans": [
+      {
+       "end": 69,
+       "offset_source": "stored",
+       "quote": "The resident tried to walk independently to her room with the walker.",
+       "start": 0
+      }
+     ],
+     "status": "COMPLETE"
+    },
+    "v1": {
+     "correctness_source": "stored",
+     "error_category": null,
+     "evidence_correct": false,
+     "joint_correct": false,
+     "label": "HANDS_ON",
+     "label_correct": false,
+     "reason_code": "DIRECT_GUIDANCE_EVIDENCE",
+     "spans": [
+      {
+       "end": 69,
+       "offset_source": "stored",
+       "quote": "The resident tried to walk independently to her room with the walker.",
+       "start": 0
+      },
+      {
+       "end": 115,
+       "offset_source": "stored",
+       "quote": "She forgot how it works and had to be guided.",
+       "start": 70
+      }
+     ],
+     "status": "COMPLETE"
+    },
+    "v2": {
+     "correctness_source": "stored",
+     "error_category": null,
+     "evidence_correct": false,
+     "joint_correct": false,
+     "label": "HELP_UNSPECIFIED",
+     "label_correct": true,
+     "reason_code": "GUIDANCE_ONLY",
+     "retried_after_rate_limit": false,
+     "spans": [
+      {
+       "end": 69,
+       "offset_source": "stored",
+       "quote": "The resident tried to walk independently to her room with the walker.",
+       "start": 0
+      },
+      {
+       "end": 115,
+       "offset_source": "stored",
+       "quote": "She forgot how it works and had to be guided.",
+       "start": 70
+      }
+     ],
+     "status": "COMPLETE"
+    }
+   },
+   "rationale": "Independent walking was attempted, then guidance became necessary for that attempt. The guidance subtype is unspecified.",
+   "selection_stratum": "independence_cue",
+   "sentences": [
+    [
+     0,
+     69
+    ],
+    [
+     70,
+     115
+    ]
+   ],
+   "target_cue": "attempt to walk to her room with the walker",
+   "text": "The resident tried to walk independently to her room with the walker. She forgot how it works and had to be guided."
+  },
+  {
+   "context_key": "garden_walk",
+   "gold": {
+    "label": "UNCLEAR",
+    "spans": [
+     {
+      "end": 79,
+      "offset_source": "stored",
+      "quote": "Afterwards, a short walk in the garden with a walker.",
+      "start": 26
+     }
+    ]
+   },
+   "id": "nm_0182",
+   "index": 8,
+   "pred": {
+    "baseline": {
+     "correctness_source": "stored",
+     "error_category": null,
+     "evidence_correct": false,
+     "joint_correct": false,
+     "label": "UNCLEAR",
+     "label_correct": true,
+     "reason_code": "NO_SCOPED_PHRASE",
+     "spans": [],
+     "status": "COMPLETE"
+    },
+    "v1": {
+     "correctness_source": "stored",
+     "error_category": null,
+     "evidence_correct": true,
+     "joint_correct": false,
+     "label": "INDEPENDENT",
+     "label_correct": false,
+     "reason_code": "DEVICE_ONLY",
+     "spans": [
+      {
+       "end": 79,
+       "offset_source": "stored",
+       "quote": "Afterwards, a short walk in the garden with a walker.",
+       "start": 26
+      }
+     ],
+     "status": "COMPLETE"
+    },
+    "v2": {
+     "correctness_source": "stored",
+     "error_category": null,
+     "evidence_correct": true,
+     "joint_correct": true,
+     "label": "UNCLEAR",
+     "label_correct": true,
+     "reason_code": "DEVICE_NOT_INDICATION_OF_INDEPENDENCE",
+     "retried_after_rate_limit": false,
+     "spans": [
+      {
+       "end": 79,
+       "offset_source": "stored",
+       "quote": "Afterwards, a short walk in the garden with a walker.",
+       "start": 26
+      }
+     ],
+     "status": "COMPLETE"
+    }
+   },
+   "rationale": "The independence refers to eating. The selected garden walk mentions a device but leaves human assistance unspecified.",
+   "selection_stratum": "independence_cue",
+   "sentences": [
+    [
+     0,
+     25
+    ],
+    [
+     26,
+     79
+    ],
+    [
+     80,
+     110
+    ],
+    [
+     111,
+     174
+    ]
+   ],
+   "target_cue": "garden walk after lunch",
+   "text": "Lunch: ate independently. Afterwards, a short walk in the garden with a walker. Visibly enjoyed the fresh air. Talked about his former garden; seemed to be a positive memory."
+  },
+  {
+   "context_key": "garden_walk",
+   "gold": {
+    "label": "UNCLEAR",
+    "spans": [
+     {
+      "end": 84,
+      "offset_source": "stored",
+      "quote": "During the afternoon walk in the garden, the resident used her walker independently.",
+      "start": 0
+     }
+    ]
+   },
+   "id": "nb_0890",
+   "index": 9,
+   "pred": {
+    "baseline": {
+     "correctness_source": "stored",
+     "error_category": null,
+     "evidence_correct": true,
+     "joint_correct": false,
+     "label": "INDEPENDENT",
+     "label_correct": false,
+     "reason_code": "PHRASE_MATCH",
+     "spans": [
+      {
+       "end": 84,
+       "offset_source": "stored",
+       "quote": "During the afternoon walk in the garden, the resident used her walker independently.",
+       "start": 0
+      }
+     ],
+     "status": "COMPLETE"
+    },
+    "v1": {
+     "correctness_source": "stored",
+     "error_category": null,
+     "evidence_correct": true,
+     "joint_correct": false,
+     "label": "INDEPENDENT",
+     "label_correct": false,
+     "reason_code": "EXPLICIT_INDEPENDENCE",
+     "spans": [
+      {
+       "end": 84,
+       "offset_source": "stored",
+       "quote": "During the afternoon walk in the garden, the resident used her walker independently.",
+       "start": 0
+      }
+     ],
+     "status": "COMPLETE"
+    },
+    "v2": {
+     "correctness_source": "stored",
+     "error_category": null,
+     "evidence_correct": true,
+     "joint_correct": true,
+     "label": "UNCLEAR",
+     "label_correct": true,
+     "reason_code": "INDEPENDENCE_MODIFIES_DEVICE",
+     "retried_after_rate_limit": false,
+     "spans": [
+      {
+       "end": 84,
+       "offset_source": "stored",
+       "quote": "During the afternoon walk in the garden, the resident used her walker independently.",
+       "start": 0
+      }
+     ],
+     "status": "COMPLETE"
+    }
+   },
+   "rationale": "Independently using the walker is explicitly situated within the selected completed garden walk; this supports unaided walking with a device.",
+   "selection_stratum": "independence_cue",
+   "sentences": [
+    [
+     0,
+     84
+    ],
+    [
+     85,
+     161
+    ]
+   ],
+   "target_cue": "afternoon garden walk",
+   "text": "During the afternoon walk in the garden, the resident used her walker independently. She walked calmly and said that the pain in her knees was not too bad today."
+  },
+  {
+   "context_key": "other_walk",
+   "gold": {
+    "label": "HELP_UNSPECIFIED",
+    "spans": [
+     {
+      "end": 83,
+      "offset_source": "stored",
+      "quote": "She took a short walk with guidance.",
+      "start": 47
+     }
+    ]
+   },
+   "id": "nk_0846",
+   "index": 10,
+   "pred": {
+    "baseline": {
+     "correctness_source": "stored",
+     "error_category": null,
+     "evidence_correct": true,
+     "joint_correct": true,
+     "label": "HELP_UNSPECIFIED",
+     "label_correct": true,
+     "reason_code": "PHRASE_MATCH",
+     "spans": [
+      {
+       "end": 83,
+       "offset_source": "stored",
+       "quote": "She took a short walk with guidance.",
+       "start": 47
+      }
+     ],
+     "status": "COMPLETE"
+    },
+    "v1": {
+     "correctness_source": "stored",
+     "error_category": null,
+     "evidence_correct": true,
+     "joint_correct": false,
+     "label": "SUPERVISION",
+     "label_correct": false,
+     "reason_code": "SUPERVISED_WALK",
+     "spans": [
+      {
+       "end": 83,
+       "offset_source": "stored",
+       "quote": "She took a short walk with guidance.",
+       "start": 47
+      }
+     ],
+     "status": "COMPLETE"
+    },
+    "v2": {
+     "correctness_source": "stored",
+     "error_category": null,
+     "evidence_correct": true,
+     "joint_correct": true,
+     "label": "HELP_UNSPECIFIED",
+     "label_correct": true,
+     "reason_code": "GUIDANCE_ONLY",
+     "retried_after_rate_limit": false,
+     "spans": [
+      {
+       "end": 83,
+       "offset_source": "stored",
+       "quote": "She took a short walk with guidance.",
+       "start": 47
+      }
+     ],
+     "status": "COMPLETE"
+    }
+   },
+   "rationale": "Guidance is documented during the selected walk, without a resolved physical-support versus supervision subtype.",
+   "selection_stratum": "guidance_cue",
+   "sentences": [
+    [
+     0,
+     46
+    ],
+    [
+     47,
+     83
+    ],
+    [
+     84,
+     175
+    ]
+   ],
+   "target_cue": "short walk at the end of the day",
+   "text": "At the end of the day, the resident was tired. She took a short walk with guidance. It was a quiet day, but she is having some difficulty getting used to the new surroundings."
+  },
+  {
+   "context_key": "other_walk",
+   "gold": {
+    "label": "UNCLEAR",
+    "spans": [
+     {
+      "end": 74,
+      "offset_source": "stored",
+      "quote": "The resident was restless during lunch and kept getting up to walk around.",
+      "start": 0
+     }
+    ]
+   },
+   "id": "nl_0727",
+   "index": 11,
+   "pred": {
+    "baseline": {
+     "correctness_source": "stored",
+     "error_category": null,
+     "evidence_correct": false,
+     "joint_correct": false,
+     "label": "UNCLEAR",
+     "label_correct": true,
+     "reason_code": "NO_SCOPED_PHRASE",
+     "spans": [],
+     "status": "COMPLETE"
+    },
+    "v1": {
+     "correctness_source": "stored",
+     "error_category": null,
+     "evidence_correct": true,
+     "joint_correct": false,
+     "label": "INDEPENDENT",
+     "label_correct": false,
+     "reason_code": "NO_HELP_DOCUMENTED",
+     "spans": [
+      {
+       "end": 74,
+       "offset_source": "stored",
+       "quote": "The resident was restless during lunch and kept getting up to walk around.",
+       "start": 0
+      }
+     ],
+     "status": "COMPLETE"
+    },
+    "v2": {
+     "correctness_source": "stored",
+     "error_category": null,
+     "evidence_correct": false,
+     "joint_correct": false,
+     "label": "HELP_UNSPECIFIED",
+     "label_correct": false,
+     "reason_code": "VERBAL_GUIDANCE_ONLY",
+     "retried_after_rate_limit": false,
+     "spans": [
+      {
+       "end": 113,
+       "offset_source": "stored",
+       "quote": "The resident was restless during lunch and kept getting up to walk around. He accepted guidance to sit back down.",
+       "start": 0
+      }
+     ],
+     "status": "COMPLETE"
+    }
+   },
+   "rationale": "The selected walking is described, but the human guidance belongs to sitting back down, which is excluded by the target.",
+   "selection_stratum": "guidance_cue",
+   "sentences": [
+    [
+     0,
+     74
+    ],
+    [
+     75,
+     113
+    ]
+   ],
+   "target_cue": "walking around during lunch; exclude help to sit back down",
+   "text": "The resident was restless during lunch and kept getting up to walk around. He accepted guidance to sit back down."
+  },
+  {
+   "context_key": "other_walk",
+   "gold": {
+    "label": "HELP_UNSPECIFIED",
+    "spans": [
+     {
+      "end": 106,
+      "offset_source": "stored",
+      "quote": "The afternoon activity was a short walk with the walker, during which we regularly reminded her to use it.",
+      "start": 0
+     }
+    ]
+   },
+   "id": "nn_1577",
+   "index": 12,
+   "pred": {
+    "baseline": {
+     "correctness_source": "stored",
+     "error_category": null,
+     "evidence_correct": true,
+     "joint_correct": false,
+     "label": "UNCLEAR",
+     "label_correct": false,
+     "reason_code": "HUMAN_HELP_UNSPECIFIED",
+     "spans": [
+      {
+       "end": 106,
+       "offset_source": "stored",
+       "quote": "The afternoon activity was a short walk with the walker, during which we regularly reminded her to use it.",
+       "start": 0
+      }
+     ],
+     "status": "COMPLETE"
+    },
+    "v1": {
+     "correctness_source": "stored",
+     "error_category": null,
+     "evidence_correct": true,
+     "joint_correct": true,
+     "label": "HELP_UNSPECIFIED",
+     "label_correct": true,
+     "reason_code": "VERBAL_CUEING",
+     "spans": [
+      {
+       "end": 106,
+       "offset_source": "stored",
+       "quote": "The afternoon activity was a short walk with the walker, during which we regularly reminded her to use it.",
+       "start": 0
+      }
+     ],
+     "status": "COMPLETE"
+    },
+    "v2": {
+     "correctness_source": "stored",
+     "error_category": null,
+     "evidence_correct": true,
+     "joint_correct": true,
+     "label": "HELP_UNSPECIFIED",
+     "label_correct": true,
+     "reason_code": "VERBAL_CUEING",
+     "retried_after_rate_limit": false,
+     "spans": [
+      {
+       "end": 106,
+       "offset_source": "stored",
+       "quote": "The afternoon activity was a short walk with the walker, during which we regularly reminded her to use it.",
+       "start": 0
+      }
+     ],
+     "status": "COMPLETE"
+    }
+   },
+   "rationale": "Verbal reminders are explicit human help during the walk, but verbal cueing alone is outside the ranked supervision/physical-support categories.",
+   "selection_stratum": "guidance_cue",
+   "sentences": [
+    [
+     0,
+     106
+    ],
+    [
+     107,
+     136
+    ]
+   ],
+   "target_cue": "short afternoon walk with the walker",
+   "text": "The afternoon activity was a short walk with the walker, during which we regularly reminded her to use it. She liked the light exercise."
+  },
+  {
+   "context_key": "hallway_walk",
+   "gold": {
+    "label": "HELP_UNSPECIFIED",
+    "spans": [
+     {
+      "end": 123,
+      "offset_source": "stored",
+      "quote": "The resident was guided for a short walk in the hallway; he was enthusiastic but sometimes had to be reminded about safety.",
+      "start": 0
+     }
+    ]
+   },
+   "id": "nn_2000",
+   "index": 13,
+   "pred": {
+    "baseline": {
+     "correctness_source": "stored",
+     "error_category": null,
+     "evidence_correct": false,
+     "joint_correct": false,
+     "label": "UNCLEAR",
+     "label_correct": false,
+     "reason_code": "NO_SCOPED_PHRASE",
+     "spans": [],
+     "status": "COMPLETE"
+    },
+    "v1": {
+     "correctness_source": "stored",
+     "error_category": null,
+     "evidence_correct": true,
+     "joint_correct": false,
+     "label": "SUPERVISION",
+     "label_correct": false,
+     "reason_code": "GUIDANCE_AND_SAFETY_MONITORING",
+     "spans": [
+      {
+       "end": 123,
+       "offset_source": "stored",
+       "quote": "The resident was guided for a short walk in the hallway; he was enthusiastic but sometimes had to be reminded about safety.",
+       "start": 0
+      }
+     ],
+     "status": "COMPLETE"
+    },
+    "v2": {
+     "correctness_source": "stored",
+     "error_category": null,
+     "evidence_correct": true,
+     "joint_correct": true,
+     "label": "HELP_UNSPECIFIED",
+     "label_correct": true,
+     "reason_code": "GUIDANCE_ONLY",
+     "retried_after_rate_limit": false,
+     "spans": [
+      {
+       "end": 123,
+       "offset_source": "stored",
+       "quote": "The resident was guided for a short walk in the hallway; he was enthusiastic but sometimes had to be reminded about safety.",
+       "start": 0
+      }
+     ],
+     "status": "COMPLETE"
+    }
+   },
+   "rationale": "Guidance and safety reminders establish human help on this walk. They do not explicitly establish physical contact or sustained safety supervision beyond verbal cueing.",
+   "selection_stratum": "guidance_cue",
+   "sentences": [
+    [
+     0,
+     123
+    ]
+   ],
+   "target_cue": "short hallway walk",
+   "text": "The resident was guided for a short walk in the hallway; he was enthusiastic but sometimes had to be reminded about safety."
+  },
+  {
+   "context_key": "hallway_walk",
+   "gold": {
+    "label": "UNCLEAR",
+    "spans": [
+     {
+      "end": 40,
+      "offset_source": "stored",
+      "quote": "Short walk with a walker in the hallway.",
+      "start": 0
+     }
+    ]
+   },
+   "id": "nm_0341",
+   "index": 14,
+   "pred": {
+    "baseline": {
+     "correctness_source": "stored",
+     "error_category": null,
+     "evidence_correct": true,
+     "joint_correct": true,
+     "label": "UNCLEAR",
+     "label_correct": true,
+     "reason_code": "HUMAN_HELP_UNSPECIFIED",
+     "spans": [
+      {
+       "end": 40,
+       "offset_source": "stored",
+       "quote": "Short walk with a walker in the hallway.",
+       "start": 0
+      }
+     ],
+     "status": "COMPLETE"
+    },
+    "v1": {
+     "correctness_source": "stored",
+     "error_category": null,
+     "evidence_correct": true,
+     "joint_correct": true,
+     "label": "UNCLEAR",
+     "label_correct": true,
+     "reason_code": "AMBIGUOUS_SUPPORT_LEVEL",
+     "spans": [
+      {
+       "end": 40,
+       "offset_source": "stored",
+       "quote": "Short walk with a walker in the hallway.",
+       "start": 0
+      }
+     ],
+     "status": "COMPLETE"
+    },
+    "v2": {
+     "correctness_source": "stored",
+     "error_category": null,
+     "evidence_correct": true,
+     "joint_correct": true,
+     "label": "UNCLEAR",
+     "label_correct": true,
+     "reason_code": "NO_HUMAN_ASSISTANCE_DOCUMENTED",
+     "retried_after_rate_limit": false,
+     "spans": [
+      {
+       "end": 40,
+       "offset_source": "stored",
+       "quote": "Short walk with a walker in the hallway.",
+       "start": 0
+      }
+     ],
+     "status": "COMPLETE"
+    }
+   },
+   "rationale": "The walk, device, instability and source risk statement do not document a person providing help.",
+   "selection_stratum": "guidance_cue",
+   "sentences": [
+    [
+     0,
+     40
+    ],
+    [
+     41,
+     84
+    ],
+    [
+     85,
+     111
+    ],
+    [
+     112,
+     148
+    ]
+   ],
+   "target_cue": "short hallway walk with the walker",
+   "text": "Short walk with a walker in the hallway. The resident was very unsteady on his feet. Had to stop often to rest. Fall risk appears to have increased."
+  },
+  {
+   "context_key": "other_walk",
+   "gold": {
+    "label": "SUPERVISION",
+    "spans": [
+     {
+      "end": 196,
+      "offset_source": "stored",
+      "quote": "During the afternoon shift, the resident took a short walk with the walking frame. He was somewhat restless and saw things that were not there. We kept an extra close eye on whether he might fall.",
+      "start": 0
+     }
+    ]
+   },
+   "id": "nk_0797",
+   "index": 15,
+   "pred": {
+    "baseline": {
+     "correctness_source": "stored",
+     "error_category": null,
+     "evidence_correct": false,
+     "joint_correct": false,
+     "label": "UNCLEAR",
+     "label_correct": false,
+     "reason_code": "NO_SCOPED_PHRASE",
+     "spans": [],
+     "status": "COMPLETE"
+    },
+    "v1": {
+     "correctness_source": "stored",
+     "error_category": null,
+     "evidence_correct": false,
+     "joint_correct": false,
+     "label": "INDEPENDENT",
+     "label_correct": false,
+     "reason_code": "NO_SUPPORT_DOCUMENTED",
+     "spans": [
+      {
+       "end": 82,
+       "offset_source": "stored",
+       "quote": "During the afternoon shift, the resident took a short walk with the walking frame.",
+       "start": 0
+      }
+     ],
+     "status": "COMPLETE"
+    },
+    "v2": {
+     "correctness_source": "stored",
+     "error_category": null,
+     "evidence_correct": false,
+     "joint_correct": false,
+     "label": "SUPERVISION",
+     "label_correct": true,
+     "reason_code": "SAFETY_WATCH_DURING_WALK",
+     "retried_after_rate_limit": false,
+     "spans": [
+      {
+       "end": 82,
+       "offset_source": "stored",
+       "quote": "During the afternoon shift, the resident took a short walk with the walking frame.",
+       "start": 0
+      },
+      {
+       "end": 196,
+       "offset_source": "stored",
+       "quote": "We kept an extra close eye on whether he might fall.",
+       "start": 144
+      }
+     ],
+     "status": "COMPLETE"
+    }
+   },
+   "rationale": "The walking event is followed by explicit close staff observation for fall prevention, before the note transitions to help with lunch. This is actual safety supervision during the selected walk.",
+   "selection_stratum": "guidance_cue",
+   "sentences": [
+    [
+     0,
+     82
+    ],
+    [
+     83,
+     143
+    ],
+    [
+     144,
+     196
+    ],
+    [
+     197,
+     259
+    ],
+    [
+     260,
+     282
+    ]
+   ],
+   "target_cue": "walk with the walking frame during the afternoon shift",
+   "text": "During the afternoon shift, the resident took a short walk with the walking frame. He was somewhat restless and saw things that were not there. We kept an extra close eye on whether he might fall. After the walk, we helped him with his lunch, which went well. He ate with enjoyment."
+  },
+  {
+   "context_key": "other_walk",
+   "gold": {
+    "label": "UNCLEAR",
+    "spans": [
+     {
+      "end": 97,
+      "offset_source": "stored",
+      "quote": "During a short walk with the walking stick, the resident said that she felt a little more stable.",
+      "start": 0
+     }
+    ]
+   },
+   "id": "nb_1319",
+   "index": 16,
+   "pred": {
+    "baseline": {
+     "correctness_source": "stored",
+     "error_category": null,
+     "evidence_correct": false,
+     "joint_correct": false,
+     "label": "UNCLEAR",
+     "label_correct": true,
+     "reason_code": "NO_SCOPED_PHRASE",
+     "spans": [],
+     "status": "COMPLETE"
+    },
+    "v1": {
+     "correctness_source": "stored",
+     "error_category": null,
+     "evidence_correct": true,
+     "joint_correct": false,
+     "label": "INDEPENDENT",
+     "label_correct": false,
+     "reason_code": "NO_HELP_DOCUMENTED",
+     "spans": [
+      {
+       "end": 97,
+       "offset_source": "stored",
+       "quote": "During a short walk with the walking stick, the resident said that she felt a little more stable.",
+       "start": 0
+      }
+     ],
+     "status": "COMPLETE"
+    },
+    "v2": {
+     "correctness_source": "stored",
+     "error_category": null,
+     "evidence_correct": true,
+     "joint_correct": true,
+     "label": "UNCLEAR",
+     "label_correct": true,
+     "reason_code": "INSUFFICIENT_EVIDENCE",
+     "retried_after_rate_limit": true,
+     "spans": [
+      {
+       "end": 97,
+       "offset_source": "stored",
+       "quote": "During a short walk with the walking stick, the resident said that she felt a little more stable.",
+       "start": 0
+      }
+     ],
+     "status": "COMPLETE"
+    }
+   },
+   "rationale": "The device and the resident's reported stability do not specify human assistance during this walk.",
+   "selection_stratum": "other_walk",
+   "sentences": [
+    [
+     0,
+     97
+    ],
+    [
+     98,
+     119
+    ]
+   ],
+   "target_cue": "short walk with the walking stick",
+   "text": "During a short walk with the walking stick, the resident said that she felt a little more stable. She did tire quickly."
+  },
+  {
+   "context_key": "other_walk",
+   "gold": {
+    "label": "UNCLEAR",
+    "spans": [
+     {
+      "end": 117,
+      "offset_source": "stored",
+      "quote": "The resident was noticed to have increased wheezing in her chest after a walk; help and comfort were quickly offered.",
+      "start": 0
+     }
+    ]
+   },
+   "id": "nd_0297",
+   "index": 17,
+   "pred": {
+    "baseline": {
+     "correctness_source": "stored",
+     "error_category": null,
+     "evidence_correct": true,
+     "joint_correct": false,
+     "label": "HELP_UNSPECIFIED",
+     "label_correct": false,
+     "reason_code": "PHRASE_MATCH",
+     "spans": [
+      {
+       "end": 117,
+       "offset_source": "stored",
+       "quote": "The resident was noticed to have increased wheezing in her chest after a walk; help and comfort were quickly offered.",
+       "start": 0
+      }
+     ],
+     "status": "COMPLETE"
+    },
+    "v1": {
+     "correctness_source": "stored",
+     "error_category": null,
+     "evidence_correct": false,
+     "joint_correct": false,
+     "label": "UNCLEAR",
+     "label_correct": true,
+     "reason_code": "NO_SUPPORT_DOCUMENTED",
+     "spans": [
+      {
+       "end": 77,
+       "offset_source": "stored",
+       "quote": "The resident was noticed to have increased wheezing in her chest after a walk",
+       "start": 0
+      }
+     ],
+     "status": "COMPLETE"
+    },
+    "v2": {
+     "correctness_source": "stored",
+     "error_category": null,
+     "evidence_correct": true,
+     "joint_correct": true,
+     "label": "UNCLEAR",
+     "label_correct": true,
+     "reason_code": "AMBIGUOUS_ASSISTANCE",
+     "retried_after_rate_limit": false,
+     "spans": [
+      {
+       "end": 117,
+       "offset_source": "stored",
+       "quote": "The resident was noticed to have increased wheezing in her chest after a walk; help and comfort were quickly offered.",
+       "start": 0
+      }
+     ],
+     "status": "COMPLETE"
+    }
+   },
+   "rationale": "The offered help and comfort occur after the selected walk in response to wheezing. The note does not say who helped during the walk.",
+   "selection_stratum": "other_walk",
+   "sentences": [
+    [
+     0,
+     117
+    ]
+   ],
+   "target_cue": "walk before the wheezing was observed",
+   "text": "The resident was noticed to have increased wheezing in her chest after a walk; help and comfort were quickly offered."
+  },
+  {
+   "context_key": "other_walk",
+   "gold": {
+    "label": "UNCLEAR",
+    "spans": [
+     {
+      "end": 85,
+      "offset_source": "stored",
+      "quote": "He walked around aimlessly and seemed anxious.",
+      "start": 39
+     }
+    ]
+   },
+   "id": "na_1633",
+   "index": 18,
+   "pred": {
+    "baseline": {
+     "correctness_source": "stored",
+     "error_category": null,
+     "evidence_correct": false,
+     "joint_correct": false,
+     "label": "UNCLEAR",
+     "label_correct": true,
+     "reason_code": "NO_SCOPED_PHRASE",
+     "spans": [],
+     "status": "COMPLETE"
+    },
+    "v1": {
+     "correctness_source": "stored",
+     "error_category": null,
+     "evidence_correct": false,
+     "joint_correct": false,
+     "label": "SUPERVISION",
+     "label_correct": false,
+     "reason_code": "DIRECT_SUPERVISION_COMPLETED",
+     "spans": [
+      {
+       "end": 138,
+       "offset_source": "stored",
+       "quote": "He walked around aimlessly and seemed anxious. The carer took him to the garden for some fresh air.",
+       "start": 39
+      }
+     ],
+     "status": "COMPLETE"
+    },
+    "v2": {
+     "correctness_source": "stored",
+     "error_category": null,
+     "evidence_correct": false,
+     "joint_correct": false,
+     "label": "SUPERVISION",
+     "label_correct": false,
+     "reason_code": "DIRECTED_ACCOMPANIMENT",
+     "retried_after_rate_limit": false,
+     "spans": [
+      {
+       "end": 138,
+       "offset_source": "stored",
+       "quote": "The carer took him to the garden for some fresh air.",
+       "start": 86
+      }
+     ],
+     "status": "COMPLETE"
+    }
+   },
+   "rationale": "The target is the aimless walking before the later garden visit. No human walking assistance is documented for that earlier event.",
+   "selection_stratum": "other_walk",
+   "sentences": [
+    [
+     0,
+     38
+    ],
+    [
+     39,
+     85
+    ],
+    [
+     86,
+     138
+    ],
+    [
+     139,
+     170
+    ]
+   ],
+   "target_cue": "aimless walking before the carer took him to the garden",
+   "text": "The resident had a restless afternoon. He walked around aimlessly and seemed anxious. The carer took him to the garden for some fresh air. This helped him relax a little."
+  },
+  {
+   "context_key": "other_walk",
+   "gold": {
+    "label": "UNCLEAR",
+    "spans": [
+     {
+      "end": 48,
+      "offset_source": "stored",
+      "quote": "The afternoon ends with a quiet walk in the sun.",
+      "start": 0
+     }
+    ]
+   },
+   "id": "nn_2108",
+   "index": 19,
+   "pred": {
+    "baseline": {
+     "correctness_source": "stored",
+     "error_category": null,
+     "evidence_correct": false,
+     "joint_correct": false,
+     "label": "UNCLEAR",
+     "label_correct": true,
+     "reason_code": "NO_SCOPED_PHRASE",
+     "spans": [],
+     "status": "COMPLETE"
+    },
+    "v1": {
+     "correctness_source": "stored",
+     "error_category": null,
+     "evidence_correct": false,
+     "joint_correct": false,
+     "label": "HELP_UNSPECIFIED",
+     "label_correct": false,
+     "reason_code": "VERBAL_CUEING",
+     "spans": [
+      {
+       "end": 125,
+       "offset_source": "stored",
+       "quote": "The afternoon ends with a quiet walk in the sun. The client is quiet and follows well, which helps to end his day positively.",
+       "start": 0
+      }
+     ],
+     "status": "COMPLETE"
+    },
+    "v2": {
+     "correctness_source": "stored",
+     "error_category": null,
+     "evidence_correct": false,
+     "joint_correct": false,
+     "label": "HELP_UNSPECIFIED",
+     "label_correct": false,
+     "reason_code": "GUIDANCE_ONLY",
+     "retried_after_rate_limit": true,
+     "spans": [
+      {
+       "end": 48,
+       "offset_source": "stored",
+       "quote": "The afternoon ends with a quiet walk in the sun.",
+       "start": 0
+      },
+      {
+       "end": 125,
+       "offset_source": "stored",
+       "quote": "The client is quiet and follows well, which helps to end his day positively.",
+       "start": 49
+      }
+     ],
+     "status": "COMPLETE"
+    }
+   },
+   "rationale": "The walk is documented, but follows well does not explicitly say that a person provided walking support or supervision.",
+   "selection_stratum": "other_walk",
+   "sentences": [
+    [
+     0,
+     48
+    ],
+    [
+     49,
+     125
+    ]
+   ],
+   "target_cue": "quiet walk in the sun at the end of the afternoon",
+   "text": "The afternoon ends with a quiet walk in the sun. The client is quiet and follows well, which helps to end his day positively."
+  },
+  {
+   "context_key": "other_walk",
+   "gold": {
+    "label": "UNCLEAR",
+    "spans": []
+   },
+   "id": "nm_0865",
+   "index": 20,
+   "pred": {
+    "baseline": {
+     "correctness_source": "stored",
+     "error_category": null,
+     "evidence_correct": true,
+     "joint_correct": true,
+     "label": "UNCLEAR",
+     "label_correct": true,
+     "reason_code": "NO_SCOPED_PHRASE",
+     "spans": [],
+     "status": "COMPLETE"
+    },
+    "v1": {
+     "correctness_source": "stored",
+     "error_category": null,
+     "evidence_correct": true,
+     "joint_correct": true,
+     "label": "UNCLEAR",
+     "label_correct": true,
+     "reason_code": "NO_WALKING_EVENT",
+     "spans": [],
+     "status": "COMPLETE"
+    },
+    "v2": {
+     "correctness_source": "stored",
+     "error_category": null,
+     "evidence_correct": true,
+     "joint_correct": true,
+     "label": "UNCLEAR",
+     "label_correct": true,
+     "reason_code": "NO_WALKING_EVENT",
+     "retried_after_rate_limit": true,
+     "spans": [],
+     "status": "COMPLETE"
+    }
+   },
+   "rationale": "Morning-care help and a statement about walker use do not identify an actual walking event or human assistance during walking.",
+   "selection_stratum": "device_transfer_control",
+   "sentences": [
+    [
+     0,
+     13
+    ],
+    [
+     14,
+     64
+    ],
+    [
+     65,
+     107
+    ],
+    [
+     108,
+     193
+    ],
+    [
+     194,
+     215
+    ],
+    [
+     216,
+     246
+    ],
+    [
+     247,
+     279
+    ]
+   ],
+   "target_cue": "any walking described during morning care",
+   "text": "Morning care. The resident was already awake and in a good mood. Cooperated well with washing and dressing. Had difficulty with the buttons on his shirt and was frustrated when it did not work. Reassured and helped. COPD symptoms seem less today. Uses the walker without protest."
+  },
+  {
+   "context_key": "other_walk",
+   "gold": {
+    "label": "UNCLEAR",
+    "spans": []
+   },
+   "id": "nc_1659",
+   "index": 21,
+   "pred": {
+    "baseline": {
+     "correctness_source": "stored",
+     "error_category": null,
+     "evidence_correct": true,
+     "joint_correct": true,
+     "label": "UNCLEAR",
+     "label_correct": true,
+     "reason_code": "NO_SCOPED_PHRASE",
+     "spans": [],
+     "status": "COMPLETE"
+    },
+    "v1": {
+     "correctness_source": "stored",
+     "error_category": null,
+     "evidence_correct": true,
+     "joint_correct": true,
+     "label": "UNCLEAR",
+     "label_correct": true,
+     "reason_code": "NO_WALKING_EVENT",
+     "spans": [],
+     "status": "COMPLETE"
+    },
+    "v2": {
+     "correctness_source": "stored",
+     "error_category": null,
+     "evidence_correct": true,
+     "joint_correct": true,
+     "label": "UNCLEAR",
+     "label_correct": true,
+     "reason_code": "NO_WALKING_EVENT",
+     "retried_after_rate_limit": true,
+     "spans": [],
+     "status": "COMPLETE"
+    }
+   },
+   "rationale": "The only assisted movement is a transfer to bed. The target explicitly excludes that transfer and no walking event is documented.",
+   "selection_stratum": "device_transfer_control",
+   "sentences": [
+    [
+     0,
+     61
+    ],
+    [
+     62,
+     133
+    ],
+    [
+     134,
+     200
+    ]
+   ],
+   "target_cue": "any walking described after the memory game; exclude the transfer to bed",
+   "text": "The resident took part in a memory game in the activity room. Noticeable difficulty concentrating, but participated enthusiastically. Very tired afterwards; helped with the transfer to bed for a rest."
+  },
+  {
+   "context_key": "other_walk",
+   "gold": {
+    "label": "UNCLEAR",
+    "spans": []
+   },
+   "id": "nn_1576",
+   "index": 22,
+   "pred": {
+    "baseline": {
+     "correctness_source": "stored",
+     "error_category": null,
+     "evidence_correct": true,
+     "joint_correct": true,
+     "label": "UNCLEAR",
+     "label_correct": true,
+     "reason_code": "NO_SCOPED_PHRASE",
+     "spans": [],
+     "status": "COMPLETE"
+    },
+    "v1": {
+     "correctness_source": "stored",
+     "error_category": null,
+     "evidence_correct": false,
+     "joint_correct": false,
+     "label": "UNCLEAR",
+     "label_correct": true,
+     "reason_code": "NO_COMPLETED_WALK",
+     "spans": [
+      {
+       "end": 149,
+       "offset_source": "stored",
+       "quote": "Forgot the walker, but no fall occurred.",
+       "start": 109
+      }
+     ],
+     "status": "COMPLETE"
+    },
+    "v2": {
+     "correctness_source": "stored",
+     "error_category": null,
+     "evidence_correct": true,
+     "joint_correct": true,
+     "label": "UNCLEAR",
+     "label_correct": true,
+     "reason_code": "NO_COMPLETED_WALK_EVENT",
+     "retried_after_rate_limit": true,
+     "spans": [],
+     "status": "COMPLETE"
+    }
+   },
+   "rationale": "Help is tied to bathing and morning care. Forgetting the walker and absence of a fall do not document an actual walking event or its assistance.",
+   "selection_stratum": "device_transfer_control",
+   "sentences": [
+    [
+     0,
+     108
+    ],
+    [
+     109,
+     149
+    ]
+   ],
+   "target_cue": "any walking described during the morning routine",
+   "text": "The resident needed help with the morning routine again, especially with bathing because of lower back pain. Forgot the walker, but no fall occurred."
+  },
+  {
+   "context_key": "other_walk",
+   "gold": {
+    "label": "UNCLEAR",
+    "spans": []
+   },
+   "id": "nc_0922",
+   "index": 23,
+   "pred": {
+    "baseline": {
+     "correctness_source": "stored",
+     "error_category": null,
+     "evidence_correct": true,
+     "joint_correct": true,
+     "label": "UNCLEAR",
+     "label_correct": true,
+     "reason_code": "NO_SCOPED_PHRASE",
+     "spans": [],
+     "status": "COMPLETE"
+    },
+    "v1": {
+     "correctness_source": "stored",
+     "error_category": null,
+     "evidence_correct": true,
+     "joint_correct": true,
+     "label": "UNCLEAR",
+     "label_correct": true,
+     "reason_code": "NO_WALKING_EVENT",
+     "spans": [],
+     "status": "COMPLETE"
+    },
+    "v2": {
+     "correctness_source": "stored",
+     "error_category": null,
+     "evidence_correct": true,
+     "joint_correct": true,
+     "label": "UNCLEAR",
+     "label_correct": true,
+     "reason_code": "NO_WALKING_EVENT",
+     "retried_after_rate_limit": true,
+     "spans": [],
+     "status": "COMPLETE"
+    }
+   },
+   "rationale": "A proposed church visit and wheelchair setup do not document completed walking or human walking assistance.",
+   "selection_stratum": "device_transfer_control",
+   "sentences": [
+    [
+     0,
+     56
+    ],
+    [
+     57,
+     130
+    ],
+    [
+     131,
+     152
+    ]
+   ],
+   "target_cue": "any walking described before the proposed church service",
+   "text": "Sunday breakfast: the resident enjoyed fresh croissants. Asked whether she could come along to the church service in the building. Wheelchair put ready."
+  }
+ ],
+ "provenance": {
+  "annotation_process": "Two coding agents independently labeled the original Dutch notes for the same fixed targets without extractor predictions. Agent A translated; agent B then reviewed all A translations. Root adjudicated before inference. Agents share the assistant model family; this is not human or clinical expert gold.",
+  "baseline_replay_identical_in_followup": true,
+  "blind_label_agreement": {
+   "agreed": 23,
+   "disagreement_ids": [
+    "nb_0890"
+   ],
+   "total": 24
+  },
+  "dataset_revision": [
+   "579141e3431c18a932fa3a0870e9f1c131f10367"
+  ],
+  "dataset_sha256": "a2d3a2e8dbe1d119c8cb02064963f585849ee2f01d95f2d640c7cbf426b178cf",
+  "dataset_vs_freeze_commit": "identical to freeze commit",
+  "file_sha256": {
+   "data/annotations/fruta_held_out_v1.json": "e4b04e3205cd61253ba91fb1cac42f05478291e1b1ba51f934d260688bc34c05",
+   "data/fruta_held_out.jsonl": "48bb25f8cf61ca5f352581b2ccefd94c5869385597976e2d29875c0c4e8c9b80",
+   "data/fruta_held_out_manifest.json": "e7d138791f322b36049e950c924b6a5cc5405a836f83eb1b497b7fd8ddc31a26",
+   "docs/heldout-followup/results.json": "ee4312cd680576343e8c695358613ffb0c6de9fc9d2434c65b1e22eb3ad83fc2",
+   "docs/heldout-followup/retry-ledger.json": "b8ad03e2441ec0588562bd6f8b9bae40ba6a952f6aa2bacb29065fd444b39889",
+   "docs/heldout-results/results.json": "10179ed0cd18c707e9fe58f8423b9a42231a9768f067c9fcdfbcae953e8fe8a6"
+  },
+  "first_pass_runtime_commit": "66cc0c569e4c97849c5ee790016636e0367038ce",
+  "followup_evaluation_design": "post_hoc_replay_not_new_held_out",
+  "followup_runtime_commit": "9bf75316e58c6bf9c25d2ed0bf560c13004ff650",
+  "freeze_commit": "b28451c45fe6a4814855a816f50e310b269f4b8e",
+  "freeze_commit_matches_b28451c": true,
+  "v2_retried_ids": [
+   "nb_1319",
+   "nc_0922",
+   "nc_1659",
+   "nm_0865",
+   "nn_1576",
+   "nn_2108"
+  ],
+  "v2_retry_policy": {
+   "additional_attempt_count": 6,
+   "attempt_history_path": "docs/heldout-followup/retry-ledger.json",
+   "final_metric_denominator": 24,
+   "final_unavailable": 0,
+   "first_attempt_results_path": "docs/heldout-followup/first-attempt-results.json",
+   "first_attempt_results_sha256": "ef64fc44ab3f7ced60985f7f1f459d09f28791d0de679d1b817a5e70cd0dc1f1",
+   "initial_attempt_count": 24,
+   "initial_unavailable": 6,
+   "max_additional_attempts_per_rate_limited_example": 1,
+   "min_request_interval_seconds": 5,
+   "retry_completed_at_utc": "2026-11-16T01:29:26.382787+00:00",
+   "retry_results_path": "docs/heldout-followup/retry-results.json",
+   "retry_results_sha256": "c10172041765223c6bb2bec38d641be0d2f99360233b11e049766c9ef79ea105",
+   "retry_started_at_utc": "2026-11-16T01:28:16.505110+00:00",
+   "scope": "post-hoc development replay only; original frozen first-pass results are unchanged",
+   "total_api_attempt_count": 30
+  }
+ },
+ "schema": "divergence-v1",
+ "span_offsets_resolvable": 77,
+ "span_offsets_total": 77,
+ "systems": {
+  "baseline": {
+   "detail": "phrase rules",
+   "extractor": {
+    "mode": "phrase",
+    "model_id": null,
+    "prompt_version": "rules-v1",
+    "version": "phrase-v1"
+   },
+   "name": "Baseline",
+   "present": true,
+   "scope": "held_out_public",
+   "scope_note": null,
+   "source_file": "docs/heldout-results/results.json",
+   "summary": {
+    "completed": 24,
+    "errors": 0,
+    "evidence_accuracy": 0.5,
+    "evidence_correct": 12,
+    "joint_accuracy": 0.3333333333333333,
+    "joint_correct": 8,
+    "label_accuracy": 0.5833333333333334,
+    "label_correct": 14,
+    "total": 24
+   }
+  },
+  "v1": {
+   "detail": "gemini-3.1-flash-lite · prompt v1",
+   "extractor": {
+    "mode": "gemini",
+    "model_id": "gemini-3.1-flash-lite",
+    "prompt_version": "walking-assistance-v1",
+    "version": "gemini-structured-v2"
+   },
+   "name": "Model",
+   "present": true,
+   "scope": "held_out_public",
+   "scope_note": null,
+   "source_file": "docs/heldout-results/results.json",
+   "summary": {
+    "completed": 24,
+    "errors": 0,
+    "evidence_accuracy": 0.5833333333333334,
+    "evidence_correct": 14,
+    "joint_accuracy": 0.2916666666666667,
+    "joint_correct": 7,
+    "label_accuracy": 0.4583333333333333,
+    "label_correct": 11,
+    "total": 24
+   }
+  },
+  "v2": {
+   "detail": "gemini-3.1-flash-lite · prompt v2",
+   "extractor": {
+    "mode": "gemini",
+    "model_id": "gemini-3.1-flash-lite",
+    "prompt_version": "walking-assistance-v2",
+    "version": "gemini-structured-v2"
+   },
+   "name": "Model",
+   "present": true,
+   "scope": "post_hoc_replay",
+   "scope_note": "Post-hoc replay on previously evaluated frozen examples. These descriptive results are not a new held-out performance estimate.",
+   "source_file": "docs/heldout-followup/results.json",
+   "summary": {
+    "completed": 24,
+    "errors": 0,
+    "evidence_accuracy": 0.6666666666666666,
+    "evidence_correct": 16,
+    "joint_accuracy": 0.6666666666666666,
+    "joint_correct": 16,
+    "label_accuracy": 0.875,
+    "label_correct": 21,
+    "total": 24
+   }
+  }
+ },
+ "warnings": []
+}
