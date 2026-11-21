@@ -2,6 +2,37 @@
  "act1_note_id": "nk_0797",
  "always_unclear_label_correct": 14,
  "degraded_ribbon_only": false,
+ "demo": {
+  "date": "2026-01-15",
+  "evidence_quote": "This morning she needed an aide beside her on the way to breakfast.",
+  "evidence_start": 0,
+  "note": "This morning she needed an aide beside her on the way to breakfast. She ate her breakfast in the dining room.",
+  "observed_label": "Staff beside or supervising",
+  "observed_level": "SUPERVISION",
+  "residents": [
+   {
+    "name": "Elena",
+    "result": "↑ More help than usual",
+    "usual_description": "Usually walks to breakfast independently.",
+    "usual_label": "Independent",
+    "usual_level": "INDEPENDENT"
+   },
+   {
+    "name": "Ruth",
+    "result": "✓ Matches usual routine",
+    "usual_description": "Usually has an aide beside her for walking support on the way to breakfast.",
+    "usual_label": "Staff beside or supervising",
+    "usual_level": "SUPERVISION"
+   }
+  ],
+  "sources": [
+   "caresignal/fixtures.py",
+   "caresignal/extractors.py",
+   "caresignal/service.py",
+   "caresignal/models.py",
+   "app.py"
+  ]
+ },
  "expected_notes": 24,
  "missing_expected_ids": [],
  "notes": [

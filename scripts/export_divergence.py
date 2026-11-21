@@ -167,6 +167,76 @@ def span_key(spans: list[dict]) -> list[list[int]] | None:
     return sorted([s["start"], s["end"]] for s in spans)
 
 
+def _src(rel: str) -> str:
+    path = ROOT / rel
+    return path.read_text(encoding="utf-8") if path.exists() else ""
+
+
+def _string_constant(source: str, name: str) -> str | None:
+    """Read a module-level string constant written as adjacent literals."""
+    match = re.search(rf"^{name} = \(\n((?:\s+\".*\"\n)+)\)", source, re.M)
+    if not match:
+        return None
+    return "".join(json.loads(line.strip()) for line in match.group(1).splitlines())
+
+
+def demo_content(warnings: list[str]) -> dict:
+    """Fictional walkthrough shown in the explainer, read from the app's own source."""
+    fixtures, extractors = _src("caresignal/fixtures.py"), _src("caresignal/extractors.py")
+    service, models, app = (
+        _src("caresignal/service.py"),
+        _src("caresignal/models.py"),
+        _src("app.py"),
+    )
+    note = _string_constant(fixtures, "DEMO_NOTE")
+    date = re.search(r"^DEMO_DATE = date\((\d+), (\d+), (\d+)\)", fixtures, re.M)
+    quote = None
+    block = re.search(r"note_body == DEMO_NOTE:(.*?)\)\n", extractors, re.S)
+    if block and note:
+        quotes = [json.loads(q) for q in re.findall(r'^\s+(".*")', block.group(1), re.M)]
+        quote = next((q for q in quotes if q in note), None)
+    level = re.search(r"note_body == DEMO_NOTE:.*?AssistanceLevel\.(\w+)", extractors, re.S)
+    labels = dict(re.findall(r'AssistanceLevel\.(\w+): "([^"]+)"', models))
+    residents = [
+        {"name": n, "usual_level": lv, "usual_label": labels.get(lv), "usual_description": d}
+        for n, lv, d in re.findall(
+            r'\(\s*"(\w+)",\s*AssistanceLevel\.(\w+),\s*"([^"]+)",?\s*\)', service
+        )
+    ]
+    ranks = dict(re.findall(r"AssistanceLevel\.(\w+): (\d)", models))
+    headlines = dict(re.findall(r'"(MORE_HELP|LESS_HELP|MATCHES)": "([^"]+)"', app))
+    observed = level.group(1) if level else None
+    for r in residents:
+        o, u = ranks.get(observed or ""), ranks.get(r["usual_level"])
+        if o is None or u is None:
+            r["result"] = None
+            continue
+        key = "MORE_HELP" if o > u else "LESS_HELP" if o < u else "MATCHES"
+        r["result"] = headlines.get(key)
+    out = {
+        "note": note,
+        "date": "-".join(f"{int(x):02d}" for x in date.groups()) if date else None,
+        "evidence_quote": quote,
+        "evidence_start": note.find(quote) if note and quote else None,
+        "observed_level": observed,
+        "observed_label": labels.get(observed or ""),
+        "residents": residents,
+        "sources": [
+            "caresignal/fixtures.py",
+            "caresignal/extractors.py",
+            "caresignal/service.py",
+            "caresignal/models.py",
+            "app.py",
+        ],
+    }
+    for key in ("note", "evidence_quote", "observed_label"):
+        if not out[key]:
+            warnings.append(f"demo: {key} not found in app source; explainer omits it")
+    if len(residents) < 2 or any(r["result"] is None for r in residents):
+        warnings.append("demo: resident baselines or comparison wording incomplete")
+    return out
+
+
 # ---------------------------------------------------------------- export
 def build() -> tuple[dict, list[list[str]], list[str]]:
     warnings: list[str] = []
@@ -411,6 +481,7 @@ def build() -> tuple[dict, list[list[str]], list[str]]:
                 for rel in [DATASET, MANIFEST, ANNOTATIONS, FIRST_PASS, FOLLOWUP, RETRY_LEDGER]
             },
         },
+        "demo": demo_content(warnings),
         "warnings": warnings,
     }
     table = [["field", "present", "derived", "missing"]] + [
